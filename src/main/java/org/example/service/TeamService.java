@@ -31,10 +31,17 @@ public class TeamService {
             throw new TeamNotFoundException(teamId);
         }
 
+        List<TeamEntity> teamWithName = getByName(userId, name).stream()
+                .filter(t -> !t.getId().equals(teamId))
+                .toList();
+
+        if (!teamWithName.isEmpty()){
+            throw new TeamNameExistException(name);
+        }
         if (name != null && !name.trim().isEmpty()) {
             team.setName(name);
         }
-        if (!profilePictureUrl.trim().isEmpty()) {
+        if (profilePictureUrl != null && !profilePictureUrl.trim().isEmpty()) {
             team.setProfilePictureUrl(profilePictureUrl);
         }
 
@@ -63,25 +70,27 @@ public class TeamService {
                 .orElseThrow(() -> new TeamNotFoundException(teamId));
 
         UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new TeamNotFoundException(userId));
+                .orElseThrow(() -> new UserNotFoundException(userId));
 
         if (!user.getTeams().contains(team)) {
             throw new TeamNotFoundException(teamId);
         }
+        user.getTeams().remove(team);
+        team.setUser(null);
         teamRepository.delete(team);
         return team;
     }
 
     public List<TeamEntity> getByName(Long userId, String name) {
         userRepository.findById(userId)
-                .orElseThrow(() -> new TeamNotFoundException(userId));
+                .orElseThrow(() -> new UserNotFoundException(userId));
 
-        return teamRepository.findAllByNameAndId(name, userId);
+        return teamRepository.findAllByNameAndUserId(name, userId);
     }
 
     public List<TeamEntity> getAllTeams(Long userId) {
         userRepository.findById(userId)
-                .orElseThrow(() -> new TeamNotFoundException(userId));
-        return teamRepository.findAllById(userId);
+                .orElseThrow(() -> new UserNotFoundException(userId));
+        return teamRepository.findAllByUserId(userId);
     }
 }

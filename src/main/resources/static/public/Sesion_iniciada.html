@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Equipos</title>
+    <link rel="stylesheet" href="css/styles_sesion_iniciada.css">
+</head>
+<body>
+    <!-- Encabezado con título decorado -->
+    <nav class="navbar">
+        <h1>Creación del equipo de futbol</h1>
+        
+    </nav>
+
+    <div class="contenido">
+        <!-- Menú lateral con botones -->
+        <aside class="menu-lateral">
+            <img id="userPhoto" src="" alt="Foto del usuario">
+            <!-- Botón de configuración para mostrar/ocultar los botones -->
+            <button type="button" id="configuracion">Configuración</button>
+
+            <!-- Sección de configuración que está oculta por defecto -->
+            <div id="configuracion-apartado" class="configuracion-apartado">
+                <button type="button" id="Volver_Inicio">Cerrar sesión</button>
+                <button type="button" id="Eliminar_cuenta">Eliminar cuenta</button>
+            </div>
+            <div class="registro-equipos">
+                <h3>Registrar Equipo de Fútbol</h3>
+                <form id="form-registro-equipo">
+                    <label for="nombre-equipo">Nombre del equipo:</label>
+                    <input type="text" id="nombre-equipo" name="nombre-equipo" placeholder="Ingrese el nombre del equipo" required>
+                
+                    <label for="ciudad-equipo">Ciudad del equipo:</label>
+                    <input type="text" id="ciudad-equipo" name="ciudad-equipo" placeholder="Ingrese la ciudad" required>
+                
+                    <label for="fundacion-equipo">Año de fundación:</label>
+                    <select id="fundacion-equipo" name="fundacion-equipo" required>
+                    </select>
+                
+                    <label for="imagen-equipo">Imagen del equipo:</label>
+                    <input type="file" id="imagen-equipo" name="imagen-equipo" accept="image/*" required>
+                
+                    <button type="submit" id="registrar-equipo">Registrar Equipo</button>
+                </form>
+                
+            </div>
+        </aside>
+
+        <!-- Contenido principal -->
+        <main>
+            <!-- Formulario de registro de equipos -->
+            <div class="equipos-container" id="equipos-container">
+            </div>
+        </main>
+    </div>
+
+    <script src="js/script_sesion_iniciada.js"></script>
+</body>
+</html>

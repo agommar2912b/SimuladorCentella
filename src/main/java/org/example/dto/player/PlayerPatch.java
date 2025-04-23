@@ -12,7 +12,7 @@ public class PlayerPatch {
     @NotBlankOrEmpty
     private String name;
     @NotBlankOrEmpty
-    private int skill;
+    private Integer skill;
     @NotBlankOrEmpty
     private Position position;
     @NotBlankOrEmpty

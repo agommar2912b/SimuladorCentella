@@ -10,5 +10,5 @@ public class UserPatch {
     @NotBlankOrEmpty
     private String name;
     @NotBlankOrEmpty
-    private String profilePictureUrl;
+    private String password;
 }

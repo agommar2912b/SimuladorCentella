@@ -22,29 +22,41 @@ public class PlayerService {
     private final PlayerRepository playerRepository;
     private final UserRepository userRepository;
 
-    public PlayerEntity patchPlayer(Long userId, Long teamId, Long playerId, String name, int skill, Position position, Boolean titular) {
+    public PlayerEntity patchPlayer(Long userId, Long teamId, Long playerId, String name, Integer skill, Position position, Boolean titular) {
         TeamEntity team = teamRepository.findById(teamId)
                 .orElseThrow(() -> new TeamNotFoundException(teamId));
 
         UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new TeamNotFoundException(userId));
+                .orElseThrow(() -> new UserNotFoundException(userId));
 
         PlayerEntity player = playerRepository.findById(playerId)
-                .orElseThrow(() -> new TeamNotFoundException(playerId));
+                .orElseThrow(() -> new PlayerNotFoundException(playerId));
+
 
         if (!user.getTeams().contains(team) || !team.getPlayers().contains(player)) {
             throw new PlayerNotFoundException(playerId);
         }
 
-        if (name != null && !name.trim().isEmpty()) {
-            player.setName(name.trim());
+        List<PlayerEntity> playerWithName = getByName(name, userId ,teamId).stream()
+                .filter(u->!u.getId().equals(playerId))
+                .toList();
+
+        if (!playerWithName.isEmpty()){
+            throw new TeamNameExistException(name);
         }
 
-        if (skill >= 1 && skill <= 99) {
-            player.setSkill(skill);
-        } else {
-            throw new IllegalArgumentException("Skill must be between 1 and 99.");
+        if (name != null && !name.trim().isEmpty()) {
+            player.setName(name);
         }
+
+        if (skill != null) {
+            if (skill >= 1 && skill <= 99) {
+                player.setSkill(skill);
+            } else {
+                throw new IllegalArgumentException("Skill must be between 1 and 99.");
+            }
+        }
+
 
         if (position != null) {
             player.setPosition(position);
@@ -80,14 +92,16 @@ public class PlayerService {
                 .orElseThrow(() -> new TeamNotFoundException(teamId));
 
         UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new TeamNotFoundException(userId));
+                .orElseThrow(() -> new UserNotFoundException(userId));
 
         PlayerEntity player = playerRepository.findById(playerId)
-                .orElseThrow(() -> new TeamNotFoundException(playerId));
+                .orElseThrow(() -> new PlayerNotFoundException(playerId));
 
         if (!user.getTeams().contains(team) || !team.getPlayers().contains(player)) {
             throw new PlayerNotFoundException(playerId);
         }
+        team.getPlayers().remove(player);
+        player.setTeam(null);
         playerRepository.delete(player);
         return player;
     }
@@ -97,8 +111,8 @@ public class PlayerService {
                 .orElseThrow(() -> new TeamNotFoundException(teamId));
 
         userRepository.findById(userId)
-                .orElseThrow(() -> new TeamNotFoundException(userId));
-        return playerRepository.findAllByNameAndId(name, teamId);
+                .orElseThrow(() -> new UserNotFoundException(userId));
+        return playerRepository.findAllByNameAndTeamId(name, teamId);
     }
 
     public List<PlayerEntity> getAllPlayers(Long userId , Long teamId) {
@@ -107,7 +121,7 @@ public class PlayerService {
                 .orElseThrow(() -> new TeamNotFoundException(teamId));
 
         userRepository.findById(userId)
-                .orElseThrow(() -> new TeamNotFoundException(userId));
+                .orElseThrow(() -> new UserNotFoundException(userId));
         return playerRepository.findAllByTeamId(teamId);
     }
 }

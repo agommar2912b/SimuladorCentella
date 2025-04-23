@@ -6,6 +6,7 @@ import org.example.dto.team.TeamCreate;
 import org.example.dto.team.TeamPatch;
 import org.example.dto.team.TeamResponse;
 import org.example.entity.TeamEntity;
+import org.example.exceptions.TeamNameExistException;
 import org.example.exceptions.UserNotFoundNameException;
 import org.example.service.TeamService;
 import org.example.service.UserService;
@@ -26,6 +27,7 @@ public class TeamController {
         return TeamResponse.builder()
                 .id(patchedTeam.getId())
                 .name(patchedTeam.getName())
+                .profilePictureUrl(patchedTeam.getProfilePictureUrl())
                 .build();
 
     }
@@ -61,7 +63,7 @@ public class TeamController {
         if (name != null && !name.isBlank()) {
             teams = teamService.getByName(userId,name);
             if (teams.isEmpty()) {
-                throw new UserNotFoundNameException(name);
+                throw new TeamNameExistException(name);
             }
         } else {
             teams = teamService.getAllTeams(userId);

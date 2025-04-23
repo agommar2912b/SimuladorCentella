@@ -15,6 +15,7 @@ import java.util.Random;
 @NoArgsConstructor
 @Entity
 @ToString
+@Table(name = "team")
 
 public class TeamEntity {
     @Id
@@ -31,9 +32,6 @@ public class TeamEntity {
     private PlayerEntity goalie;
     @OneToMany
     private List<PlayerEntity> substitutes;
-    private double skillAverage;
-    private double winProbability;
-    private int changesMade = 0;
     @OneToMany
     private List<PlayerEntity> freekickKickers;
     @OneToMany

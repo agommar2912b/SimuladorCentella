@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @ToString
+@Table(name = "user")
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,16 +21,16 @@ public class UserEntity {
 
     private String name;
 
-    private String profilePictureUrl;
+    private String password;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private List<TeamEntity> teams;
 
 
-    public UserEntity(String name, String profilePictureUrl) {
+    public UserEntity(String name, String password) {
         this.name = name;
-        this.profilePictureUrl = profilePictureUrl;
+        this.password = password;
     }
 }
 

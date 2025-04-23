@@ -12,16 +12,15 @@ import org.example.Position;
 @Setter
 @ToString
 @NoArgsConstructor
+@Table(name = "player")
 public class PlayerEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private int skill;
-    private boolean hasYellowCard = false;
+    private Integer skill;
     @Enumerated(EnumType.STRING)
     private Position position;
-    private double points;
     private boolean hasPlayed;
     @ManyToOne
     @JoinColumn(name = "team_id")

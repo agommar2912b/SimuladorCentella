@@ -13,7 +13,7 @@ public class PlayerCreate {
     @NotBlank(message = "The name can't be empty")
     private String name;
     @NotBlank(message = "The skill can't be empty")
-    private int skill;
+    private Integer skill;
     @NotBlank(message = "The position can't be empty")
     private Position position;
     @NotBlank(message = "If is titular or not can't be empty")

@@ -1,7 +1,7 @@
 package org.example;
 
-import org.example.entity.PlayerEntity;
-import org.example.entity.TeamEntity;
+import org.example.Player;
+
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -9,16 +9,16 @@ import java.util.List;
 import java.util.Random;
 
 public class Game {
-    TeamEntity teamA;
-    TeamEntity teamB;
+    Team teamA;
+    Team teamB;
     Random rand = new Random();
     int scoreA = 0;
     int scoreB = 0;
     List<String> events = new ArrayList<>();
-    PlayerEntity mvp;
+    Player mvp;
     boolean firstCalculate = true;
 
-    public Game(TeamEntity teamA, TeamEntity teamB) {
+    public Game(Team teamA, Team teamB) {
         this.teamA = teamA;
         this.teamB = teamB;
     }
@@ -41,7 +41,7 @@ public class Game {
         events.add("Probabilidades de victoria: " + teamA.getName() + " " + teamA.getWinProbability() + "%, " + teamB.getName() + " " + teamB.getWinProbability() + "%");
     }
 
-    public double calculateWinProbabilities_players(PlayerEntity atacker, PlayerEntity defender) {
+    public double calculateWinProbabilities_players(Player atacker, Player defender) {
         return Math.abs(atacker.getSkill() * 5 - defender.getSkill() * 5);
     }
 
@@ -56,8 +56,8 @@ public class Game {
     private void simulateMinute(int minute) {
         int eventChance = rand.nextInt(100);
         int subChance = rand.nextInt(100);
-        TeamEntity attackingTeam = selectAttackingTeam();
-        TeamEntity defendTeam = (attackingTeam == teamA) ? teamB : teamA;
+        Team attackingTeam = selectAttackingTeam();
+        Team defendTeam = (attackingTeam == teamA) ? teamB : teamA;
 
         events.add("Minuto: " + minute);
 
@@ -77,8 +77,8 @@ public class Game {
     }
 
 
-    public void simulateInjury(TeamEntity injuredTeam) {
-        PlayerEntity injuredPlayer;
+    public void simulateInjury(Team injuredTeam) {
+        Player injuredPlayer;
         if (rand.nextInt(100) > 10) {
             injuredPlayer = injuredTeam.getPlayers().get(rand.nextInt(injuredTeam.getPlayers().size()));
         } else {
@@ -91,7 +91,7 @@ public class Game {
             events.add("\tParece que si ha sido una lesión fuerte");
         }
 
-        PlayerEntity substitute = injuredTeam.makeSubstitutionForInjury(injuredPlayer);
+        Player substitute = injuredTeam.makeSubstitutionForInjury(injuredPlayer);
         if (substitute != null) {
             events.add("\tEntra " + substitute.getName() + " en lugar de " + injuredPlayer.getName() + " para " + injuredTeam.getName() + ".");
         } else {
@@ -100,9 +100,9 @@ public class Game {
     }
 
 
-    private void simulateCorner(TeamEntity attackingTeam, TeamEntity defenderTeam) {
-        PlayerEntity cornerTaker = getCornerTaker(attackingTeam);
-        PlayerEntity receiver = attackingTeam.getPlayers().get(rand.nextInt(attackingTeam.getPlayers().size()));
+    private void simulateCorner(Team attackingTeam, Team defenderTeam) {
+        Player cornerTaker = getCornerTaker(attackingTeam);
+        Player receiver = attackingTeam.getPlayers().get(rand.nextInt(attackingTeam.getPlayers().size()));
 
         if (cornerTaker == receiver) {
             if (rand.nextInt(100) < 55) {
@@ -111,16 +111,16 @@ public class Game {
                 simulateOccasion(attackingTeam, cornerTaker, defenderTeam, receiver);
             }
         } else {
-            events.add("\t " + attackingTeam.getName() + " tiene un córner. Lo ejecuta " + cornerTaker.getTeam() + ".");
+            events.add("\t " + attackingTeam.getName() + " tiene un córner. Lo ejecuta " + cornerTaker.getName() + ".");
             cornerTaker.setPoints(cornerTaker.getPoints() + 0.2);
             receiver.setPoints(receiver.getPoints() + 0.2);
             simulateOccasion(attackingTeam, receiver, defenderTeam, cornerTaker);
         }
     }
 
-    private void simulatePass(TeamEntity attackingTeam, PlayerEntity pasador, TeamEntity defenderTeam) {
-        PlayerEntity receiver = selectPlayerByProbabilityOffensivePass(attackingTeam);
-        PlayerEntity defender = selectPlayerByProbabilityDefenderPass(defenderTeam);
+    private void simulatePass(Team attackingTeam, Player pasador, Team defenderTeam) {
+        Player receiver = selectPlayerByProbabilityOffensivePass(attackingTeam);
+        Player defender = selectPlayerByProbabilityDefenderPass(defenderTeam);
         double atc_win_prob, skill_diff;
         skill_diff = calculateWinProbabilities_players(pasador, defender);
         atc_win_prob = 50 + skill_diff;
@@ -146,7 +146,7 @@ public class Game {
                     events.add("\t" + receiver.getName() + " recibe el pase y se encuentra en una buena posición.");
                     simulateOccasion(attackingTeam, receiver, defenderTeam, pasador);
                 } else {
-                    events.add("\t" + pasador.getTeam() + " intenta un pase, pero lo intercepta " + defender.getName() + ".");
+                    events.add("\t" + pasador.getName() + " intenta un pase, pero lo intercepta " + defender.getName() + ".");
                     pasador.setPoints(pasador.getPoints()- 0.25);
                     defender.setPoints(defender.getPoints()+ 1);
                 }
@@ -160,12 +160,12 @@ public class Game {
         }
     }
 
-    public void simulate_Ball_In_Middle(TeamEntity attackingTeam, TeamEntity defendingTeam) {
+    public void simulate_Ball_In_Middle(Team attackingTeam, Team defendingTeam) {
         double atc_win_prob, skill_diff;
 
-        PlayerEntity attacker = selectPlayerByProbabilityBallMiddle(attackingTeam);
-        PlayerEntity assist = selectPlayerByProbabilityBallMiddle(attackingTeam);
-        PlayerEntity defender = selectPlayerByProbabilityBallMiddle(defendingTeam);
+        Player attacker = selectPlayerByProbabilityBallMiddle(attackingTeam);
+        Player assist = selectPlayerByProbabilityBallMiddle(attackingTeam);
+        Player defender = selectPlayerByProbabilityBallMiddle(defendingTeam);
 
         skill_diff = calculateWinProbabilities_players(attacker, defender);
         atc_win_prob = 50 + skill_diff;
@@ -195,14 +195,14 @@ public class Game {
         }
     }
 
-    private PlayerEntity selectPlayerByProbabilityBallMiddle(TeamEntity team) {
-        List<PlayerEntity> midfielders = team.getPlayers().stream()
+    private Player selectPlayerByProbabilityBallMiddle(Team team) {
+        List<Player> midfielders = team.getPlayers().stream()
                 .filter(p -> p.getPosition() == Position.MIDFIELDER)
                 .toList();
-        List<PlayerEntity> forwardsAndDefenders = team.getPlayers().stream()
+        List<Player> forwardsAndDefenders = team.getPlayers().stream()
                 .filter(p -> p.getPosition() == Position.FORWARD || p.getPosition() == Position.DEFENDER)
                 .toList();
-        List<PlayerEntity> goalkeepers = team.getPlayers().stream()
+        List<Player> goalkeepers = team.getPlayers().stream()
                 .filter(p -> p.getPosition() == Position.GOALKEEPER)
                 .toList();
 
@@ -218,14 +218,14 @@ public class Game {
         return team.getPlayers().get(rand.nextInt(team.getPlayers().size()));
     }
 
-    private PlayerEntity selectPlayerByProbabilityDefenderPass(TeamEntity team) {
-        List<PlayerEntity> defender = team.getPlayers().stream()
+    private Player selectPlayerByProbabilityDefenderPass(Team team) {
+        List<Player> defender = team.getPlayers().stream()
                 .filter(p -> p.getPosition() == Position.DEFENDER)
                 .toList();
-        List<PlayerEntity> midfielders = team.getPlayers().stream()
+        List<Player> midfielders = team.getPlayers().stream()
                 .filter(p -> p.getPosition() == Position.MIDFIELDER)
                 .toList();
-        List<PlayerEntity> goalkeepersAndForward = team.getPlayers().stream()
+        List<Player> goalkeepersAndForward = team.getPlayers().stream()
                 .filter(p -> p.getPosition() == Position.GOALKEEPER || p.getPosition() == Position.FORWARD)
                 .toList();
 
@@ -241,17 +241,17 @@ public class Game {
         return team.getPlayers().get(rand.nextInt(team.getPlayers().size()));
     }
 
-    private PlayerEntity selectPlayerByProbabilityOffensivePass(TeamEntity team) {
-        List<PlayerEntity> forward = team.getPlayers().stream()
+    private Player selectPlayerByProbabilityOffensivePass(Team team) {
+        List<Player> forward = team.getPlayers().stream()
                 .filter(p -> p.getPosition() == Position.FORWARD)
                 .toList();
-        List<PlayerEntity> midfielders = team.getPlayers().stream()
+        List<Player> midfielders = team.getPlayers().stream()
                 .filter(p -> p.getPosition() == Position.MIDFIELDER)
                 .toList();
-        List<PlayerEntity> defender = team.getPlayers().stream()
+        List<Player> defender = team.getPlayers().stream()
                 .filter(p -> p.getPosition() == Position.DEFENDER)
                 .toList();
-        List<PlayerEntity> goalkeepers = team.getPlayers().stream()
+        List<Player> goalkeepers = team.getPlayers().stream()
                 .filter(p -> p.getPosition() == Position.GOALKEEPER)
                 .toList();
 
@@ -269,11 +269,11 @@ public class Game {
         return team.getPlayers().get(rand.nextInt(team.getPlayers().size()));
     }
 
-    private void simulateCounterAttack(TeamEntity counterAttackingTeam, TeamEntity defendTeam) {
+    private void simulateCounterAttack(Team counterAttackingTeam, Team defendTeam) {
         double skill_diff, atc_win_prob;
-        PlayerEntity attacker = selectPlayerByProbabilityOffensivePass(counterAttackingTeam);
-        PlayerEntity assist = selectPlayerByProbabilityOffensivePass(counterAttackingTeam);
-        PlayerEntity defender = selectPlayerByProbabilityBallMiddle(defendTeam);
+        Player attacker = selectPlayerByProbabilityOffensivePass(counterAttackingTeam);
+        Player assist = selectPlayerByProbabilityOffensivePass(counterAttackingTeam);
+        Player defender = selectPlayerByProbabilityBallMiddle(defendTeam);
 
         events.add("\t" + attacker.getName() + " lidera el contraataque a gran velocidad.");
 
@@ -293,10 +293,10 @@ public class Game {
     }
 
 
-    private void simulateOccasion(TeamEntity attackingTeam, PlayerEntity attacker, TeamEntity defendTeam, PlayerEntity assist) {
+    private void simulateOccasion(Team attackingTeam, Player attacker, Team defendTeam, Player assist) {
         double occasion_chance = rand.nextDouble(100);
-        PlayerEntity defender = selectPlayerByProbabilityDefenderPass(defendTeam);
-        PlayerEntity goalkeeper = defendTeam.getGoalie();
+        Player defender = selectPlayerByProbabilityDefenderPass(defendTeam);
+        Player goalkeeper = defendTeam.getGoalie();
 
         double attackVsDefense = attacker.getSkill() - defender.getSkill();
         double attackVsGoalkeeper = attacker.getSkill() - goalkeeper.getSkill();
@@ -323,7 +323,7 @@ public class Game {
         }
     }
 
-    private void simulateGoal(TeamEntity attackingTeam, PlayerEntity attacker, PlayerEntity assist) {
+    private void simulateGoal(Team attackingTeam, Player attacker, Player assist) {
         if (attacker != assist) {
             if (attackingTeam == teamA) scoreA++;
             else scoreB++;
@@ -338,11 +338,11 @@ public class Game {
         }
     }
 
-    private void simulateFreeKick(TeamEntity beenFouledTeam, TeamEntity defendFreekickTeam) {
+    private void simulateFreeKick(Team beenFouledTeam, Team defendFreekickTeam) {
         events.add("\tFalta para " + beenFouledTeam.getName());
 
-        PlayerEntity freeKickTaker = getFreeKickTaker(beenFouledTeam);
-        PlayerEntity goalkeeper = defendFreekickTeam.getGoalie();
+        Player freeKickTaker = getFreeKickTaker(beenFouledTeam);
+        Player goalkeeper = defendFreekickTeam.getGoalie();
         double skillDifference = freeKickTaker.getSkill() - goalkeeper.getSkill();
         double chanceToScore = 40 + skillDifference;
         double chanceForGreatOpportunity = 70;
@@ -360,12 +360,12 @@ public class Game {
         }
     }
 
-    private PlayerEntity getFreeKickTaker(TeamEntity beenFouledTeam) {
-        List<PlayerEntity> eligibleKickers = beenFouledTeam.getFreekickKickers().stream()
+    private Player getFreeKickTaker(Team beenFouledTeam) {
+        List<Player> eligibleKickers = beenFouledTeam.getFreekickKickers().stream()
                 .filter(player -> beenFouledTeam.getPlayers().contains(player))
                 .toList();
 
-        PlayerEntity freeKickTaker;
+        Player freeKickTaker;
         if (!eligibleKickers.isEmpty()) {
             freeKickTaker = eligibleKickers.get(rand.nextInt(eligibleKickers.size()));
         } else {
@@ -374,12 +374,12 @@ public class Game {
         return freeKickTaker;
     }
 
-    private PlayerEntity getPenaltyTaker(TeamEntity beenFouledTeam) {
-        List<PlayerEntity> eligibleKickers = beenFouledTeam.getPenaltyKickers().stream()
+    private Player getPenaltyTaker(Team beenFouledTeam) {
+        List<Player> eligibleKickers = beenFouledTeam.getPenaltyKickers().stream()
                 .filter(player -> beenFouledTeam.getPlayers().contains(player))
                 .toList();
 
-        PlayerEntity penaltyKicker;
+        Player penaltyKicker;
         if (!eligibleKickers.isEmpty()) {
             penaltyKicker = eligibleKickers.get(rand.nextInt(eligibleKickers.size()));
         } else {
@@ -388,12 +388,12 @@ public class Game {
         return penaltyKicker;
     }
 
-    private PlayerEntity getCornerTaker(TeamEntity beenFouledTeam) {
-        List<PlayerEntity> eligibleKickers = beenFouledTeam.getCornerKickers().stream()
+    private Player getCornerTaker(Team beenFouledTeam) {
+        List<Player> eligibleKickers = beenFouledTeam.getCornerKickers().stream()
                 .filter(player -> beenFouledTeam.getPlayers().contains(player))
                 .toList();
 
-        PlayerEntity cornerKicker;
+        Player cornerKicker;
         if (!eligibleKickers.isEmpty()) {
             cornerKicker = eligibleKickers.get(rand.nextInt(eligibleKickers.size()));
         } else {
@@ -402,9 +402,9 @@ public class Game {
         return cornerKicker;
     }
 
-    private void simulatePenalty(TeamEntity beenFouledTeam, TeamEntity defendTeam) {
-        PlayerEntity penaltyTaker = getPenaltyTaker(beenFouledTeam);
-        PlayerEntity goalkeeper = defendTeam.getGoalie();
+    private void simulatePenalty(Team beenFouledTeam, Team defendTeam) {
+        Player penaltyTaker = getPenaltyTaker(beenFouledTeam);
+        Player goalkeeper = defendTeam.getGoalie();
 
         double skillDifference = penaltyTaker.getSkill() - goalkeeper.getSkill();
         double chanceToScore = 70 + skillDifference;
@@ -423,9 +423,9 @@ public class Game {
         }
     }
 
-    public void simulateFoul(TeamEntity attackingTeam, TeamEntity defendTeam) {
-        PlayerEntity beenfoul = attackingTeam.getPlayers().get(rand.nextInt(attackingTeam.getPlayers().size()));
-        PlayerEntity fouler = defendTeam.getPlayers().get(rand.nextInt(defendTeam.getPlayers().size()));
+    public void simulateFoul(Team attackingTeam, Team defendTeam) {
+        Player beenfoul = attackingTeam.getPlayers().get(rand.nextInt(attackingTeam.getPlayers().size()));
+        Player fouler = defendTeam.getPlayers().get(rand.nextInt(defendTeam.getPlayers().size()));
         int random = rand.nextInt(100) + 1;
 
         if (random < 20) {
@@ -457,8 +457,8 @@ public class Game {
         }
     }
 
-    private void adjustWinProbabilityAfterExpulsion(TeamEntity foulingTeam, PlayerEntity expelledPlayer) {
-        int totalSkill = foulingTeam.getPlayers().stream().mapToInt(PlayerEntity::getSkill).sum() + foulingTeam.getGoalie().getSkill();
+    private void adjustWinProbabilityAfterExpulsion(Team foulingTeam, Player expelledPlayer) {
+        int totalSkill = foulingTeam.getPlayers().stream().mapToInt(Player::getSkill).sum() + foulingTeam.getGoalie().getSkill();
         int adjustedTotalSkill = totalSkill - expelledPlayer.getSkill();
         foulingTeam.setSkillAverage((double) adjustedTotalSkill / 11);
 
@@ -468,12 +468,12 @@ public class Game {
         calculateWinProbabilities();
     }
 
-    public void simulateSubstitution(TeamEntity subsTeam) {
-        PlayerEntity playerOut;
-        PlayerEntity playerIn;
+    public void simulateSubstitution(Team subsTeam) {
+        Player playerOut;
+        Player playerIn;
         if (rand.nextInt(100) > 10) {
-            List<PlayerEntity> worstPlayers = subsTeam.getPlayers().stream()
-                    .sorted(Comparator.comparingDouble(PlayerEntity::getPoints))
+            List<Player> worstPlayers = subsTeam.getPlayers().stream()
+                    .sorted(Comparator.comparingDouble(Player::getPoints))
                     .limit(3)
                     .toList();
 
@@ -490,13 +490,13 @@ public class Game {
     }
 
 
-    private TeamEntity selectAttackingTeam() {
+    private Team selectAttackingTeam() {
         int randomValue = rand.nextInt(100);
         return (randomValue < teamA.getWinProbability()) ? teamA : teamB;
     }
 
     public void listMvp() {
-        List<PlayerEntity> allPlayers = new ArrayList<>();
+        List<Player> allPlayers = new ArrayList<>();
 
         allPlayers.addAll(teamA.getPlayers());
         allPlayers.add(teamA.getGoalie());
@@ -506,11 +506,11 @@ public class Game {
         allPlayers.add(teamB.getGoalie());
         allPlayers.addAll(teamB.getSubstitutes());
 
-        List<PlayerEntity> mvpPlayer = allPlayers.stream()
+        List<Player> mvpPlayer = allPlayers.stream()
                 .sorted((p1, p2) -> Double.compare(p2.getPoints(), p1.getPoints()))
                 .toList();
 
-        for (PlayerEntity player : mvpPlayer) {
+        for (Player player : mvpPlayer) {
             if (player.isHasPlayed()) {
                 if (mvp==null){
                     mvp=player;

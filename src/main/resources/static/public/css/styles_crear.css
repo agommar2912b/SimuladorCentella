@@ -1,0 +1,165 @@
+/*Centramos formulario en la pagina y permitimos ajuste dinámico*/
+body {
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh; /* Asegura que ocupe al menos el alto de la pantalla */
+    margin: 0;
+    font-size: 14px;
+    animation: fondo 10s linear infinite;
+    overflow: auto; /* Agrega scroll si el contenido excede la altura */
+    background-image: url(../img/fondo-futbol-gradiente-dinamico_1226107-217.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+/* Fondo animado */
+@keyframes fondo { 
+    0% { background-position: left top; }
+    100% { background-position: right bottom; } 
+}
+
+a {
+    text-decoration: none;
+}
+
+#createForm {
+    width: 90%; /* Flexible para pantallas pequeñas */
+    max-width: 400px; /* Límite para pantallas grandes */
+    padding: 1rem;
+    border: 0.1rem solid rgb(226, 226, 226);
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden; /* Asegura que el contenido no desborde */
+}
+
+/*Ponemos label e input juntos*/
+.formulario_grupo {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.6rem;
+    flex-direction: column; /* Diseño vertical */
+    text-align: left;
+}
+
+/*Centramos los placeholder de dentro de los inputs*/
+input::placeholder {
+    text-align: center;
+    color: #aaa;
+}
+
+/*Le damos ancho fijo a los label*/
+.formulario_grupo label {
+    margin-bottom: 0.4rem; /* Espaciado vertical */
+    width: 100%; /* Ocupa todo el ancho */
+}
+
+/*Le damos ancho de 100% a los inputs*/
+.formulario_grupo input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 0.1rem solid #ccc;
+    border-radius: 0.3rem;
+    box-sizing: border-box;
+}
+
+.botones {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Estilo para el primer botón */
+.botones button[type="submit"] {
+    background-color: #007BFF;
+    color: white;
+    width: 100%;
+    padding: 0.625rem;
+    border: none;
+    border-radius: 0.3125rem;
+    cursor: pointer;
+    margin-bottom: 1.25rem;
+}
+
+.botones a {
+    padding-bottom: 1rem;
+}
+
+/*linea que separa formulario de crear usuario*/
+.separator {
+    height: 0.1rem;
+    width: 100%;
+    background-color: #ccc;
+}
+
+/*Volver a iniciar_sesion*/
+.Inicio {
+    padding: 1rem;
+    width: 90%; /* Ancho flexible */
+    max-width: 400px; /* Límite para pantallas grandes */
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    height: auto; /* Altura ajustable automáticamente */
+    border: 0.1rem solid rgb(226, 226, 226);
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+a {
+    color: blue;
+}
+
+/* Imagen de vista previa */
+#imagenVistaPrevia {
+    max-width: 100%;
+    display: none;
+    margin-top: 10px;
+}
+
+/* Media queries para dispositivos pequeños */
+@media (max-width: 768px) {
+    body {
+        font-size: 12px;
+        padding: 1rem 0; /* Evita que el contenido toque los bordes */
+    }
+    #createForm, .Inicio {
+        width: 95%;
+        padding: 1rem;
+    }
+    .formulario_grupo label {
+        width: 100%; /* Ocupa todo el ancho */
+    }
+    .botones button[type="submit"] {
+        padding: 0.5rem;
+    }
+}
+
+/* Media queries para pantallas ultra pequeñas */
+@media (max-width: 480px) {
+    body {
+        font-size: 11px;
+        padding: 1rem;
+    }
+    #createForm, .Inicio {
+        padding: 0.8rem;
+    }
+    .botones button[type="submit"] {
+        font-size: 0.9rem;
+    }
+}
+
+/* Aseguramos que el formulario sea completamente visible */
+@media (max-height: 600px) {
+    #createForm, .Inicio {
+        max-height: 90vh; /* Limita la altura del formulario */
+        overflow-y: auto; /* Permite scroll interno */
+    }
+}

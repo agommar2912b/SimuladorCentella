@@ -9,7 +9,7 @@ import org.example.Position;
 public class PlayerResponse {
     private Long id;
     private String name;
-    private int skill;
+    private Integer skill;
     private Position position;
     private boolean hasPlayed;
 }

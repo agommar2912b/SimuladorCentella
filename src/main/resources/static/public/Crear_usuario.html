@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Registro</title>
+    <link rel="stylesheet" href="css/styles_crear.css">
+</head>
+<body>
+    <form id="createForm">
+        <div class="formulario_grupo">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" placeholder="Nombre" required>
+        </div>
+
+        <div class="formulario_grupo">
+            <label for="contraseña">Contraseña:</label>
+            <input type="password" id="contraseña" name="contraseña" placeholder="Contraseña" required>
+        </div>
+
+        <p id="usuario_creado" style="display: none;">Usuario creado correctamente</p>
+
+        <div class="separator"></div>
+
+        <p id="parrafo_info" style="display: none;"></p>
+
+        <div class="botones">
+            <button id="Crear_usuario" type="submit">Crear usuario</button>
+            <a href="#" id="limpiar">Limpiar</a>
+        </div>
+    </form>
+    
+    <div class="Inicio">
+        <span>¿Tienes una cuenta? </span>
+        <a href="Iniciar_sesion.html" class="Iniciar_sesion">Inicia sesión</a>
+    </div>
+    
+    <script src="js/script_guardar.js"></script>
+</body>
+</html>

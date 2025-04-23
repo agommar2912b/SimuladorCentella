@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Registro</title>
+    <link rel="stylesheet" href="css/styles_inicio.css">
+</head>
+
+<body>
+    <form id="registrationForm">
+        <h1>Creador de equipos</h1>
+        <img src="img/creador-equipos-futbol.png" alt="Logotipo" class="logo">
+        <div class="formulario_grupo">
+            <input type="text" id="nombre_usuario" name="nombre_usuario" placeholder="Nombre de usuario"
+                required>
+        </div>
+
+        <div class="formulario_grupo">
+            <input type="password" id="password" name="password" placeholder="Contraseña" required>
+        </div>
+
+        <p id="error-message">No se ha podido iniciar sesión. Usuario o contraseña incorrectos.</p>
+
+        <div class="separator"></div>
+
+        <div class="botones">
+            <button type="button" id="comparePassword">Iniciar Sesión</button>
+            <a href="Password_olvidada.html" class="olvidar">He olvidado mi contraseña</a>
+            <a href="#" id="limpiar">Limpiar</a>
+        </div>
+
+
+    </form>
+
+    <div class="Inicio">
+        <span>¿No tienes una cuenta? </span>
+        <a href="Crear_usuario.html" class="Crear_cuenta"> Crear cuenta</a>
+    </div>
+
+
+
+    <script src="js/script_iniciar.js"></script>
+</body>
+
+</html>

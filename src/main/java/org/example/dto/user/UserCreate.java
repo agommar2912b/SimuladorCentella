@@ -9,6 +9,6 @@ import lombok.Data;
 public class UserCreate {
     @NotBlank(message = "The name can't be empty")
     private String name;
-    @NotBlank(message = "The image can't be empty")
-    private String profilePictureUrl;
+    @NotBlank(message = "The password can't be empty")
+    private String password;
 }
