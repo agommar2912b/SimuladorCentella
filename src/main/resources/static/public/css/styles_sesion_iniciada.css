@@ -82,9 +82,16 @@ body {
 }
 
 .configuracion-apartado {
-    display: none;
+    display: flex;
     flex-direction: column;
     gap: 1rem;
+    max-height: 0; /* Altura inicial cerrada */
+    overflow: hidden; /* Ocultar contenido desbordado */
+    transition: max-height 0.5s ease-in-out; /* Transición suave */
+}
+
+.configuracion-apartado.abierto {
+    max-height: 300px; /* Altura máxima cuando está abierto */
 }
 
 /* Registro de equipos */

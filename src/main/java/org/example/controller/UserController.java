@@ -3,10 +3,7 @@ package org.example.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.dto.team.TeamPatch;
-import org.example.dto.user.UserChangePassword;
-import org.example.dto.user.UserCreate;
-import org.example.dto.user.UserPatch;
-import org.example.dto.user.UserResponse;
+import org.example.dto.user.*;
 import org.example.entity.UserEntity;
 import org.example.exceptions.InvalidCredentialsException;
 import org.example.exceptions.UserNotFoundNameException;
@@ -39,6 +36,15 @@ public class UserController {
     @PutMapping("/changePassword")
     public UserResponse changePassword(@RequestBody UserChangePassword request) {
         UserEntity user =  userService.changePassword(request);
+        return UserResponse.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .build();
+    }
+
+    @PutMapping("/changeName")
+    public UserResponse changeName(@RequestBody UserChangeName request) {
+        UserEntity user =  userService.changeName(request);
         return UserResponse.builder()
                 .id(user.getId())
                 .name(user.getName())

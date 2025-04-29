@@ -56,8 +56,6 @@ public class PlayerService {
                 throw new IllegalArgumentException("Skill must be between 1 and 99.");
             }
         }
-
-
         if (position != null) {
             player.setPosition(position);
         }

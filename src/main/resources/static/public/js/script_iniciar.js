@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.location.href = 'Sesion_iniciada.html' 
                 localStorage.setItem('nombre_usuario', nombreUsuario);
                 localStorage.setItem('token', usuarioData.token);
+                localStorage.setItem('user_id', usuarioData.id);
                 }
             } 
      catch (error) {

@@ -1,6 +1,7 @@
 package org.example.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.dto.user.UserChangeName;
 import org.example.dto.user.UserChangePassword;
 import org.example.entity.UserEntity;
 import org.example.exceptions.InvalidCredentialsException;
@@ -18,8 +19,21 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+    public UserEntity changeName(UserChangeName request) {
+        UserEntity userExist = getByName(request.getNewUsername());
+        UserEntity user = getByName(request.getOldUsername());
+        if (userExist != null || Objects.equals(request.getNewUsername(), request.getOldUsername())) {
+            throw new InvalidCredentialsException("Ese nombre ya existe o es el mismo que ya tenias");
+        }else{
+            user.setName(request.getNewUsername());
+            userRepository.save(user);
+            return user;
+        }
+
+    }
+
     public UserEntity changePassword(UserChangePassword request) {
-        UserEntity user = userRepository.findByName(request.getUsername());
+        UserEntity user = getByName(request.getUsername());
 
         if (user == null || !user.getPassword().equals(request.getOld_password())) {
             throw new InvalidCredentialsException("Usuario o contraseña incorrectos");
@@ -31,7 +45,7 @@ public class UserService {
     }
 
     public UserEntity validateUserCredentials(String name, String password) {
-        UserEntity user = userRepository.findByName(name);
+        UserEntity user = getByName(name);
         if (user == null||!user.getPassword().equals(password)) {
             throw new InvalidCredentialsException("Invalid username or password");
         }

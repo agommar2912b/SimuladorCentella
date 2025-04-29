@@ -27,6 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('parrafo_info').textContent = `Usuario ${data.name} creado con éxito con ID ${data.id}`;
             document.getElementById('parrafo_info').style.display = 'block';
 
+            window.location.href = 'Iniciar_sesion.html'; 
+
         } catch (error) {
             console.error('Error:', error);
             alert('Error al crear usuario');
