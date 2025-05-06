@@ -7,6 +7,7 @@ import org.example.dto.team.TeamPatch;
 import org.example.dto.team.TeamResponse;
 import org.example.entity.TeamEntity;
 import org.example.exceptions.TeamNameExistException;
+import org.example.exceptions.TeamNameNotExistException;
 import org.example.exceptions.UserNotFoundNameException;
 import org.example.service.TeamService;
 import org.example.service.UserService;
@@ -57,24 +58,21 @@ public class TeamController {
     }
 
     @GetMapping
-    public List<TeamResponse> getTeams(@PathVariable Long userId ,@RequestParam(required = false)String name) {
+    public List<TeamResponse> getTeams(@PathVariable Long userId, @RequestParam(required = false) String name) {
         List<TeamEntity> teams;
 
         if (name != null && !name.isBlank()) {
-            teams = teamService.getByName(userId,name);
-            if (teams.isEmpty()) {
-                throw new TeamNameExistException(name);
-            }
+            teams = teamService.getByName(userId, name);
         } else {
             teams = teamService.getAllTeams(userId);
         }
+
         return teams.stream()
-                .map(user -> TeamResponse.builder()
-                        .id(user.getId())
-                        .name(user.getName())
-                        .profilePictureUrl(user.getProfilePictureUrl())
+                .map(team -> TeamResponse.builder()
+                        .id(team.getId())
+                        .name(team.getName())
+                        .profilePictureUrl(team.getProfilePictureUrl())
                         .build())
                 .toList();
     }
-
 }

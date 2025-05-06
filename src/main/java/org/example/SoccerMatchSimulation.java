@@ -246,15 +246,15 @@ public class SoccerMatchSimulation {
                 new Player("Clear", 84, Position.DEFENDER, true), new Player("Ogar", 84, Position.DEFENDER, true)
         ));
 
-        Player ZeroGoalie = new Player("Skie Blue", 84, Position.GOALKEEPER, true);
+        Player zeroGoalie = new Player("Skie Blue", 84, Position.GOALKEEPER, true);
 
-        List<Player> ZeroBench = new ArrayList<>(List.of(
+        List<Player> zeroBench = new ArrayList<>(List.of(
                 new Player("Samguk", 83, Position.GOALKEEPER, false),
                 new Player("Cerise", 84, Position.MIDFIELDER, false),
                 new Player("Gozu", 83, Position.DEFENDER, false), new Player("Yuri Rodina", 83, Position.FORWARD, false), new Player("Dolphin", 83, Position.MIDFIELDER, false)));
 
 
-        Team zero = new Team("Zero", zeroPlayers, zanGoalie, zanBench);
+        Team zero = new Team("Zero", zeroPlayers, zeroGoalie, zeroBench);
         setPenaltyKickers(zero, List.of("Axel","Xavier"));
         setFreeKickKickers(zero, List.of("Riccardo","Jordan"));
         setCornerKickers(zero, List.of("Riccardo","Aitor"));

@@ -1,0 +1,344 @@
+/* General */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background: linear-gradient(to bottom, #003366, #005bb5);
+    color: #fff;
+}
+
+/* Navbar */
+.navbar {
+    background-color: #002244;
+    color: white;
+    text-align: center;
+    padding: 1rem 2rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    border-bottom: 3px solid #005bb5;
+}
+
+.navbar h1 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+/* Contenedor principal */
+.contenido {
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+/* Menú lateral */
+.menu-lateral {
+    background-color: #ffffff;
+    padding: 2rem;
+    width: 200px;
+    box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+    border-right: 3px solid #f2f2f2;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+}
+
+.menu-lateral button {
+    background-color: #005bb5;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s, transform 0.2s;
+    width: 100%;
+    text-align: center;
+}
+
+.menu-lateral button:hover {
+    background-color: #003366;
+    transform: translateY(-2px);
+}
+
+/* Contenido principal */
+main {
+    flex: 1;
+    padding: 2rem;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    margin: 2rem;
+}
+
+main h2 {
+    font-size: 2rem;
+    color: #003366;
+    margin-bottom: 1rem;
+}
+
+.busqueda {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.busqueda input {
+    flex: 1;
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 0.375rem;
+    font-size: 1rem;
+}
+
+.busqueda button {
+    background-color: #005bb5;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.busqueda button:hover {
+    background-color: #003366;
+    transform: translateY(-2px);
+}
+
+/* Contenedor de equipos */
+.equipos-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+}
+
+.equipo-card {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.equipo-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.equipo-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.equipo-card h3 {
+    font-size: 1.5rem;
+    color: #003366;
+    margin-bottom: 0.5rem;
+}
+
+.equipo-card p {
+    font-size: 1rem;
+    color: #555;
+}
+
+/* Estilos para el modal */
+.modal {
+    display: none; /* Ocultar el modal por defecto */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.6); /* Fondo oscuro con transparencia */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px; /* Espacio interno */
+    border-radius: 12px; /* Bordes redondeados */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Sombra */
+    width: 70%; /* Ancho del modal */
+    max-width: 600px; /* Ancho máximo */
+    text-align: center;
+    position: relative;
+    animation: slideDown 0.4s ease-in-out;
+    box-sizing: border-box; /* Asegurar que el padding se incluya en el ancho */
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-20px);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+.modal-content h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+    font-weight: bold;
+}
+
+.modal-content .buttons {
+    display: flex;
+    justify-content: space-between; /* Espacio entre los botones */
+    gap: 15px; /* Espacio entre los botones */
+    margin-top: 20px; /* Espacio superior */
+}
+
+.form-group {
+    margin-bottom: 20px; /* Espacio entre los campos */
+    text-align: left;
+    width: 100%; /* Asegurar que el grupo ocupe todo el ancho disponible */
+    box-sizing: border-box; /* Incluir padding y borde en el ancho */
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px; /* Espacio entre el label y el campo */
+    color: #555;
+}
+
+.form-group input {
+    width: calc(100% - 20px); /* Reducir el ancho para respetar los márgenes */
+    padding: 12px; /* Espacio interno */
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px; /* Tamaño de fuente */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box; /* Asegurar que el padding y el borde se incluyan en el ancho */
+}
+
+.form-group input:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+}
+
+button.btn-submit {
+    padding: 15px 30px; /* Botón más grande */
+    font-size: 18px; /* Texto más grande */
+    font-weight: bold;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button.btn-submit:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+.btn-submit,
+.btn-edit,
+.btn-delete {
+    display: inline-block;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-submit:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+button.btn-edit,
+button.btn-delete {
+    padding: 12px 20px; /* Tamaño de los botones */
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button.btn-edit {
+    background-color: #28a745;
+    color: #fff;
+}
+
+button.btn-edit:hover {
+    background-color: #218838;
+    transform: scale(1.05);
+}
+
+button.btn-delete {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+button.btn-delete:hover {
+    background-color: #c82333;
+    transform: scale(1.05);
+}
+
+.btn-edit {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.btn-edit:hover {
+    background-color: #218838;
+    transform: scale(1.05);
+}
+
+.btn-delete {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.btn-delete:hover {
+    background-color: #c82333;
+    transform: scale(1.05);
+}
+
+.close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close:hover {
+    color: #ff0000;
+}

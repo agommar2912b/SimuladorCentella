@@ -15,10 +15,17 @@ body {
     background-size: cover;
 }
 
-/* Fondo animado */
-@keyframes fondo { 
-    0% { background-position: left top; }
-    100% { background-position: right bottom; } 
+/* Nueva animación de fondo */
+@keyframes fondo {
+    0% {
+        background-position: 0% 0%;
+    }
+    50% {
+        background-position: 100% 100%;
+    }
+    100% {
+        background-position: 0% 0%;
+    }
 }
 
 a {
