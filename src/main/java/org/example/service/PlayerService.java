@@ -68,15 +68,17 @@ public class PlayerService {
     }
 
 
-    public PlayerEntity createPlayer(Long userId, Long teamId , String name, int skill, Position position, Boolean titular) {
+    public PlayerEntity createPlayer(Long userId, Long teamId, String name, int skill, Position position, Boolean titular) {
+        System.out.println("Datos recibidos: " + name + ", " + skill + ", " + position + ", " + titular);
+
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
         TeamEntity team = teamRepository.findById(teamId)
                 .orElseThrow(() -> new TeamNotFoundException(teamId));
 
-        List<PlayerEntity> playerWithName = getByName(name , userId , teamId);
+        List<PlayerEntity> playerWithName = getByName(name, userId, teamId);
         if (playerWithName.isEmpty()) {
-            PlayerEntity player = new PlayerEntity(name , skill , position , titular);
+            PlayerEntity player = new PlayerEntity(name, skill, position, titular);
             player.setTeam(team);
             return playerRepository.save(player);
         } else {

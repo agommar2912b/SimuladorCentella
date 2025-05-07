@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jugadores</title>
+    <link rel="stylesheet" href="css/styles_jugadores.css">
+</head>
+<body>
+    <nav class="navbar">
+        <h1>Football Simulator - Jugadores</h1>
+    </nav>
+
+    <div class="contenido">
+        <aside class="menu-lateral">
+            <button onclick="window.location.href='Sesion_iniciada.html'">Volver</button>
+        </aside>
+
+        <main>
+            <h2>Lista de Equipos</h2>
+            <div id="equiposContainer" class="equipos-container">
+                <!-- Aquí se cargarán los equipos dinámicamente -->
+            </div>
+
+            <h2 id="jugadoresTitle" style="display: none;">Jugadores del Equipo</h2>
+            <div id="jugadoresContainer" class="jugadores-container" style="display: none;">
+                <!-- Aquí se cargarán los jugadores dinámicamente -->
+            </div>
+
+            <!-- Botón para abrir el modal de creación de jugadores -->
+            <button id="btnCrearJugador" style="display: none;" onclick="openCreatePlayerModal()">Crear Jugador</button>
+
+            <!-- Modal para crear jugadores -->
+            <div id="createPlayerModal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <span class="close" onclick="closeCreatePlayerModal()">&times;</span>
+                    <h2>Crear Jugador</h2>
+                    <form id="createPlayerForm">
+                        <div class="form-group">
+                            <label for="playerName">Nombre del Jugador:</label>
+                            <input type="text" id="playerName" placeholder="Introduce el nombre del jugador" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="playerSkill">Habilidad (1-99):</label>
+                            <input type="number" id="playerSkill" placeholder="Introduce la habilidad del jugador" min="1" max="99" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="playerPosition">Posición:</label>
+                            <select id="playerPosition" required>
+                                <option value="GOALKEEPER">Portero</option>
+                                <option value="DEFENDER">Defensa</option>
+                                <option value="MIDFIELDER">Mediocampista</option>
+                                <option value="FORWARD">Delantero</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="playerHasPlayed">¿Ha jugado?</label>
+                            <input type="checkbox" id="playerHasPlayed">
+                        </div>
+                        <button type="submit" class="btn-submit">Crear</button>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/script_jugadores.js"></script>
+</body>
+</html>
