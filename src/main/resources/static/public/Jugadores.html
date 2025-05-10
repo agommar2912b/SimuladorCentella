@@ -14,6 +14,7 @@
     <div class="contenido">
         <aside class="menu-lateral">
             <button onclick="window.location.href='Sesion_iniciada.html'">Volver</button>
+            <button id="btnCrearJugador" style="display: none;" onclick="openCreatePlayerModal()">Crear Jugador</button>
         </aside>
 
         <main>
@@ -23,9 +24,20 @@
             </div>
 
             <h2 id="jugadoresTitle" style="display: none;">Jugadores del Equipo</h2>
-            <div id="jugadoresContainer" class="jugadores-container" style="display: none;">
-                <!-- Aquí se cargarán los jugadores dinámicamente -->
-            </div>
+            <table id="jugadoresTable" style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Habilidad</th>
+                        <th>Posición</th>
+                        <th>¿Es titular?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Aquí se cargarán los jugadores dinámicamente -->
+                </tbody>
+            </table>
 
             <!-- Botón para abrir el modal de creación de jugadores -->
             <button id="btnCrearJugador" style="display: none;" onclick="openCreatePlayerModal()">Crear Jugador</button>
@@ -58,6 +70,50 @@
                             <input type="checkbox" id="playerHasPlayed">
                         </div>
                         <button type="submit" class="btn-submit">Crear</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Modal para ver/editar/eliminar jugadores -->
+            <div id="playerModal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <span class="close" onclick="closePlayerModal()">&times;</span>
+                    <h2 id="playerInfo">Datos del Jugador</h2>
+                    <div class="buttons">
+                        <button id="editPlayerButton" class="btn-edit">Editar</button>
+                        <button id="deletePlayerButton" class="btn-delete">Eliminar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal para editar jugador -->
+            <div id="editPlayerModal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <span class="close" onclick="closeEditPlayerModal()">&times;</span>
+                    <h2>Editar Jugador</h2>
+                    <form id="editPlayerForm">
+                        <div class="form-group">
+                            <label for="editPlayerName">Nombre</label>
+                            <input type="text" id="editPlayerName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editPlayerSkill">Habilidad</label>
+                            <input type="number" id="editPlayerSkill" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editPlayerPosition">Posición</label>
+                            <select id="editPlayerPosition" required>
+                                    <option value="GOALKEEPER">Portero</option>
+                                    <option value="DEFENDER">Defensa</option>
+                                    <option value="MIDFIELDER">Centrocampista</option>
+                                    <option value="FORWARD">Delantero</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="editPlayerHasPlayed">¿Es titular?</label>
+                            <input type="checkbox" id="editPlayerHasPlayed">
+                        </div>
+                        <button type="submit" class="btn-submit">Guardar Cambios</button>
                     </form>
                 </div>
             </div>

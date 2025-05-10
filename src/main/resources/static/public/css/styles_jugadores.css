@@ -65,42 +65,68 @@ body {
     transform: translateY(-2px);
 }
 
-/* Contenedor de equipos y jugadores */
-.equipos-container,
-.jugadores-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1rem;
+/* Contenido principal */
+main {
+    flex: 1;
+    padding: 2rem;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    margin: 2rem;
+}
+
+main h2 {
+    font-size: 2rem;
+    color: #003366;
+    margin-bottom: 1rem;
+}
+
+/* Tabla de jugadores */
+#jugadoresTable {
+    width: 100%;
+    border-collapse: collapse;
     margin-top: 1rem;
 }
 
-.equipo-card,
-.jugador-card {
+#jugadoresTable th,
+#jugadoresTable td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+    font-size: 0.9rem; /* Reducir el tamaño del texto */
+}
+
+#jugadoresTable th {
+    background-color: #005bb5;
+    color: white;
+    font-weight: bold;
+}
+
+#jugadoresTable tr:nth-child(even) {
     background-color: #f9f9f9;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.equipo-card:hover,
-.jugador-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+#jugadoresTable tr:hover {
+    background-color: #f1f1f1;
 }
 
-.equipo-card h3,
-.jugador-card h3 {
-    font-size: 1.5rem;
-    color: #003366;
-    margin-bottom: 0.5rem;
-}
-
-.equipo-card p,
-.jugador-card p {
+/* Botón para crear jugador */
+#btnCrearJugador {
+    background-color: #005bb5; /* Mismo color que el botón de "Volver" */
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
     font-size: 1rem;
-    color: #555;
+    transition: background-color 0.3s, transform 0.2s;
+    width: 100%; /* Asegura que el ancho sea consistente */
+    text-align: center;
+}
+
+#btnCrearJugador:hover {
+    background-color: #003366; /* Mismo efecto hover que el botón de "Volver" */
+    transform: translateY(-2px);
 }
 
 /* Modal */
@@ -127,66 +153,228 @@ body {
     width: 70%;
     max-width: 600px;
     text-align: center;
+    position: relative;
+    animation: slideDown 0.4s ease-in-out;
+    box-sizing: border-box;
 }
 
 .modal-content h2 {
-    font-size: 1.5rem;
-    color: #003366;
-    margin-bottom: 1rem;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+    font-weight: bold;
 }
 
 .modal-content .form-group {
-    margin-bottom: 1rem;
+    margin-bottom: 20px;
     text-align: left;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .modal-content .form-group label {
     display: block;
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
-    color: #333;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #555;
 }
 
 .modal-content .form-group input,
 .modal-content .form-group select {
-    width: 100%;
-    padding: 0.75rem;
+    width: calc(100% - 20px);
+    padding: 12px;
     border: 1px solid #ccc;
-    border-radius: 0.375rem;
-    font-size: 1rem;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
 }
 
 .modal-content .form-group input:focus,
 .modal-content .form-group select:focus {
+    border-color: #007bff;
     outline: none;
-    border-color: #005bb5;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
 }
 
-.modal-content .btn-submit {
-    background-color: #005bb5;
-    color: white;
-    padding: 0.75rem 1.5rem;
+.modal-content button {
+    padding: 15px 30px;
+    font-size: 18px;
+    font-weight: bold;
+    background-color: #007bff;
+    color: #fff;
     border: none;
-    border-radius: 0.375rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.modal-content button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+.close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close:hover {
+    color: #ff0000;
+}
+
+/* Modal para jugadores */
+#playerModal .modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    width: 70%;
+    max-width: 600px;
+    text-align: center;
+    position: relative;
+    animation: slideDown 0.4s ease-in-out;
+    box-sizing: border-box;
+}
+
+#playerModal .buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+#playerModal .btn-edit {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 1rem;
-    transition: background-color 0.3s, transform 0.2s;
+    transition: background-color 0.3s ease;
 }
 
-.modal-content .btn-submit:hover {
-    background-color: #003366;
-    transform: translateY(-2px);
+#playerModal .btn-edit:hover {
+    background-color: #0056b3;
 }
 
-.modal-content .close {
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    font-size: 1.5rem;
+#playerModal .btn-delete {
+    background-color: #dc3545;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
     cursor: pointer;
-    color: #333;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
 }
 
-.modal-content .close:hover {
-    color: #005bb5;
+#playerModal .btn-delete:hover {
+    background-color: #a71d2a;
+}
+
+/* Modal para editar jugador */
+#editPlayerModal .modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    width: 70%;
+    max-width: 600px;
+    text-align: center;
+    position: relative;
+    animation: slideDown 0.4s ease-in-out;
+    box-sizing: border-box;
+}
+
+#editPlayerModal .form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+#editPlayerModal .form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #555;
+}
+
+#editPlayerModal .form-group input {
+    width: calc(100% - 20px);
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#editPlayerModal .form-group input:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+}
+
+#editPlayerModal .btn-submit {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+#editPlayerModal .btn-submit:hover {
+    background-color: #0056b3;
+}
+
+/* Contenedor de equipos */
+.equipos-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Tarjetas más pequeñas */
+    gap: 0.75rem; /* Reducir el espacio entre tarjetas */
+    margin-top: 1rem;
+}
+
+/* Tarjetas de equipos */
+.equipo-card {
+    background-color: #f9f9f9;
+    padding: 15px; /* Reducir el padding */
+    border-radius: 8px; /* Bordes más pequeños */
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1); /* Sombra más ligera */
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.equipo-card:hover {
+    transform: translateY(-3px); /* Menor desplazamiento al hacer hover */
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
+}
+
+.equipo-card img {
+    width: 100%;
+    height: 120px; /* Reducir la altura de las imágenes */
+    object-fit: cover;
+    border-radius: 6px; /* Bordes más pequeños */
+    margin-bottom: 0.5rem; /* Reducir el margen inferior */
+}
+
+.equipo-card h3 {
+    font-size: 1.2rem; /* Reducir el tamaño del título */
+    color: #003366;
+    margin-bottom: 0.25rem; /* Reducir el margen inferior */
+}
+
+.equipo-card p {
+    font-size: 0.9rem; /* Reducir el tamaño del texto */
+    color: #555;
 }

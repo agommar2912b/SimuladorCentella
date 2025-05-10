@@ -1,8 +1,5 @@
 package org.example;
 
-import org.example.Player;
-
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -61,7 +58,7 @@ public class Game {
 
         events.add("Minuto: " + minute);
 
-        if (eventChance < 3) {
+        if (eventChance < 2) {
             simulateInjury(attackingTeam);
         } else if (eventChance < 70) {
             simulate_Ball_In_Middle(attackingTeam, defendTeam);
@@ -105,11 +102,9 @@ public class Game {
         Player receiver = attackingTeam.getPlayers().get(rand.nextInt(attackingTeam.getPlayers().size()));
 
         if (cornerTaker == receiver) {
-            if (rand.nextInt(100) < 55) {
-                events.add("\t" + cornerTaker.getName() + " saca el corner en corto.");
-                cornerTaker.setPoints(cornerTaker.getPoints() + 0.2);
-                simulateOccasion(attackingTeam, cornerTaker, defenderTeam, receiver);
-            }
+            events.add("\t" + cornerTaker.getName() + " saca el corner en corto.");
+            cornerTaker.setPoints(cornerTaker.getPoints() + 0.2);
+            simulateOccasion(attackingTeam, cornerTaker, defenderTeam, receiver);
         } else {
             events.add("\t " + attackingTeam.getName() + " tiene un córner. Lo ejecuta " + cornerTaker.getName() + ".");
             cornerTaker.setPoints(cornerTaker.getPoints() + 0.2);
@@ -140,15 +135,15 @@ public class Game {
             if (rand.nextInt(100) < 40) {
                 if (rand.nextDouble(100) < atc_win_prob) {
                     events.add("\t" + pasador.getName() + " realiza un pase exitoso a " + receiver.getName() + ".");
-                    pasador.setPoints(pasador.getPoints()+ 1);
+                    pasador.setPoints(pasador.getPoints() + 1);
                     receiver.setPoints(receiver.getPoints() + 0.5);
                     defender.setPoints(defender.getPoints() - 0.25);
                     events.add("\t" + receiver.getName() + " recibe el pase y se encuentra en una buena posición.");
                     simulateOccasion(attackingTeam, receiver, defenderTeam, pasador);
                 } else {
                     events.add("\t" + pasador.getName() + " intenta un pase, pero lo intercepta " + defender.getName() + ".");
-                    pasador.setPoints(pasador.getPoints()- 0.25);
-                    defender.setPoints(defender.getPoints()+ 1);
+                    pasador.setPoints(pasador.getPoints() - 0.25);
+                    defender.setPoints(defender.getPoints() + 1);
                 }
             } else {
                 events.add("\t" + pasador.getName() + " realiza un pase hacia atras para seguir buscando la oportunidad " + receiver.getName() + ".");
@@ -440,7 +435,7 @@ public class Game {
                 defendTeam.removePlayer(fouler);
                 adjustWinProbabilityAfterExpulsion(defendTeam, fouler);
             }
-        } else if (random < 90) {
+        } else if (random < 95) {
             events.add("\tFalta realizada por " + fouler.getName() + " de " + defendTeam.getName() + " a " + beenfoul.getName() + ".");
         } else {
             events.add("\t " + beenfoul.getName() + " recibe una falta de " + fouler.getName() + ".");
@@ -485,7 +480,7 @@ public class Game {
 
             playerIn = subsTeam.makeSubstitution(playerOut);
         }
-        subsTeam.setChangesMade(subsTeam.getChangesMade()+1);
+        subsTeam.setChangesMade(subsTeam.getChangesMade() + 1);
         events.add("\tCambio en " + subsTeam.getName() + ": Sale " + playerOut.getName() + ", entra " + playerIn.getName() + ".");
     }
 
@@ -512,8 +507,8 @@ public class Game {
 
         for (Player player : mvpPlayer) {
             if (player.isHasPlayed()) {
-                if (mvp==null){
-                    mvp=player;
+                if (mvp == null) {
+                    mvp = player;
                 }
                 System.out.printf("\n %s : %s", player.getName(), player.getPoints());
             } else {

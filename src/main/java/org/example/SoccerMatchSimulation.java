@@ -9,18 +9,18 @@ public class SoccerMatchSimulation {
     }
     public void show() {
         List<Player> criaturasPlayers = new ArrayList<>(List.of(
-                new Player("Aiden", 91, Position.FORWARD, true), new Player("Laurel", 87, Position.MIDFIELDER, true),
+                new Player("Aiden", 92, Position.FORWARD, true), new Player("Laurel", 87, Position.MIDFIELDER, true),
                 new Player("Ar ecks", 87, Position.MIDFIELDER, true), new Player("Shawn", 89, Position.DEFENDER, true),
-                new Player("Byron", 91, Position.MIDFIELDER, true), new Player("Samford", 86, Position.MIDFIELDER, true),
+                new Player("Byron", 92, Position.MIDFIELDER, true), new Player("Samford R", 86, Position.MIDFIELDER, true),
                 new Player("Erik", 88, Position.MIDFIELDER, true), new Player("Kalil", 85, Position.DEFENDER, true),
-                new Player("Hurley", 89, Position.DEFENDER, true), new Player("Peabody", 85, Position.DEFENDER, true)
+                new Player("Hurley", 89, Position.DEFENDER, true), new Player("Nathan 0", 87, Position.DEFENDER, true)
         ));
 
         Player criaturasGoalie = new Player("Phobos", 87, Position.GOALKEEPER, true);
 
         List<Player> criaturasBench = new ArrayList<>(List.of(
                 new Player("Peabody", 85, Position.GOALKEEPER, false),
-                new Player("Kappa", 84, Position.GOALKEEPER, false),
+                new Player("Kappa", 84, Position.MIDFIELDER, false),
                 new Player("Garcia", 84, Position.DEFENDER, false), new Player("Perseus", 82, Position.FORWARD, false), new Player("Leung", 83, Position.MIDFIELDER, false)
         ));
 
@@ -194,13 +194,14 @@ public class SoccerMatchSimulation {
                 new Player("Skipper", 83, Position.FORWARD,true), new Player("Max oscuro", 86,  Position.MIDFIELDER,true),
                 new Player("Tom Dark", 88, Position.FORWARD,true), new Player("Subaru", 83,  Position.DEFENDER,true),
                 new Player("Arculus", 87, Position.FORWARD,true), new Player("Master", 84,  Position.DEFENDER,true),
-                new Player("Yurkeh", 83,  Position.MIDFIELDER,true), new Player("Tod", 85, Position.DEFENDER,true)
+                new Player("Tod", 85, Position.DEFENDER,true), new Player("Shadow oscuro", 83,  Position.FORWARD,true)
         ));
         Player gigantesGoalie = new Player("King Redux", 88,  Position.GOALKEEPER,true);
         List<Player> gigantesBench = new ArrayList<>(List.of(
                 new Player("Alvicci", 80,Position.GOALKEEPER,false),
                 new Player("Galliano", 82,  Position.DEFENDER,false),
-                new Player("Steve", 84,  Position.MIDFIELDER,false), new Player("Gabrini", 82,  Position.MIDFIELDER,false), new Player("Shadow oscuro", 83,  Position.FORWARD,false)
+                new Player("Steve", 84,  Position.MIDFIELDER,false), new Player("Gabrini", 82,  Position.MIDFIELDER,false),  new Player("Michael", 82,  Position.FORWARD,false)
+//                new Player("Yurkeh", 83,  Position.MIDFIELDER,false)
         ));
 
         Team gigantes = new Team("Gigantes", gigantesPlayers, gigantesGoalie, gigantesBench);
@@ -259,7 +260,7 @@ public class SoccerMatchSimulation {
         setFreeKickKickers(zero, List.of("Riccardo","Jordan"));
         setCornerKickers(zero, List.of("Riccardo","Aitor"));
 
-        Game game = new Game(zero, dragones);
+        Game game = new Game(zero, universal);
         game.simulate();
         game.showEvents();
     }

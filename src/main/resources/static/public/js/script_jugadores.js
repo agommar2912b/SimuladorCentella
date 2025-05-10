@@ -9,12 +9,10 @@ if (!token) {
 // Función para cargar equipos
 async function loadTeams() {
     const equiposContainer = document.getElementById("equiposContainer");
-    const jugadoresContainer = document.getElementById("jugadoresContainer");
     const jugadoresTitle = document.getElementById("jugadoresTitle");
 
     equiposContainer.innerHTML = "<p>Cargando equipos...</p>";
-    jugadoresContainer.style.display = "none";
-    jugadoresTitle.style.display = "none";
+    jugadoresTitle.style.display = "none"; // Ocultar el título de jugadores
 
     try {
         const response = await fetch(`http://localhost:8080/users/${userId}/teams`, {
@@ -67,15 +65,148 @@ function closeCreatePlayerModal() {
     document.getElementById("createPlayerModal").style.display = "none";
 }
 
+// Función para abrir el modal de un jugador
+function openPlayerModal(player) {
+    const playerModal = document.getElementById("playerModal");
+    const playerInfo = document.getElementById("playerInfo");
+    const editPlayerButton = document.getElementById("editPlayerButton");
+    const deletePlayerButton = document.getElementById("deletePlayerButton");
+
+    // Mostrar información del jugador
+    playerInfo.textContent = `Jugador: ${player.name} (ID: ${player.id})\nHabilidad: ${player.skill}\nPosición: ${player.position}\n¿Es titular?: ${player.hasPlayed ? "Sí" : "No"}`;
+
+    // Configurar acciones de los botones
+    editPlayerButton.onclick = () => openEditPlayerModal(player); // Abrir el nuevo modal de edición
+    deletePlayerButton.onclick = () => deletePlayer(player.id); // Eliminar el jugador
+
+    playerModal.style.display = "flex"; // Mostrar el modal
+}
+
+// Función para cerrar el modal del jugador
+function closePlayerModal() {
+    const playerModal = document.getElementById("playerModal");
+    playerModal.style.display = "none";
+}
+
+// Función para eliminar un jugador
+async function deletePlayer(playerId) {
+    if (!confirm("¿Estás seguro de que deseas eliminar este jugador?")) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`http://localhost:8080/users/${userId}/teams/${currentTeamId}/players/${playerId}`, {
+            method: "DELETE",
+            headers: {
+                Authorization: token,
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error("Error al eliminar el jugador.");
+        }
+
+        alert("Jugador eliminado con éxito.");
+        closePlayerModal();
+        loadPlayers(currentTeamId, document.getElementById("jugadoresTitle").textContent.split(": ")[1]); // Recargar jugadores
+    } catch (error) {
+        console.error("Error al eliminar el jugador:", error);
+        alert("Hubo un error al eliminar el jugador.");
+    }
+}
+
+// Función para abrir el formulario de edición de un jugador
+function openEditPlayerForm(player) {
+    closePlayerModal(); // Cerrar el modal principal
+    openCreatePlayerModal(); // Reutilizar el modal de creación para edición
+
+    // Rellenar los campos del formulario con los datos del jugador
+    document.getElementById("playerName").value = player.name;
+    document.getElementById("playerSkill").value = player.skill;
+    document.getElementById("playerPosition").value = player.position;
+    document.getElementById("playerHasPlayed").checked = player.hasPlayed;
+
+    // Configurar el evento de envío del formulario
+    const createPlayerForm = document.getElementById("createPlayerForm");
+    createPlayerForm.onsubmit = async (event) => {
+        event.preventDefault();
+
+        const updatedName = document.getElementById("playerName").value.trim();
+        const updatedSkill = parseInt(document.getElementById("playerSkill").value.trim(), 10);
+        const updatedPosition = document.getElementById("playerPosition").value.trim();
+        const updatedHasPlayed = document.getElementById("playerHasPlayed").checked;
+
+        if (!updatedName || isNaN(updatedSkill) || !updatedPosition) {
+            alert("Por favor, completa todos los campos.");
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:8080/users/${userId}/teams/${currentTeamId}/players/${player.id}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: token,
+                },
+                body: JSON.stringify({
+                    name: updatedName,
+                    skill: updatedSkill,
+                    position: updatedPosition,
+                    hasPlayed: updatedHasPlayed,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error("Error al editar el jugador.");
+            }
+
+            alert("Jugador editado con éxito.");
+            closeCreatePlayerModal();
+            loadPlayers(currentTeamId, document.getElementById("jugadoresTitle").textContent.split(": ")[1]); // Recargar jugadores
+        } catch (error) {
+            console.error("Error al editar el jugador:", error);
+            alert("Hubo un error al editar el jugador.");
+        }
+    };
+}
+
+// Función para abrir el modal de edición de un jugador
+function openEditPlayerModal(player) {
+    const editPlayerModal = document.getElementById("editPlayerModal");
+
+    // Rellenar los campos del formulario con los datos del jugador
+    document.getElementById("editPlayerName").value = player.name;
+    document.getElementById("editPlayerSkill").value = player.skill;
+
+    // Seleccionar la posición actual del jugador
+    const positionSelect = document.getElementById("editPlayerPosition");
+    positionSelect.value = player.position; // Asegúrate de que el valor coincida con las opciones del select
+
+    document.getElementById("editPlayerHasPlayed").checked = player.hasPlayed;
+
+    // Guardar el ID del jugador en un atributo del formulario
+    document.getElementById("editPlayerForm").dataset.playerId = player.id;
+
+    editPlayerModal.style.display = "flex"; // Mostrar el modal
+}
+
+// Función para cerrar el modal de edición de un jugador
+function closeEditPlayerModal() {
+    const editPlayerModal = document.getElementById("editPlayerModal");
+    editPlayerModal.style.display = "none";
+}
+
 // Función para cargar jugadores de un equipo
 async function loadPlayers(teamId, teamName) {
-    const jugadoresContainer = document.getElementById("jugadoresContainer");
+    const jugadoresTable = document.getElementById("jugadoresTable");
     const jugadoresTitle = document.getElementById("jugadoresTitle");
     const btnCrearJugador = document.getElementById("btnCrearJugador");
+    const jugadoresTableBody = jugadoresTable.querySelector("tbody");
 
-    jugadoresContainer.innerHTML = "<p>Cargando jugadores...</p>";
-    jugadoresContainer.style.display = "block";
-    jugadoresTitle.style.display = "block";
+    // Ocultar la tabla y mostrar un mensaje de carga
+    jugadoresTableBody.innerHTML = "<tr><td colspan='5'>Cargando jugadores...</td></tr>";
+    jugadoresTable.style.display = "table"; // Mostrar la tabla
+    jugadoresTitle.style.display = "block"; // Mostrar el título
     btnCrearJugador.style.display = "block"; // Mostrar el botón de crear jugador
     jugadoresTitle.textContent = `Jugadores del Equipo: ${teamName}`;
     currentTeamId = teamId; // Guardar el ID del equipo seleccionado
@@ -88,34 +219,37 @@ async function loadPlayers(teamId, teamName) {
         });
 
         if (!response.ok) {
-            jugadoresContainer.innerHTML = "<p>Error: No se pudieron cargar los jugadores. Verifica tu conexión o intenta más tarde.</p>";
+            jugadoresTableBody.innerHTML = "<tr><td colspan='5'>Error: No se pudieron cargar los jugadores.</td></tr>";
             throw new Error("Error al cargar los jugadores.");
         }
 
         const players = await response.json();
-        console.log("Jugadores recibidos:", players);
-        jugadoresContainer.innerHTML = "";
+        jugadoresTableBody.innerHTML = "";
 
         if (players.length === 0) {
-            jugadoresContainer.innerHTML = "<p>No se encontraron jugadores.</p>";
+            jugadoresTableBody.innerHTML = "<tr><td colspan='5'>No se encontraron jugadores.</td></tr>";
             return;
         }
 
         players.forEach((player) => {
-            const playerCard = document.createElement("div");
-            playerCard.classList.add("jugador-card");
+            const row = document.createElement("tr");
 
-            playerCard.innerHTML = `
-                <h3>${player.name}</h3>
-                <p>Posición: ${player.position}</p>
-                <p>ID: ${player.id}</p>
+            row.innerHTML = `
+                <td style="border: 1px solid #ccc; padding: 8px;">${player.id}</td>
+                <td style="border: 1px solid #ccc; padding: 8px;">${player.name}</td>
+                <td style="border: 1px solid #ccc; padding: 8px;">${player.skill}</td>
+                <td style="border: 1px solid #ccc; padding: 8px;">${player.position}</td>
+                <td style="border: 1px solid #ccc; padding: 8px;">${player.hasPlayed ? "Sí" : "No"}</td>
             `;
 
-            jugadoresContainer.appendChild(playerCard);
+            // Asignar evento onclick para abrir el modal del jugador
+            row.onclick = () => openPlayerModal(player);
+
+            jugadoresTableBody.appendChild(row);
         });
     } catch (error) {
         console.error("Error al cargar los jugadores:", error);
-        jugadoresContainer.innerHTML = "<p>Error al cargar los jugadores.</p>";
+        jugadoresTableBody.innerHTML = "<tr><td colspan='5'>Error al cargar los jugadores.</td></tr>";
     }
 }
 
@@ -163,5 +297,60 @@ document.getElementById("createPlayerForm").addEventListener("submit", async (ev
     }
 });
 
+// Manejar la edición de un jugador
+document.getElementById("editPlayerForm").addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const playerId = event.target.dataset.playerId; // Obtener el ID del jugador
+    const updatedName = document.getElementById("editPlayerName").value.trim();
+    const updatedSkill = parseInt(document.getElementById("editPlayerSkill").value.trim(), 10);
+    const updatedPosition = document.getElementById("editPlayerPosition").value; // Obtener el valor seleccionado
+    const updatedHasPlayed = document.getElementById("editPlayerHasPlayed").checked;
+
+    if (!updatedName || isNaN(updatedSkill) || !updatedPosition) {
+        alert("Por favor, completa todos los campos.");
+        return;
+    }
+
+    try {
+        const response = await fetch(`http://localhost:8080/users/${userId}/teams/${currentTeamId}/players/${playerId}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: token,
+            },
+            body: JSON.stringify({
+                name: updatedName,
+                skill: updatedSkill,
+                position: updatedPosition, // Enviar la posición seleccionada
+                hasPlayed: updatedHasPlayed,
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error("Error al editar el jugador.");
+        }
+
+        alert("Jugador editado con éxito.");
+        closeEditPlayerModal(); // Cerrar el modal de edición
+        closePlayerModal(); // Cerrar el modal con los botones
+        loadPlayers(currentTeamId, document.getElementById("jugadoresTitle").textContent.split(": ")[1]); // Recargar jugadores
+    } catch (error) {
+        console.error("Error al editar el jugador:", error);
+        alert("Hubo un error al editar el jugador.");
+    }
+});
+
 // Cargar equipos al cargar la página
 document.addEventListener("DOMContentLoaded", loadTeams);
+
+// Ocultar la tabla al cargar la página
+document.addEventListener("DOMContentLoaded", () => {
+    const jugadoresTable = document.getElementById("jugadoresTable");
+    const jugadoresTitle = document.getElementById("jugadoresTitle");
+    const btnCrearJugador = document.getElementById("btnCrearJugador");
+
+    jugadoresTable.style.display = "none"; // Ocultar la tabla
+    jugadoresTitle.style.display = "none"; // Ocultar el título
+    btnCrearJugador.style.display = "none"; // Ocultar el botón de crear jugador
+});
