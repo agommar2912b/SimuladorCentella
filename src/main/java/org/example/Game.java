@@ -521,11 +521,8 @@ public class Game {
     }
 
 
-    public void showEvents() {
-        for (String event : events) {
-            System.out.println(event);
-        }
-        listMvp();
+    public List<String> showEvents() {
+        return events;
     }
 }
 

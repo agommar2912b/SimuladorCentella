@@ -2,15 +2,21 @@ package org.example.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.example.Game;
+import org.example.Player;
+import org.example.Position;
+import org.example.Team;
 import org.example.dto.team.TeamCreate;
 import org.example.dto.team.TeamPatch;
 import org.example.dto.team.TeamResponse;
+import org.example.entity.PlayerEntity;
 import org.example.entity.TeamEntity;
 import org.example.exceptions.TeamNameExistException;
 import org.example.exceptions.TeamNameNotExistException;
 import org.example.exceptions.UserNotFoundNameException;
 import org.example.service.TeamService;
 import org.example.service.UserService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +26,109 @@ import java.util.List;
 @RequestMapping("/users/{userId}/teams")
 public class TeamController {
     private final TeamService teamService;
+
+
+    @PostMapping("/simulate")
+    public ResponseEntity<String> simulateGame(@PathVariable Long userId,
+            @RequestParam String teamAName,
+            @RequestParam String teamBName) {
+
+        TeamEntity teamAEntity = teamService.getByName(userId, teamAName).stream().findFirst()
+            .orElseThrow(() -> new TeamNameNotExistException(teamAName));
+        TeamEntity teamBEntity = teamService.getByName(userId, teamBName).stream().findFirst()
+            .orElseThrow(() -> new TeamNameNotExistException(teamBName));
+
+        Team teamA = new Team();
+        teamA.setName(teamAName);
+        Team teamB = new Team();
+        teamB.setName(teamBName);
+
+        // Asignar titulares, portero y suplentes para teamA
+        List<PlayerEntity> allA = teamAEntity.getPlayers();
+        PlayerEntity goalieAEntity = allA.stream()
+                .filter(p -> p.getPosition() == Position.GOALKEEPER && p.isHasPlayed())
+                .findFirst()
+                .orElse(null);
+        List<PlayerEntity> fieldPlayersAEntities = allA.stream()
+                .filter(p -> p.getPosition() != Position.GOALKEEPER && p.isHasPlayed())
+                .toList();
+        List<PlayerEntity> substitutesAEntities = allA.stream()
+                .filter(p -> !p.isHasPlayed())
+                .toList();
+
+        // Conversión a Player
+        Player goalieA = null;
+        if (goalieAEntity != null) {
+            goalieA = new Player(
+                goalieAEntity.getName(),
+                goalieAEntity.getSkill(),
+                goalieAEntity.getPosition(),
+                goalieAEntity.isHasPlayed()
+            );
+        }
+        List<Player> fieldPlayersA = fieldPlayersAEntities.stream()
+                .map(pe -> new Player(pe.getName(), pe.getSkill(), pe.getPosition(), pe.isHasPlayed()))
+                .toList();
+        List<Player> substitutesA = substitutesAEntities.stream()
+                .map(pe -> new Player(pe.getName(), pe.getSkill(), pe.getPosition(), pe.isHasPlayed()))
+                .toList();
+
+        teamA.setGoalie(goalieA);
+        teamA.setPlayers(fieldPlayersA);
+        teamA.setSubstitutes(substitutesA);
+
+        // Asignar titulares, portero y suplentes para teamB
+        List<PlayerEntity> allB = teamBEntity.getPlayers();
+        PlayerEntity goalieBEntity = allB.stream()
+                .filter(p -> p.getPosition() == Position.GOALKEEPER && p.isHasPlayed())
+                .findFirst()
+                .orElse(null);
+        List<PlayerEntity> fieldPlayersBEntities = allB.stream()
+                .filter(p -> p.getPosition() != Position.GOALKEEPER && p.isHasPlayed())
+                .toList();
+        List<PlayerEntity> substitutesBEntities = allB.stream()
+                .filter(p -> !p.isHasPlayed())
+                .toList();
+
+        Player goalieB = null;
+        if (goalieBEntity != null) {
+            goalieB = new Player(
+                goalieBEntity.getName(),
+                goalieBEntity.getSkill(),
+                goalieBEntity.getPosition(),
+                goalieBEntity.isHasPlayed()
+            );
+        }
+        List<Player> fieldPlayersB = fieldPlayersBEntities.stream()
+                .map(pe -> new Player(pe.getName(), pe.getSkill(), pe.getPosition(), pe.isHasPlayed()))
+                .toList();
+        List<Player> substitutesB = substitutesBEntities.stream()
+                .map(pe -> new Player(pe.getName(), pe.getSkill(), pe.getPosition(), pe.isHasPlayed()))
+                .toList();
+
+        teamB.setGoalie(goalieB);
+        teamB.setPlayers(fieldPlayersB);
+        teamB.setSubstitutes(substitutesB);
+
+        // Validaciones
+        if (teamA.getPlayers().size() != 10 || teamA.getGoalie() == null) {
+            return ResponseEntity.badRequest().body("El equipo A debe tener 10 jugadores de campo titulares y 1 portero titular.");
+        }
+        if (teamB.getPlayers().size() != 10 || teamB.getGoalie() == null) {
+            return ResponseEntity.badRequest().body("El equipo B debe tener 10 jugadores de campo titulares y 1 portero titular.");
+        }
+
+        Game game = new Game(teamA, teamB);
+        game.simulate();
+        List<String> gameEvents=game.showEvents();
+        for (String event : gameEvents) {
+            System.out.println(event);
+        }
+        return ResponseEntity.ok("Partido preparado correctamente. Puedes lanzar la simulación.");
+    }
+
+
+
 
     @PatchMapping("/{teamId}")
     public TeamResponse patchTeam(@PathVariable Long teamId,@PathVariable Long userId, @Valid @RequestBody TeamPatch team){

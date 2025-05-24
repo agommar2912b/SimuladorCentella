@@ -8,6 +8,7 @@ import lombok.ToString;
 
 import java.util.List;
 import java.util.Random;
+import java.util.ArrayList;
 
 @Getter
 @Setter
@@ -27,10 +28,30 @@ public class Team {
 
     public Team(String name, List<Player> players, Player goalie, List<Player> substitutes) {
         this.name = name;
-        this.players = players;
+        this.players = new ArrayList<>(players); 
         this.goalie = goalie;
-        this.substitutes = substitutes;
+        this.substitutes = new ArrayList<>(substitutes); 
         this.skillAverage = calculateAverageSkill();
+    }
+
+    public void setPlayers(List<Player> players) {
+        this.players = new ArrayList<>(players);
+    }
+
+    public void setSubstitutes(List<Player> substitutes) {
+        this.substitutes = new ArrayList<>(substitutes);
+    }
+
+    public void setFreekickKickers(List<Player> freekickKickers) {
+        this.freekickKickers = new ArrayList<>(freekickKickers);
+    }
+
+    public void setCornerKickers(List<Player> cornerKickers) {
+        this.cornerKickers = new ArrayList<>(cornerKickers);
+    }
+
+    public void setPenaltyKickers(List<Player> penaltyKickers) {
+        this.penaltyKickers = new ArrayList<>(penaltyKickers);
     }
 
     public double calculateAverageSkill() {
@@ -82,6 +103,18 @@ public class Team {
             return substitute;
         }
         return null;
+    }
+
+    public List<Player> getCornerKickers() {
+        return cornerKickers != null ? cornerKickers : new ArrayList<>();
+    }
+
+    public List<Player> getFreekickKickers() {
+        return freekickKickers != null ? freekickKickers : new ArrayList<>();
+    }
+
+    public List<Player> getPenaltyKickers() {
+        return penaltyKickers != null ? penaltyKickers : new ArrayList<>();
     }
 
 }

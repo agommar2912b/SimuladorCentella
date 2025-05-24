@@ -115,8 +115,8 @@ public class SoccerMatchSimulation {
                 new Player("Vladimir", 87, Position.FORWARD, true), new Player("Austin", 88, Position.FORWARD, true),
                 new Player("Petronio", 86, Position.MIDFIELDER, true), new Player("Caleb", 91, Position.MIDFIELDER, true),
                 new Player("Jude", 89, Position.MIDFIELDER, true), new Player("Acker", 85, Position.DEFENDER, true),
-                new Player("Gabi", 89, Position.DEFENDER, true), new Player("Bobby", 85, Position.DEFENDER, true),
-                new Player("King", 86, Position.GOALKEEPER, true)
+                new Player("Gabi", 89, Position.DEFENDER, true), new Player("Bobby", 85, Position.DEFENDER, true)
+
         ));
         Player royalReduxGoalie = new Player("King", 86, Position.GOALKEEPER, true);
         List<Player> royalReduxBench = new ArrayList<>(List.of(
@@ -260,9 +260,12 @@ public class SoccerMatchSimulation {
         setFreeKickKickers(zero, List.of("Riccardo","Jordan"));
         setCornerKickers(zero, List.of("Riccardo","Aitor"));
 
-        Game game = new Game(zero, universal);
+        Game game = new Game(dragonLink, gigantes);
         game.simulate();
-        game.showEvents();
+        List<String> gameEvents=game.showEvents();
+        for (String event : gameEvents) {
+            System.out.println(event);
+        }
     }
 
     private void setPenaltyKickers(Team team, List<String> names) {

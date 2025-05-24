@@ -32,7 +32,6 @@ public class PlayerService {
         PlayerEntity player = playerRepository.findById(playerId)
                 .orElseThrow(() -> new PlayerNotFoundException(playerId));
 
-
         if (!user.getTeams().contains(team) || !team.getPlayers().contains(player)) {
             throw new PlayerNotFoundException(playerId);
         }
@@ -43,6 +42,35 @@ public class PlayerService {
 
         if (!playerWithName.isEmpty()){
             throw new TeamNameExistException(name);
+        }
+
+        long titulares = team.getPlayers().stream().filter(PlayerEntity::isHasPlayed).count();
+        long porterosTitulares = team.getPlayers().stream()
+                .filter(p -> p.isHasPlayed() && p.getPosition() == Position.GOALKEEPER)
+                .count();
+
+        boolean esTitularActual = player.isHasPlayed();
+        boolean esPorteroActual = player.getPosition() == Position.GOALKEEPER;
+        boolean seraTitular = titular != null ? titular : esTitularActual;
+        Position nuevaPosicion = position != null ? position : player.getPosition();
+        boolean seraPortero = nuevaPosicion == Position.GOALKEEPER;
+
+        if (titulares == 11 && esTitularActual && esPorteroActual && seraTitular && !seraPortero) {
+            throw new IllegalStateException("No puedes cambiar la posición de un portero titular si hay 11 titulares sin desmarcarlo como titular, debe haber al menos un portero titular.");
+        }
+
+        if (titular != null && titular && !player.isHasPlayed()) {
+            if (nuevaPosicion == Position.GOALKEEPER && porterosTitulares >= 1 && !player.isHasPlayed()) {
+                throw new IllegalStateException("Solo puede haber un portero titular por equipo.");
+            }
+            if (titulares >= 10) {
+                if (porterosTitulares == 0 && nuevaPosicion != Position.GOALKEEPER) {
+                    throw new IllegalStateException("Debe haber al menos un portero titular si ya hay 11 titulares.");
+                }
+                if (titulares >= 11) {
+                    throw new IllegalStateException("Solo puede haber 11 jugadores titulares por equipo.");
+                }
+            }
         }
 
         if (name != null && !name.trim().isEmpty()) {

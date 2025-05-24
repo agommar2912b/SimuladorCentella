@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football Simulator - Partidos</title>
+    <link rel="stylesheet" href="css/styles_partidos.css">
+</head>
+<body>
+    <!-- Encabezado -->
+    <nav class="navbar">
+        <h1>Football Simulator</h1>
+    </nav>
+
+    <div class="contenido">
+        <!-- Menú lateral -->
+        <aside class="menu-lateral">
+            <button type="button" onclick="window.location.href='Sesion_iniciada.html'">Inicio</button>
+            <button type="button" onclick="window.location.href='Equipos.html'">Equipos</button>
+            <button type="button" onclick="window.location.href='Jugadores.html'">Jugadores</button>
+            
+        </aside>
+
+        <main>
+            <form id="partidoForm">
+                <h3>Registrar Partido</h3>
+                <label for="equipoLocal">Equipo Local:</label>
+                <select id="equipoLocal" required></select>
+                <br>
+                <label for="equipoVisitante">Equipo Visitante:</label>
+                <select id="equipoVisitante" required></select>
+                <br>
+                <button type="submit">Registrar Partido</button>
+            </form>
+
+            <div id="partidoResumen"></div>
+        </main>
+    </div>
+
+    <script src="js/script_partidos.js"></script>
+</body>
+</html>
