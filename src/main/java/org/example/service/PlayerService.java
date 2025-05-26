@@ -44,6 +44,7 @@ public class PlayerService {
             throw new TeamNameExistException(name);
         }
 
+        // Cálculo de titulares y porteros titulares
         long titulares = team.getPlayers().stream().filter(PlayerEntity::isHasPlayed).count();
         long porterosTitulares = team.getPlayers().stream()
                 .filter(p -> p.isHasPlayed() && p.getPosition() == Position.GOALKEEPER)
@@ -55,22 +56,23 @@ public class PlayerService {
         Position nuevaPosicion = position != null ? position : player.getPosition();
         boolean seraPortero = nuevaPosicion == Position.GOALKEEPER;
 
-        if (titulares == 11 && esTitularActual && esPorteroActual && seraTitular && !seraPortero) {
-            throw new IllegalStateException("No puedes cambiar la posición de un portero titular si hay 11 titulares sin desmarcarlo como titular, debe haber al menos un portero titular.");
+        // 1. No puede haber más de 11 titulares
+        if (seraTitular && !esTitularActual && titulares >= 11) {
+            throw new IllegalStateException("Solo puede haber 11 jugadores titulares por equipo.");
         }
 
-        if (titular != null && titular && !player.isHasPlayed()) {
-            if (nuevaPosicion == Position.GOALKEEPER && porterosTitulares >= 1 && !player.isHasPlayed()) {
-                throw new IllegalStateException("Solo puede haber un portero titular por equipo.");
-            }
-            if (titulares >= 10) {
-                if (porterosTitulares == 0 && nuevaPosicion != Position.GOALKEEPER) {
-                    throw new IllegalStateException("Debe haber al menos un portero titular si ya hay 11 titulares.");
-                }
-                if (titulares >= 11) {
-                    throw new IllegalStateException("Solo puede haber 11 jugadores titulares por equipo.");
-                }
-            }
+        // 2. Solo puede haber un portero titular
+        if (seraTitular && seraPortero && (!esTitularActual || !esPorteroActual) && porterosTitulares >= 1) {
+            throw new IllegalStateException("Solo puede haber un portero titular por equipo.");
+        }
+
+        // 3. Si ya hay 10 titulares y no hay portero titular, el siguiente titular debe ser portero
+        if (seraTitular && !esTitularActual && titulares == 10 && porterosTitulares == 0 && !seraPortero) {
+            throw new IllegalStateException("Debe haber al menos un portero titular entre los 11 titulares.");
+        }
+        // 4. Si se va a cambiar la posición de portero titular a otra y hay 11 titulares, impedirlo
+        if (esTitularActual && esPorteroActual && seraTitular && !seraPortero && titulares == 11) {
+            throw new IllegalStateException("Debe haber al menos un portero titular entre los 11 titulares.");
         }
 
         if (name != null && !name.trim().isEmpty()) {
@@ -105,14 +107,39 @@ public class PlayerService {
                 .orElseThrow(() -> new TeamNotFoundException(teamId));
 
         List<PlayerEntity> playerWithName = getByName(name, userId, teamId);
-        if (playerWithName.isEmpty()) {
-            PlayerEntity player = new PlayerEntity(name, skill, position, titular);
-            player.setTeam(team);
-            return playerRepository.save(player);
-        } else {
+        if (!playerWithName.isEmpty()) {
             throw new PlayerNameExistExcepcion(name);
         }
 
+        // Lógica de validación
+        List<PlayerEntity> jugadores = team.getPlayers();
+        long titulares = jugadores.stream().filter(PlayerEntity::isHasPlayed).count();
+        long porterosTitulares = jugadores.stream()
+                .filter(p -> p.isHasPlayed() && p.getPosition() == Position.GOALKEEPER)
+                .count();
+
+        boolean seraTitular = titular != null ? titular : false;
+        boolean seraPortero = position == Position.GOALKEEPER;
+        
+
+        // 1. No puede haber más de 11 titulares
+        if (seraTitular && titulares >= 11) {
+            throw new IllegalStateException("Solo puede haber 11 jugadores titulares por equipo.");
+        }
+
+        // 2. Solo puede haber un portero titular
+        if (seraTitular && seraPortero && porterosTitulares >= 1) {
+            throw new IllegalStateException("Solo puede haber un portero titular por equipo.");
+        }
+
+        // 3. Si ya hay 10 titulares y no hay portero titular, el siguiente titular debe ser portero
+        if (seraTitular && titulares == 10 && porterosTitulares == 0 && !seraPortero) {
+            throw new IllegalStateException("Debe haber al menos un portero titular entre los 11 titulares.");
+        }
+
+        PlayerEntity player = new PlayerEntity(name, skill, position, titular);
+        player.setTeam(team);
+        return playerRepository.save(player);
     }
 
     public PlayerEntity deletePlayer(Long teamId, Long userId , Long playerId) {

@@ -93,9 +93,7 @@ document.getElementById("partidoForm").addEventListener("submit", async function
     function ordenarJugadores(jugadores) {
         const posiciones = ["GOALKEEPER", "DEFENDER", "MIDFIELDER", "FORWARD"];
         return jugadores.slice().sort((a, b) => {
-            // Titulares primero
             if (a.hasPlayed !== b.hasPlayed) return b.hasPlayed - a.hasPlayed;
-            // Por posición según el orden del array
             return posiciones.indexOf(a.position) - posiciones.indexOf(b.position);
         });
     }
@@ -111,9 +109,29 @@ document.getElementById("partidoForm").addEventListener("submit", async function
         const localJugadores = ordenarJugadores(local.jugadores);
         const visitanteJugadores = ordenarJugadores(visitante.jugadores);
 
+        function lanzadoresCheckboxes(jugadores, equipo, tipo, label, color) {
+            // Excluye porteros
+            const jugadoresSinPortero = jugadores.filter(j => j.position !== "GOALKEEPER");
+            return `
+                <div class="lanzadores-box" style="flex:1;min-width:220px;">
+                    <div style="font-weight:bold;color:${color};margin-bottom:0.5rem;">
+                        ${label} <span style="font-size:0.9em;color:#888;">(marca uno o varios)</span>
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:0.4rem;">
+                        ${jugadoresSinPortero.map(j => `
+                            <label style="display:flex;align-items:center;gap:0.5em;cursor:pointer;">
+                                <input type="checkbox" name="${equipo}_${tipo}" value="${j.id}" style="accent-color:${color};">
+                                <span>${j.name} <span style="color:#888;font-size:0.95em;">(${j.position})</span></span>
+                            </label>
+                        `).join("")}
+                    </div>
+                </div>
+            `;
+        }
+
         resumenDiv.innerHTML = `
-            <div>
-                <h3>${localName}</h3>
+            <div class="plantilla-box" style="background:#f8fbff;border-radius:12px;padding:2rem 1rem;margin-bottom:2rem;box-shadow:0 2px 10px #005bb51a;">
+                <h3 style="color:#005bb5;text-align:center;margin-bottom:1.2rem;">${localName}</h3>
                 <table class="jugadores-table">
                     <thead>
                         <tr>
@@ -121,7 +139,7 @@ document.getElementById("partidoForm").addEventListener("submit", async function
                             <th>Nombre</th>
                             <th>Habilidad</th>
                             <th>Posición</th>
-                            <th>¿Es titular?</th>
+                            <th>¿Titular?</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -140,9 +158,14 @@ document.getElementById("partidoForm").addEventListener("submit", async function
                         }
                     </tbody>
                 </table>
+                <div style="display:flex;gap:2rem;justify-content:center;margin-top:1.5rem;flex-wrap:wrap;">
+                    ${lanzadoresCheckboxes(localJugadores, "local", "faltas", "Lanzadores de faltas", "#1e88e5")}
+                    ${lanzadoresCheckboxes(localJugadores, "local", "corners", "Lanzadores de córners", "#43a047")}
+                    ${lanzadoresCheckboxes(localJugadores, "local", "penalty", "Lanzadores de penaltis", "#e53935")}
+                </div>
             </div>
-            <div>
-                <h3>${visitanteName}</h3>
+            <div class="plantilla-box" style="background:#f8fbff;border-radius:12px;padding:2rem 1rem;margin-bottom:2rem;box-shadow:0 2px 10px #005bb51a;">
+                <h3 style="color:#005bb5;text-align:center;margin-bottom:1.2rem;">${visitanteName}</h3>
                 <table class="jugadores-table">
                     <thead>
                         <tr>
@@ -150,7 +173,7 @@ document.getElementById("partidoForm").addEventListener("submit", async function
                             <th>Nombre</th>
                             <th>Habilidad</th>
                             <th>Posición</th>
-                            <th>¿Es titular?</th>
+                            <th>¿Titular?</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -169,6 +192,11 @@ document.getElementById("partidoForm").addEventListener("submit", async function
                         }
                     </tbody>
                 </table>
+                <div style="display:flex;gap:2rem;justify-content:center;margin-top:1.5rem;flex-wrap:wrap;">
+                    ${lanzadoresCheckboxes(visitanteJugadores, "visitante", "faltas", "Lanzadores de faltas", "#1e88e5")}
+                    ${lanzadoresCheckboxes(visitanteJugadores, "visitante", "corners", "Lanzadores de córners", "#43a047")}
+                    ${lanzadoresCheckboxes(visitanteJugadores, "visitante", "penalty", "Lanzadores de penaltis", "#e53935")}
+                </div>
             </div>
             <div style="text-align:center; margin-top:2rem;">
                 <button id="simularBtn" style="background:#005bb5;color:#fff;padding:0.7rem 2rem;border:none;border-radius:20px;font-size:1.1rem;cursor:pointer;">Simular Partido</button>
@@ -192,11 +220,33 @@ document.getElementById("partidoForm").addEventListener("submit", async function
                     return;
                 }
                 const resultado = await response.text();
+
+                // Separar eventos y resultado final
+                const eventos = resultado.split("<br>");
+                const resultadoFinal = eventos.pop(); // Última línea es el resultado final
+
                 resultadoDiv.innerHTML = `
-                    <div>
-                        <h4 style="color:#005bb5;">Resultado del partido</h4>
-                        <p style="font-size:1.1rem; color:#333;">${localName} vs ${visitanteName}</p>
-                        <p style="font-size:1.2rem; color:#003366; font-weight:bold;">${resultado}</p>
+                    <div class="resultado-partido-box">
+                        <div class="equipos-marcador">
+                            <div class="equipo-nombre">
+                                <img src="/public/img/equipos/${localName.replace(/\s+/g, '_').toLowerCase()}.png" 
+                                     alt="${localName}" 
+                                     onerror="this.onerror=null;this.src='/public/img/equipos/default.png';">
+                                <span>${localName}</span>
+                            </div>
+                            <div class="marcador-central">
+                                ${resultadoFinal.replace(/Resultado final: /, '').replace(localName, `<span class='marcador-local'>${localName}</span>`).replace(visitanteName, `<span class='marcador-visitante'>${visitanteName}</span>`)}
+                            </div>
+                            <div class="equipo-nombre">
+                                <img src="/public/img/equipos/${visitanteName.replace(/\s+/g, '_').toLowerCase()}.png" 
+                                     alt="${visitanteName}" 
+                                     onerror="this.onerror=null;this.src='/public/img/equipos/default.png';">
+                                <span>${visitanteName}</span>
+                            </div>
+                        </div>
+                        <div class="eventos-timeline">
+                            ${eventos.map(ev => `<div class="evento-linea">${ev}</div>`).join("")}
+                        </div>
                     </div>
                 `;
             } catch (err) {
@@ -209,7 +259,27 @@ document.getElementById("partidoForm").addEventListener("submit", async function
     }
 });
 
+function setTeamImage(selectId, imgDivId) {
+    const select = document.getElementById(selectId);
+    const imgDiv = document.getElementById(imgDivId);
+    select.addEventListener("change", () => {
+        const teamName = select.options[select.selectedIndex]?.text || "";
+        // Si está en la opción por defecto, no mostramos imagen
+        if (
+            teamName.toLowerCase().includes("selecciona equipo") ||
+            teamName.trim() === ""
+        ) {
+            imgDiv.innerHTML = "";
+            return;
+        }
+        const imgSrc = `/public/img/equipos/${teamName.replace(/\s+/g, '_').toLowerCase()}.png`;
+        imgDiv.innerHTML = `<img src="${imgSrc}" alt="${teamName}" onerror="this.onerror=null;this.src='/public/img/equipos/default.png';">`;
+    });
+}
+
 // Ejecutar cuando el DOM esté listo
 document.addEventListener("DOMContentLoaded", () => {
     loadTeamsForSelects();
+    setTeamImage("equipoLocal", "imgLocal");
+    setTeamImage("equipoVisitante", "imgVisitante");
 });

@@ -196,6 +196,15 @@ function closeEditPlayerModal() {
     editPlayerModal.style.display = "none";
 }
 
+// Función para ordenar jugadores: titulares primero, luego por posición
+function ordenarJugadores(jugadores) {
+    const posiciones = ["GOALKEEPER", "DEFENDER", "MIDFIELDER", "FORWARD"];
+    return jugadores.slice().sort((a, b) => {
+        if (a.hasPlayed !== b.hasPlayed) return b.hasPlayed - a.hasPlayed;
+        return posiciones.indexOf(a.position) - posiciones.indexOf(b.position);
+    });
+}
+
 // Función para cargar jugadores de un equipo
 async function loadPlayers(teamId, teamName) {
     const jugadoresTable = document.getElementById("jugadoresTable");
@@ -223,13 +232,16 @@ async function loadPlayers(teamId, teamName) {
             throw new Error("Error al cargar los jugadores.");
         }
 
-        const players = await response.json();
+        let players = await response.json();
         jugadoresTableBody.innerHTML = "";
 
         if (players.length === 0) {
             jugadoresTableBody.innerHTML = "<tr><td colspan='5'>No se encontraron jugadores.</td></tr>";
             return;
         }
+
+        // Ordenar jugadores: titulares primero, luego por posición
+        players = ordenarJugadores(players);
 
         players.forEach((player) => {
             const row = document.createElement("tr");

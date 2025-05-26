@@ -117,14 +117,58 @@ public class TeamController {
         if (teamB.getPlayers().size() != 10 || teamB.getGoalie() == null) {
             return ResponseEntity.badRequest().body("El equipo B debe tener 10 jugadores de campo titulares y 1 portero titular.");
         }
+        if (teamA.getSubstitutes().size() < 3) {
+            return ResponseEntity.badRequest().body("El equipo A debe tener al menos 3 suplentes.");
+        }
+        if (teamB.getSubstitutes().size() < 3) {
+            return ResponseEntity.badRequest().body("El equipo B debe tener al menos 3 suplentes.");
+        }
+        
+        long defensasA = teamA.getPlayers().stream().filter(p -> p.getPosition() == Position.DEFENDER).count();
+        long mediocentrosA = teamA.getPlayers().stream().filter(p -> p.getPosition() == Position.MIDFIELDER).count();
+        long delanterosA = teamA.getPlayers().stream().filter(p -> p.getPosition() == Position.FORWARD).count();
+
+        if (defensasA < 2) {
+            return ResponseEntity.badRequest().body("El equipo A debe tener al menos 2 defensas titulares.");
+        }
+        if (mediocentrosA < 2) {
+            return ResponseEntity.badRequest().body("El equipo A debe tener al menos 2 mediocentros titulares.");
+        }
+        if (delanterosA < 1) {
+            return ResponseEntity.badRequest().body("El equipo A debe tener al menos 1 delantero titular.");
+        }
+
+        // Validación de posiciones titulares para teamB
+        long defensasB = teamB.getPlayers().stream().filter(p -> p.getPosition() == Position.DEFENDER).count();
+        long mediocentrosB = teamB.getPlayers().stream().filter(p -> p.getPosition() == Position.MIDFIELDER).count();
+        long delanterosB = teamB.getPlayers().stream().filter(p -> p.getPosition() == Position.FORWARD).count();
+
+        if (defensasB < 2) {
+            return ResponseEntity.badRequest().body("El equipo B debe tener al menos 2 defensas titulares.");
+        }
+        if (mediocentrosB < 2) {
+            return ResponseEntity.badRequest().body("El equipo B debe tener al menos 2 mediocentros titulares.");
+        }
+        if (delanterosB < 1) {
+            return ResponseEntity.badRequest().body("El equipo B debe tener al menos 1 delantero titular.");
+        }
 
         Game game = new Game(teamA, teamB);
         game.simulate();
-        List<String> gameEvents=game.showEvents();
-        for (String event : gameEvents) {
-            System.out.println(event);
-        }
-        return ResponseEntity.ok("Partido preparado correctamente. Puedes lanzar la simulación.");
+        List<String> gameEvents = game.showEvents();
+
+        // Unir todos los eventos en un solo String con saltos de línea HTML
+        String resultado = String.join("<br>", gameEvents);
+
+        // Opcional: limpiar los jugadores de los equipos si quieres "borrarlos"
+        teamA.setPlayers(List.of());
+        teamA.setSubstitutes(List.of());
+        teamA.setGoalie(null);
+        teamB.setPlayers(List.of());
+        teamB.setSubstitutes(List.of());
+        teamB.setGoalie(null);
+
+        return ResponseEntity.ok(resultado);
     }
 
 
