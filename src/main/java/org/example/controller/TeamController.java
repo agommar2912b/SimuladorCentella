@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -29,9 +30,19 @@ public class TeamController {
 
 
     @PostMapping("/simulate")
-    public ResponseEntity<String> simulateGame(@PathVariable Long userId,
-            @RequestParam String teamAName,
-            @RequestParam String teamBName) {
+    public ResponseEntity<String> simulateGame(
+            @PathVariable Long userId,
+            @RequestBody Map<String, Object> body) {
+
+        String teamAName = (String) body.get("teamAName");
+        String teamBName = (String) body.get("teamBName");
+
+        List<String> localFaltas = ((List<?>) body.get("local_faltas")).stream().map(Object::toString).toList();
+        List<String> localCorners = ((List<?>) body.get("local_corners")).stream().map(Object::toString).toList();
+        List<String> localPenalty = ((List<?>) body.get("local_penalty")).stream().map(Object::toString).toList();
+        List<String> visitanteFaltas = ((List<?>) body.get("visitante_faltas")).stream().map(Object::toString).toList();
+        List<String> visitanteCorners = ((List<?>) body.get("visitante_corners")).stream().map(Object::toString).toList();
+        List<String> visitantePenalty = ((List<?>) body.get("visitante_penalty")).stream().map(Object::toString).toList();
 
         TeamEntity teamAEntity = teamService.getByName(userId, teamAName).stream().findFirst()
             .orElseThrow(() -> new TeamNameNotExistException(teamAName));
@@ -152,6 +163,26 @@ public class TeamController {
         if (delanterosB < 1) {
             return ResponseEntity.badRequest().body("El equipo B debe tener al menos 1 delantero titular.");
         }
+
+        // Asignar lanzadores por nombre
+        teamA.setFreekickKickers(
+            teamA.getPlayers().stream().filter(p -> localFaltas.contains(p.getName())).toList()
+        );
+        teamA.setCornerKickers(
+            teamA.getPlayers().stream().filter(p -> localCorners.contains(p.getName())).toList()
+        );
+        teamA.setPenaltyKickers(
+            teamA.getPlayers().stream().filter(p -> localPenalty.contains(p.getName())).toList()
+        );
+        teamB.setFreekickKickers(
+            teamB.getPlayers().stream().filter(p -> visitanteFaltas.contains(p.getName())).toList()
+        );
+        teamB.setCornerKickers(
+            teamB.getPlayers().stream().filter(p -> visitanteCorners.contains(p.getName())).toList()
+        );
+        teamB.setPenaltyKickers(
+            teamB.getPlayers().stream().filter(p -> visitantePenalty.contains(p.getName())).toList()
+        );
 
         Game game = new Game(teamA, teamB);
         game.simulate();
