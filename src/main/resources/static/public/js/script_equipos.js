@@ -129,9 +129,8 @@ async function loadTeams(name = "") {
     }
 
     try {
-        const url = name
-            ? `http://localhost:8080/users/${userId}/teams?name=${name}`
-            : `http://localhost:8080/users/${userId}/teams`;
+        // Siempre trae todos los equipos y filtra en el frontend
+        const url = `http://localhost:8080/users/${userId}/teams`;
 
         const response = await fetch(url, {
             headers: {
@@ -143,7 +142,14 @@ async function loadTeams(name = "") {
             throw new Error("Error al cargar los equipos");
         }
 
-        const teams = await response.json();
+        let teams = await response.json();
+
+        // Filtrado parcial en frontend (insensible a mayúsculas/minúsculas)
+        if (name) {
+            const search = name.toLowerCase();
+            teams = teams.filter(team => team.name.toLowerCase().includes(search));
+        }
+
         equiposContainer.innerHTML = ""; // Limpiar el contenedor
 
         if (teams.length === 0) {

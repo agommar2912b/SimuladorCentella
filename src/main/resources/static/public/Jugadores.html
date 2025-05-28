@@ -13,16 +13,20 @@
 
     <div class="contenido">
         <aside class="menu-lateral">
-            <button onclick="window.location.href='Sesion_iniciada.html'">Volver</button>
+            <button onclick="window.location.href='Sesion_iniciada.html'">Inicio</button>
+             <button onclick="window.location.href='Equipos.html'">Equipos</button>
             <button id="btnCrearJugador" style="display: none;" onclick="openCreatePlayerModal()">Crear Jugador</button>
         </aside>
 
         <main>
             <h2>Lista de Equipos</h2>
+            <div class="busqueda">
+                <input type="text" id="searchInput" placeholder="Buscar equipo por nombre">
+                <button id="searchButton">Buscar</button>
+            </div>
             <div id="equiposContainer" class="equipos-container">
                 <!-- Aquí se cargarán los equipos dinámicamente -->
             </div>
-
             <h2 id="jugadoresTitle" style="display: none;">Jugadores del Equipo</h2>
             <table id="jugadoresTable" style="width: 100%; border-collapse: collapse;">
                 <thead>

@@ -7,7 +7,7 @@ if (!token) {
 }
 
 // Función para cargar equipos
-async function loadTeams() {
+async function loadTeams(name = "") {
     const equiposContainer = document.getElementById("equiposContainer");
     const jugadoresTitle = document.getElementById("jugadoresTitle");
 
@@ -25,7 +25,14 @@ async function loadTeams() {
             throw new Error("Error al cargar los equipos.");
         }
 
-        const teams = await response.json();
+        let teams = await response.json();
+
+        // Filtrado parcial en frontend (insensible a mayúsculas/minúsculas)
+        if (name) {
+            const search = name.toLowerCase();
+            teams = teams.filter(team => team.name.toLowerCase().includes(search));
+        }
+
         equiposContainer.innerHTML = "";
 
         if (teams.length === 0) {
@@ -353,16 +360,30 @@ document.getElementById("editPlayerForm").addEventListener("submit", async (even
     }
 });
 
-// Cargar equipos al cargar la página
-document.addEventListener("DOMContentLoaded", loadTeams);
-
-// Ocultar la tabla al cargar la página
+// Evento para el buscador
 document.addEventListener("DOMContentLoaded", () => {
+    const searchInput = document.getElementById("searchInput");
+    const searchButton = document.getElementById("searchButton");
     const jugadoresTable = document.getElementById("jugadoresTable");
     const jugadoresTitle = document.getElementById("jugadoresTitle");
     const btnCrearJugador = document.getElementById("btnCrearJugador");
 
-    jugadoresTable.style.display = "none"; // Ocultar la tabla
-    jugadoresTitle.style.display = "none"; // Ocultar el título
-    btnCrearJugador.style.display = "none"; // Ocultar el botón de crear jugador
+    if (searchButton && searchInput) {
+        searchButton.addEventListener("click", () => {
+            const name = searchInput.value.trim();
+            // Oculta la tabla y el título de jugadores al buscar equipos
+            jugadoresTable.style.display = "none";
+            jugadoresTitle.style.display = "none";
+            btnCrearJugador.style.display = "none";
+            loadTeams(name);
+        });
+    }
+
+    // Cargar todos los equipos al inicio
+    loadTeams();
+
+    // Ocultar la tabla al cargar la página
+    jugadoresTable.style.display = "none";
+    jugadoresTitle.style.display = "none";
+    btnCrearJugador.style.display = "none";
 });
