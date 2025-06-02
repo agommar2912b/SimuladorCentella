@@ -118,32 +118,47 @@ main h2 {
     gap: 1rem;
 }
 
+/* Tarjetas de equipo mejoradas */
 .equipo-card {
-    background-color: #f9f9f9;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(135deg, #e3f0ff 0%, #fafcff 100%);
+    padding: 24px 18px 18px 18px;
+    border-radius: 18px;
+    box-shadow: 0 6px 24px rgba(0, 91, 181, 0.10), 0 1.5px 6px rgba(0,0,0,0.06);
     text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.25s cubic-bezier(.4,2,.6,1), box-shadow 0.25s;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid #e0e7ef;
 }
 
 .equipo-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0 12px 32px rgba(0, 91, 181, 0.18), 0 2px 8px rgba(0,0,0,0.10);
+    border-color: #007bff;
 }
 
 .equipo-card img {
-    width: 100%;
-    height: 150px;
+    width: 110px;
+    height: 110px;
     object-fit: cover;
-    border-radius: 8px;
+    border-radius: 50%;
     margin-bottom: 1rem;
+    border: 4px solid #fff;
+    box-shadow: 0 2px 8px rgba(0,91,181,0.10);
+    background: #f2f6fa;
+    transition: box-shadow 0.3s;
+}
+
+.equipo-card:hover img {
+    box-shadow: 0 4px 16px rgba(0,91,181,0.18);
 }
 
 .equipo-card h3 {
-    font-size: 1.5rem;
+    font-size: 1.35rem;
     color: #003366;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
 }
 
 .equipo-card p {
@@ -341,4 +356,84 @@ button.btn-delete:hover {
 
 .close:hover {
     color: #ff0000;
+}
+
+/* Modal de detalles del equipo mejorado */
+#editTeamModal .modal-content {
+    background: linear-gradient(120deg, #f5faff 60%, #e3f0ff 100%);
+    padding: 36px 32px 28px 32px;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 91, 181, 0.18), 0 2px 8px rgba(0,0,0,0.10);
+    width: 95%;
+    max-width: 420px;
+    text-align: center;
+    position: relative;
+    animation: slideDown 0.4s cubic-bezier(.4,2,.6,1);
+}
+
+#editTeamModalImg {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid #fff;
+    box-shadow: 0 4px 16px rgba(0,91,181,0.15);
+    margin-bottom: 18px;
+    background: #f2f6fa;
+}
+
+#editTeamModal h2#teamInfo {
+    font-size: 1.5rem;
+    color: #003366;
+    margin-bottom: 18px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+#editTeamModal .buttons {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 18px;
+}
+
+#editTeamModal .btn-edit,
+#editTeamModal .btn-delete {
+    min-width: 110px;
+    padding: 12px 0;
+    font-size: 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0,91,181,0.08);
+}
+
+#editTeamModal .btn-edit {
+    background: linear-gradient(90deg, #28a745 80%, #34d058 100%);
+    color: #fff;
+}
+
+#editTeamModal .btn-edit:hover {
+    background: linear-gradient(90deg, #218838 80%, #28a745 100%);
+}
+
+#editTeamModal .btn-delete {
+    background: linear-gradient(90deg, #dc3545 80%, #ff6b81 100%);
+    color: #fff;
+}
+
+#editTeamModal .btn-delete:hover {
+    background: linear-gradient(90deg, #c82333 80%, #dc3545 100%);
+}
+
+#editTeamModal .close {
+    top: 18px;
+    right: 18px;
+    font-size: 26px;
+    color: #003366;
+    opacity: 0.7;
+}
+
+#editTeamModal .close:hover {
+    color: #ff0000;
+    opacity: 1;
 }

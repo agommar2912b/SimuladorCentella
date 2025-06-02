@@ -33,12 +33,18 @@ async function loadTeamsForSelects() {
     selectLocal.innerHTML =
       `<option value="">Selecciona equipo local</option>` +
       teams
-        .map((team) => `<option value="${team.id}">${team.name}</option>`)
+        .map(
+          (team) =>
+            `<option value="${team.id}" data-img="${team.profilePictureUrl ? `/users/${userId}/teams/images/${userId}/${team.profilePictureUrl.split('/').pop()}` : '/public/img/equipos/default.png'}">${team.name}</option>`
+        )
         .join("");
     selectVisitante.innerHTML =
       `<option value="">Selecciona equipo visitante</option>` +
       teams
-        .map((team) => `<option value="${team.id}">${team.name}</option>`)
+        .map(
+          (team) =>
+            `<option value="${team.id}" data-img="${team.profilePictureUrl ? `/users/${userId}/teams/images/${userId}/${team.profilePictureUrl.split('/').pop()}` : '/public/img/equipos/default.png'}">${team.name}</option>`
+        )
         .join("");
 
     // Evitar seleccionar el mismo equipo en ambos selects
@@ -360,29 +366,45 @@ document
     }
   });
 
-function setTeamImage(selectId, imgDivId) {
+function setTeamImage(selectId, imgDivId, imgTagId, nombreSpanId) {
   const select = document.getElementById(selectId);
   const imgDiv = document.getElementById(imgDivId);
-  select.addEventListener("change", () => {
-    const teamName = select.options[select.selectedIndex]?.text || "";
-    // Si está en la opción por defecto, no mostramos imagen
+  const imgTag = document.getElementById(imgTagId);
+  const nombreSpan = document.getElementById(nombreSpanId);
+
+  function updateImageAndName() {
+    const selectedOption = select.options[select.selectedIndex];
+    const teamName = selectedOption?.text || "";
+    const imgSrc = selectedOption?.getAttribute("data-img") || "/public/img/equipos/default.png";
     if (
       teamName.toLowerCase().includes("selecciona equipo") ||
       teamName.trim() === ""
     ) {
-      imgDiv.innerHTML = "";
+      imgTag.style.display = "none"; // Oculta la imagen
+      imgDiv.style.background = "transparent"; // Fondo blanco/transparente
+      imgDiv.style.border = "none"; // Sin borde
+      nombreSpan.textContent = "";
       return;
     }
-    const imgSrc = `/public/img/equipos/${teamName
-      .replace(/\s+/g, "_")
-      .toLowerCase()}.png`;
-    imgDiv.innerHTML = `<img src="${imgSrc}" alt="${teamName}" onerror="this.onerror=null;this.src='/public/img/equipos/default.png';">`;
-  });
+    imgTag.style.display = "block"; // Muestra la imagen
+    imgDiv.style.background = "#e0e7ef"; // Fondo normal
+    imgDiv.style.border = "2px solid #005bb5"; // Borde normal
+    imgTag.src = imgSrc;
+    imgTag.alt = teamName;
+    imgTag.onerror = function () {
+      this.onerror = null;
+      this.src = "/public/img/equipos/default.png";
+    };
+    nombreSpan.textContent = teamName;
+  }
+
+  select.addEventListener("change", updateImageAndName);
+  updateImageAndName(); // Inicializa al cargar
 }
 
 // Ejecutar cuando el DOM esté listo
 document.addEventListener("DOMContentLoaded", () => {
   loadTeamsForSelects();
-  setTeamImage("equipoLocal", "imgLocal");
-  setTeamImage("equipoVisitante", "imgVisitante");
+  setTeamImage("equipoLocal", "imgLocal", "imgLocalImg", "nombreLocal");
+  setTeamImage("equipoVisitante", "imgVisitante", "imgVisitanteImg", "nombreVisitante");
 });

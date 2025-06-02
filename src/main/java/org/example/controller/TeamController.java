@@ -16,9 +16,15 @@ import org.example.exceptions.TeamNameNotExistException;
 import org.example.exceptions.UserNotFoundNameException;
 import org.example.service.TeamService;
 import org.example.service.UserService;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
@@ -205,33 +211,96 @@ public class TeamController {
 
 
 
-    @PatchMapping("/{teamId}")
-    public TeamResponse patchTeam(@PathVariable Long teamId,@PathVariable Long userId, @Valid @RequestBody TeamPatch team){
-        TeamEntity patchedTeam = teamService.patchTeam(userId, teamId, team.getName() , team.getProfilePictureUrl());
+    @PatchMapping(value = "/{teamId}", consumes = {"multipart/form-data"})
+    public TeamResponse patchTeam(
+            @PathVariable Long teamId,
+            @PathVariable Long userId,
+            @RequestParam("name") String name,
+            @RequestParam(value = "image", required = false) MultipartFile image) throws Exception {
+
+        TeamEntity team = teamService.getById(teamId);
+        String oldName = team.getName();
+        String safeOldName = oldName.replaceAll("[^a-zA-Z0-9\\-_]", "_");
+        String safeNewName = name.replaceAll("[^a-zA-Z0-9\\-_]", "_");
+        String imagesDir = "images/" + userId;
+        Path userDir = Paths.get(imagesDir);
+
+        String newProfilePictureUrl = team.getProfilePictureUrl();
+
+        // Si cambia el nombre, renombra la imagen si existe
+        if (!oldName.equals(name)) {
+            Path oldImagePath = userDir.resolve(safeOldName + ".jpg");
+            Path newImagePath = userDir.resolve(safeNewName + ".jpg");
+            if (Files.exists(oldImagePath)) {
+                Files.move(oldImagePath, newImagePath);
+                newProfilePictureUrl = "/images/" + userId + "/" + safeNewName + ".jpg";
+            }
+        }
+
+        // Si hay nueva imagen, reemplaza la imagen (con el nombre nuevo)
+        if (image != null && !image.isEmpty()) {
+            Path imagePath = userDir.resolve(safeNewName + ".jpg");
+            Files.write(imagePath, image.getBytes());
+            newProfilePictureUrl = "/images/" + userId + "/" + safeNewName + ".jpg";
+        }
+
+        // Actualiza entidad usando tu servicio (solo una vez)
+        TeamEntity patchedTeam = teamService.patchTeam(userId, teamId, name, newProfilePictureUrl);
 
         return TeamResponse.builder()
                 .id(patchedTeam.getId())
                 .name(patchedTeam.getName())
                 .profilePictureUrl(patchedTeam.getProfilePictureUrl())
                 .build();
-
     }
 
-    @PostMapping
-    public TeamResponse createTeam(@PathVariable Long userId, @Valid @RequestBody TeamCreate teamCreate){
-        TeamEntity createdTeam = teamService.createTeam(userId,teamCreate.getName(),teamCreate.getProfilePictureUrl());
+    @PostMapping(consumes = {"multipart/form-data"})
+    public TeamResponse createTeam(
+            @PathVariable Long userId,
+            @RequestParam("name") String name,
+            @RequestParam("image") MultipartFile image) throws Exception {
+
+        // 1. Guardar la imagen en /images/{userId}/{teamName}.jpg
+        String safeTeamName = name.replaceAll("[^a-zA-Z0-9\\-_]", "_"); // Evita caracteres problemáticos
+        String imagesDir = "images/" + userId;
+        Path userDir = Paths.get(imagesDir);
+        if (!Files.exists(userDir)) {
+            Files.createDirectories(userDir);
+        }
+        String fileName = safeTeamName + ".jpg";
+        Path imagePath = userDir.resolve(fileName);
+        Files.write(imagePath, image.getBytes());
+
+        // 2. Crear el equipo con la ruta de la imagen
+        String relativePath = "/images/" + userId + "/" + fileName;
+        TeamEntity createdTeam = teamService.createTeam(userId, name, relativePath);
 
         return TeamResponse.builder()
                 .id(createdTeam.getId())
                 .name(createdTeam.getName())
-                .profilePictureUrl(createdTeam.getProfilePictureUrl())
+                .profilePictureUrl(relativePath)
                 .build();
-
     }
 
     @DeleteMapping("/{teamId}")
     public TeamResponse deleteTeam(@PathVariable Long userId , @PathVariable Long teamId){
         TeamEntity deletedTeam = teamService.deleteTeam(teamId , userId);
+
+        // Eliminar la imagen asociada si existe
+        String profilePictureUrl = deletedTeam.getProfilePictureUrl();
+        if (profilePictureUrl != null && !profilePictureUrl.isBlank()) {
+            // profilePictureUrl es algo como "/images/{userId}/nombre.jpg"
+            try {
+                String relativePath = profilePictureUrl.startsWith("/") ? profilePictureUrl.substring(1) : profilePictureUrl;
+                Path imagePath = Paths.get(relativePath);
+                if (Files.exists(imagePath)) {
+                    Files.delete(imagePath);
+                }
+            } catch (Exception e) {
+                // Puedes loguear el error si lo deseas
+                e.printStackTrace();
+            }
+        }
 
         return TeamResponse.builder()
                 .id(deletedTeam.getId())
@@ -258,5 +327,18 @@ public class TeamController {
                         .profilePictureUrl(team.getProfilePictureUrl())
                         .build())
                 .toList();
+    }
+
+    @GetMapping("/images/{teamUserId}/{imageName:.+}")
+    public ResponseEntity<Resource> getTeamImage(
+            @PathVariable("teamUserId") String teamUserId,
+            @PathVariable String imageName) throws Exception {
+        Path imagePath = Paths.get("images", teamUserId, imageName);
+        Resource resource = new UrlResource(imagePath.toUri());
+        if (resource.exists() && resource.isReadable()) {
+            return ResponseEntity.ok().body(resource);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

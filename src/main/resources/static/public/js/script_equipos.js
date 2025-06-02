@@ -12,31 +12,36 @@ function closeCreateTeamModal() {
 }
 
 // Función para abrir el modal con los botones "Editar" y "Eliminar"
-function openEditTeamModal(team) {
+function openEditTeamModal(team, imageUrl) {
     const modal = document.getElementById("editTeamModal");
     const teamInfo = document.getElementById("teamInfo");
     const editButton = document.getElementById("editTeamButton");
     const deleteButton = document.getElementById("deleteTeamButton");
+    const img = document.getElementById("editTeamModalImg");
 
-    // Mostrar información del equipo
-    teamInfo.textContent = `Equipo: ${team.name} (ID: ${team.id})`;
+    teamInfo.textContent = team.name;
+    img.src = imageUrl || "img/default_team.png";
+    img.style.display = "block";
 
-    // Configurar acciones de los botones
-    editButton.onclick = () => openEditFormModal(team); // Abrir el modal de edición
-    deleteButton.onclick = () => deleteTeam(team.id); // Eliminar el equipo
+    editButton.onclick = () => openEditFormModal(team);
+    deleteButton.onclick = () => deleteTeam(team.id);
 
-    modal.style.display = "flex"; // Mostrar el modal
+    modal.style.display = "flex";
 }
 
 // Función para abrir el modal del formulario de edición
 function openEditFormModal(team) {
     const editFormModal = document.getElementById("editFormModal");
-
-    // Rellenar los campos del formulario con los datos del equipo
     document.getElementById("editTeamName").value = team.name;
-    document.getElementById("editTeamImage").value = team.profilePictureUrl;
+    document.getElementById("editTeamImageFile").value = "";
 
-    // Mostrar el modal del formulario de edición
+    // Mostrar la imagen actual del equipo en el modal
+    const preview = document.getElementById("editTeamImagePreview");
+    if (preview && team.profilePictureUrl) {
+        preview.src = `/users/${userId}/teams/images/${userId}/${team.profilePictureUrl.split('/').pop()}?t=${Date.now()}`;
+        preview.style.display = "block";
+    }
+
     editFormModal.style.display = "flex";
 
     // Configurar el evento de envío del formulario
@@ -45,24 +50,27 @@ function openEditFormModal(team) {
         event.preventDefault();
 
         const updatedName = document.getElementById("editTeamName").value.trim();
-        const updatedImage = document.getElementById("editTeamImage").value.trim();
+        const updatedImageInput = document.getElementById("editTeamImageFile");
+        const updatedImage = updatedImageInput.files[0];
 
-        if (!updatedName || !updatedImage) {
-            alert("Por favor, completa todos los campos.");
+        if (!updatedName) {
+            alert("Por favor, introduce el nombre del equipo.");
             return;
+        }
+
+        const formData = new FormData();
+        formData.append("name", updatedName);
+        if (updatedImage) {
+            formData.append("image", updatedImage);
         }
 
         try {
             const response = await fetch(`http://localhost:8080/users/${userId}/teams/${team.id}`, {
                 method: "PATCH",
                 headers: {
-                    "Content-Type": "application/json",
                     Authorization: token,
                 },
-                body: JSON.stringify({
-                    name: updatedName,
-                    profilePictureUrl: updatedImage,
-                }),
+                body: formData,
             });
 
             if (!response.ok) {
@@ -75,7 +83,7 @@ function openEditFormModal(team) {
             loadTeams(); // Recargar la lista de equipos
         } catch (error) {
             console.error(error);
-            alert("Hubo un error al editar el equipo (Puede ser que el nombre este repetido).");
+            alert("Hubo un error al editar el equipo (puede ser que el nombre esté repetido).");
         }
     };
 }
@@ -161,13 +169,20 @@ async function loadTeams(name = "") {
             const teamCard = document.createElement("div");
             teamCard.classList.add("equipo-card");
 
+            const imageUrl = team.profilePictureUrl
+                ? `/users/${userId}/teams/images/${userId}/${team.profilePictureUrl.split('/').pop()}?t=${Date.now()}`
+                : "img/default_team.png";
+
             teamCard.innerHTML = `
+                <img src="${imageUrl}" alt="Imagen del equipo" class="equipo-img" style="cursor:pointer;" />
                 <h3>${team.name}</h3>
-                <p>ID: ${team.id}</p>
             `;
 
-            // Asignar evento onclick para abrir el modal de edición/eliminación
-            teamCard.onclick = () => openEditTeamModal(team);
+            // Solo la imagen abre el modal
+            teamCard.querySelector('.equipo-img').onclick = (e) => {
+                e.stopPropagation();
+                openEditTeamModal(team, imageUrl);
+            };
 
             equiposContainer.appendChild(teamCard);
         });
@@ -195,24 +210,25 @@ document.addEventListener("DOMContentLoaded", () => {
         event.preventDefault();
 
         const teamName = document.getElementById("teamName").value.trim();
-        const teamImage = document.getElementById("teamImage").value.trim();
+        const teamImageInput = document.getElementById("teamImageFile");
+        const teamImage = teamImageInput.files[0];
 
         if (!teamName || !teamImage) {
             alert("Por favor, completa todos los campos.");
             return;
         }
 
+        const formData = new FormData();
+        formData.append("name", teamName);
+        formData.append("image", teamImage);
+
         try {
             const response = await fetch(`http://localhost:8080/users/${userId}/teams`, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",
                     Authorization: token,
                 },
-                body: JSON.stringify({
-                    name: teamName,
-                    profilePictureUrl: teamImage,
-                }),
+                body: formData,
             });
 
             if (!response.ok) {

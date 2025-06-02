@@ -44,12 +44,17 @@ async function loadTeams(name = "") {
             const teamCard = document.createElement("div");
             teamCard.classList.add("equipo-card");
 
+            // Obtener la URL de la imagen del equipo (igual que en Equipos)
+            const imageUrl = team.profilePictureUrl
+                ? `/users/${userId}/teams/images/${userId}/${team.profilePictureUrl.split('/').pop()}?t=${Date.now()}`
+                : "img/default_team.png";
+
             teamCard.innerHTML = `
+                <img src="${imageUrl}" alt="Imagen del equipo" class="equipo-img" style="cursor:pointer;" />
                 <h3>${team.name}</h3>
-                <p>ID: ${team.id}</p>
             `;
 
-            // Asignar evento onclick para cargar los jugadores del equipo
+            // Al hacer clic en la tarjeta, cargar los jugadores de ese equipo
             teamCard.onclick = () => loadPlayers(team.id, team.name);
 
             equiposContainer.appendChild(teamCard);

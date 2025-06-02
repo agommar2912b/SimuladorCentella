@@ -41,7 +41,7 @@ body {
     border-right: 3px solid #f2f2f2;
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 0.7rem; 
     align-items: center;
 }
 
@@ -218,7 +218,7 @@ main {
 .equipo-imagen {
     width: 90px;
     height: 90px;
-    margin-top: 0.7rem;
+    margin: 0.7rem auto 0.3rem auto;
     border-radius: 50%;
     background: #e0e7ef;
     display: flex;
@@ -226,6 +226,8 @@ main {
     justify-content: center;
     overflow: hidden;
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    border: 2px solid #005bb5;
+    transition: box-shadow 0.2s, border-color 0.2s;
 }
 
 .equipo-imagen img {

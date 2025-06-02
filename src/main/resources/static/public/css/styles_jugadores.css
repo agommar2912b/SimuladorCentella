@@ -340,42 +340,55 @@ main h2 {
 /* Contenedor de equipos */
 .equipos-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Tarjetas más pequeñas */
-    gap: 0.75rem; /* Reducir el espacio entre tarjetas */
-    margin-top: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
 }
 
-/* Tarjetas de equipos */
+/* Tarjetas de equipo mejoradas */
 .equipo-card {
-    background-color: #f9f9f9;
-    padding: 15px; /* Reducir el padding */
-    border-radius: 8px; /* Bordes más pequeños */
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1); /* Sombra más ligera */
+    background: linear-gradient(135deg, #e3f0ff 0%, #fafcff 100%);
+    padding: 24px 18px 18px 18px;
+    border-radius: 18px;
+    box-shadow: 0 6px 24px rgba(0, 91, 181, 0.10), 0 1.5px 6px rgba(0,0,0,0.06);
     text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.25s cubic-bezier(.4,2,.6,1), box-shadow 0.25s;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid #e0e7ef;
 }
 
 .equipo-card:hover {
-    transform: translateY(-3px); /* Menor desplazamiento al hacer hover */
-    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0 12px 32px rgba(0, 91, 181, 0.18), 0 2px 8px rgba(0,0,0,0.10);
+    border-color: #007bff;
 }
 
 .equipo-card img {
-    width: 100%;
-    height: 120px; /* Reducir la altura de las imágenes */
+    width: 110px;
+    height: 110px;
     object-fit: cover;
-    border-radius: 6px; /* Bordes más pequeños */
-    margin-bottom: 0.5rem; /* Reducir el margen inferior */
+    border-radius: 50%;
+    margin-bottom: 1rem;
+    border: 4px solid #fff;
+    box-shadow: 0 2px 8px rgba(0,91,181,0.10);
+    background: #f2f6fa;
+    transition: box-shadow 0.3s;
+}
+
+.equipo-card:hover img {
+    box-shadow: 0 4px 16px rgba(0,91,181,0.18);
 }
 
 .equipo-card h3 {
-    font-size: 1.2rem; /* Reducir el tamaño del título */
+    font-size: 1.35rem;
     color: #003366;
-    margin-bottom: 0.25rem; /* Reducir el margen inferior */
+    margin-bottom: 0.25rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
 }
 
 .equipo-card p {
-    font-size: 0.9rem; /* Reducir el tamaño del texto */
+    font-size: 1rem;
     color: #555;
 }
 

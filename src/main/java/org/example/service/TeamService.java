@@ -81,6 +81,11 @@ public class TeamService {
         return team;
     }
 
+    public TeamEntity getById(Long teamId) {
+    return teamRepository.findById(teamId)
+            .orElseThrow(() -> new TeamNotFoundException(teamId));
+}
+
     public List<TeamEntity> getByName(Long userId, String name) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));

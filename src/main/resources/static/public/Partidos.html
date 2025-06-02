@@ -27,13 +27,19 @@
                     <div class="equipo-selector">
                         <label for="equipoLocal">Equipo Local:</label>
                         <select id="equipoLocal" required></select>
-                        <div class="equipo-imagen" id="imgLocal"></div>
+                        <div class="equipo-imagen" id="imgLocal">
+                            <img src="/public/img/equipos/default.png" alt="Equipo local" id="imgLocalImg">
+                        </div>
+                        <span class="equipo-nombre-seleccionado" id="nombreLocal"></span>
                     </div>
                     <span class="vs-text">VS</span>
                     <div class="equipo-selector">
                         <label for="equipoVisitante">Equipo Visitante:</label>
                         <select id="equipoVisitante" required></select>
-                        <div class="equipo-imagen" id="imgVisitante"></div>
+                        <div class="equipo-imagen" id="imgVisitante">
+                            <img src="/public/img/equipos/default.png" alt="Equipo visitante" id="imgVisitanteImg">
+                        </div>
+                        <span class="equipo-nombre-seleccionado" id="nombreVisitante"></span>
                     </div>
                 </div>
                 <button type="submit">Ver Plantillas</button>
