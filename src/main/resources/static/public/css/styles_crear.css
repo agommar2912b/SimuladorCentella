@@ -5,14 +5,15 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 100vh; /* Asegura que ocupe al menos el alto de la pantalla */
+    min-height: 100vh;
     margin: 0;
     font-size: 14px;
-    animation: fondo 10s linear infinite;
-    overflow: auto; /* Agrega scroll si el contenido excede la altura */
+    animation: fondo 15s linear infinite;
+    overflow: auto;
     background-image: url(../img/fondo-futbol-gradiente-dinamico_1226107-217.png);
     background-repeat: no-repeat;
     background-size: cover;
+    color: #333;
 }
 
 /* Nueva animación de fondo */
@@ -30,29 +31,40 @@ body {
 
 a {
     text-decoration: none;
+    color: #007bff;
+    font-size: 0.95rem;
+    transition: color 0.3s;
+}
+
+a:hover {
+    color: #0056b3;
 }
 
 #createForm {
-    width: 90%; /* Flexible para pantallas pequeñas */
-    max-width: 400px; /* Límite para pantallas grandes */
-    padding: 1rem;
-    border: 0.1rem solid rgb(226, 226, 226);
-    background-color: white;
-    border-radius: 0.5rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    overflow: hidden; /* Asegura que el contenido no desborde */
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 22px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+    backdrop-filter: blur(8px);
+    border: 1.5px solid rgba(255, 255, 255, 0.25);
+    padding: 2.5rem 2rem 2rem 2rem;
+    width: 100%;
+    max-width: 370px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    position: relative;
+    margin-top: 1.5rem;
 }
 
 /*Ponemos label e input juntos*/
 .formulario_grupo {
     display: flex;
-    align-items: center;
-    margin-bottom: 0.6rem;
-    flex-direction: column; /* Diseño vertical */
-    text-align: left;
+    flex-direction: column;
+    gap: 0.5rem;
+    position: relative;
 }
 
-/*Centramos los placeholder de dentro de los inputs*/
+/* Centramos los placeholder de dentro de los inputs */
 input::placeholder {
     text-align: center;
     color: #aaa;
@@ -60,17 +72,46 @@ input::placeholder {
 
 /*Le damos ancho fijo a los label*/
 .formulario_grupo label {
-    margin-bottom: 0.4rem; /* Espaciado vertical */
-    width: 100%; /* Ocupa todo el ancho */
+    font-size: 1.05rem;
+    color: #003366;
+    font-weight: 500;
+    margin-bottom: 0.2rem;
+    letter-spacing: 0.03em;
 }
 
-/*Le damos ancho de 100% a los inputs*/
-.formulario_grupo input {
+/* Agrupamos el input y el icono */
+.input-icon-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+/* Estilo para el input con icono */
+.input-icon-group input {
     width: 100%;
-    padding: 0.5rem;
-    border: 0.1rem solid #ccc;
-    border-radius: 0.3rem;
-    box-sizing: border-box;
+    padding: 0.9rem 0.9rem 0.9rem 2.5rem;
+    border: none;
+    border-radius: 12px;
+    background: rgba(240, 248, 255, 0.85);
+    font-size: 1.08rem;
+    color: #003366;
+    box-shadow: 0 2px 8px rgba(0,51,102,0.06);
+    transition: box-shadow 0.2s, background 0.2s;
+}
+
+/* Efecto al enfocar el input */
+.input-icon-group input:focus {
+    outline: 2px solid #7ecbff;
+    background: #fff;
+}
+
+/* Estilo para el icono dentro del input */
+.input-icon-group .icon {
+    position: absolute;
+    left: 0.8rem;
+    font-size: 1.2rem;
+    color: #7ecbff;
+    pointer-events: none;
 }
 
 .botones {
@@ -82,53 +123,168 @@ input::placeholder {
 
 /* Estilo para el primer botón */
 .botones button[type="submit"] {
-    background-color: #007BFF;
-    color: white;
+    background: linear-gradient(90deg, #7ecbff 0%, #003366 100%);
+    color: #fff;
     width: 100%;
-    padding: 0.625rem;
+    padding: 0.95rem;
     border: none;
-    border-radius: 0.3125rem;
+    border-radius: 18px;
     cursor: pointer;
     margin-bottom: 1.25rem;
+    font-size: 1.08rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 12px rgba(0,51,102,0.10);
+    transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
 }
 
-.botones a {
-    padding-bottom: 1rem;
+/* Efecto al pasar el ratón sobre el botón */
+.botones button[type="submit"]:hover {
+    background: linear-gradient(90deg, #003366 0%, #7ecbff 100%);
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 4px 20px rgba(0,51,102,0.13);
+}
+
+.boton-secundario {
+    background: linear-gradient(90deg, #7ecbff 0%, #003366 100%);
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    font-size: 0.92rem;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    box-shadow: 0 1px 6px rgba(0,51,102,0.08);
+    transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
+    margin-top: 0.2rem;
+}
+
+.boton-secundario:hover {
+    background: linear-gradient(90deg, #003366 0%, #7ecbff 100%);
+    transform: translateY(-1px) scale(1.03);
+    box-shadow: 0 2px 10px rgba(0,51,102,0.10);
+}
+
+#limpiar {
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s;
+}
+
+#limpiar:hover {
+    color: #e0e0e0;
 }
 
 /*linea que separa formulario de crear usuario*/
 .separator {
-    height: 0.1rem;
-    width: 100%;
-    background-color: #ccc;
+    border-top: 2px dashed #7ecbff;
+    margin: 1.5rem 0;
 }
 
-/*Volver a iniciar_sesion*/
+/* Mensaje de usuario creado */
+#usuario_creado {
+    color: #28a745;
+    font-size: 1rem;
+    display: none;
+    text-align: center;
+    background: #f0fff0;
+    border-radius: 8px;
+    padding: 0.7rem 1rem;
+    margin-bottom: 0.5rem;
+    border: 1.5px solid #c3e6cb;
+    box-shadow: 0 1px 4px rgba(40,167,69,0.07);
+}
+
+/* Inputs estilo igual que iniciar sesión */
+input[type="text"], input[type="password"] {
+    padding: 0.95rem 1.5rem; /* Igual que el botón */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+    background: rgba(240, 248, 255, 0.85);
+    color: #003366;
+    box-shadow: 0 2px 8px rgba(0,51,102,0.06);
+    width: 100%;
+    margin-bottom: 0.5rem;
+    box-sizing: border-box; /* Asegura que el padding no aumente el ancho */
+}
+
+input[type="text"]:focus, input[type="password"]:focus {
+    border-color: #007bff;
+    outline: none;
+    background: #fff;
+}
+
+/* Botón principal: Crear usuario */
+.botones button#Crear_usuario {
+    background: linear-gradient(90deg, #7ecbff 0%, #003366 100%);
+    color: #fff;
+    width: 100%;             
+    padding: 0.95rem 1.5rem;
+    border: none;
+    border-radius: 18px;
+    cursor: pointer;
+    margin-bottom: 0.5rem;
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 12px rgba(0,51,102,0.10);
+    transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
+    text-decoration: none;    /* Sin subrayado */
+    text-align: center;
+    display: block;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+/* Botón limpiar: centrado y más pequeño */
+.botones #limpiar {
+    background: linear-gradient(90deg, #7ecbff 0%, #003366 100%);
+    color: #fff;
+    padding: 0.5rem 1.5rem;
+    border-radius: 14px;
+    font-size: 0.92rem;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    box-shadow: 0 1px 6px rgba(0,51,102,0.08);
+    margin-top: 0.2rem;
+    text-decoration: none;
+    border: none;
+    display: block;
+    width: auto;
+    transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Cuadro inferior igual que el de arriba */
 .Inicio {
     padding: 1rem;
-    width: 90%; /* Ancho flexible */
-    max-width: 400px; /* Límite para pantallas grandes */
-    margin-top: 0.5rem;
+    width: 90%;
+    max-width: 400px;
+    margin-top: 1rem;
     display: flex;
     align-items: center;
     text-align: center;
     justify-content: center;
-    height: auto; /* Altura ajustable automáticamente */
-    border: 0.1rem solid rgb(226, 226, 226);
-    background-color: white;
-    border-radius: 0.5rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    height: auto;
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 22px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+    backdrop-filter: blur(8px);
+    border: 1.5px solid rgba(255, 255, 255, 0.25);
+    color: #fff;
 }
 
-a {
-    color: blue;
-}
-
-/* Imagen de vista previa */
-#imagenVistaPrevia {
-    max-width: 100%;
-    display: none;
-    margin-top: 10px;
+.Inicio a.Iniciar_sesion {
+    color: #7ecbff;
+    text-decoration: underline;
+    font-weight: 600;
+    margin-left: 0.3rem;
 }
 
 /* Media queries para dispositivos pequeños */
@@ -155,18 +311,12 @@ a {
         font-size: 11px;
         padding: 1rem;
     }
-    #createForm, .Inicio {
-        padding: 0.8rem;
+    #createForm {
+        padding: 1.2rem 0.5rem 1rem 0.5rem;
+        max-width: 98vw;
     }
-    .botones button[type="submit"] {
-        font-size: 0.9rem;
-    }
-}
-
-/* Aseguramos que el formulario sea completamente visible */
-@media (max-height: 600px) {
-    #createForm, .Inicio {
-        max-height: 90vh; /* Limita la altura del formulario */
-        overflow-y: auto; /* Permite scroll interno */
+    .botones button, .botones a {
+        padding: 0.7rem 1rem;
+        font-size: 1rem;
     }
 }

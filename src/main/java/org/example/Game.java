@@ -47,7 +47,9 @@ public class Game {
         for (int minute = 10; minute <= 90; minute = minute + 5) {
             simulateMinute(minute);
         }
+        listMvp();
         events.add("Resultado final: " + teamA.getName() + " " + scoreA + " - " + scoreB + " " + teamB.getName());
+
     }
 
     private void simulateMinute(int minute) {
@@ -505,19 +507,25 @@ public class Game {
                 .sorted((p1, p2) -> Double.compare(p2.getPoints(), p1.getPoints()))
                 .toList();
 
+        // Top 11 jugadores
+        StringBuilder top11 = new StringBuilder("Top 11 jugadores del partido:\n");
+        int count = 0;
         for (Player player : mvpPlayer) {
             if (player.isHasPlayed()) {
                 if (mvp == null) {
                     mvp = player;
                 }
-                System.out.printf("\n %s : %s", player.getName(), player.getPoints());
-            } else {
-                System.out.printf("\n %s NaN", player.getName());
+                if (count < 11) {
+                    top11.append(String.format("%d. %s (%.2f puntos)\n", count + 1, player.getName(), player.getPoints()));
+                    count++;
+                }
             }
-
         }
-        System.out.println();
-        System.out.println(mvp.getName());
+        // Añadir el top 11 y MVP a los eventos
+        events.add(top11.toString().trim());
+        if (mvp != null) {
+            events.add("MVP del partido: " + mvp.getName() + " (" + String.format("%.2f", mvp.getPoints()) + " puntos)");
+        }
     }
 
 

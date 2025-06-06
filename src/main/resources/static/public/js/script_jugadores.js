@@ -77,21 +77,19 @@ function closeCreatePlayerModal() {
     document.getElementById("createPlayerModal").style.display = "none";
 }
 
-// Función para abrir el modal de un jugador
+// Función para abrir el modal de un jugador (mejorado)
 function openPlayerModal(player) {
     const playerModal = document.getElementById("playerModal");
-    const playerInfo = document.getElementById("playerInfo");
-    const editPlayerButton = document.getElementById("editPlayerButton");
-    const deletePlayerButton = document.getElementById("deletePlayerButton");
+    document.getElementById("playerModalName").textContent = player.name;
+    
+    document.getElementById("playerModalSkill").textContent = `Habilidad: ${player.skill}`;
+    document.getElementById("playerModalPosition").textContent = `Posición: ${player.position}`;
+    document.getElementById("playerModalHasPlayed").textContent = `¿Es titular?: ${player.hasPlayed ? "Sí" : "No"}`;
 
-    // Mostrar información del jugador
-    playerInfo.textContent = `Jugador: ${player.name} (ID: ${player.id})\nHabilidad: ${player.skill}\nPosición: ${player.position}\n¿Es titular?: ${player.hasPlayed ? "Sí" : "No"}`;
+    document.getElementById("editPlayerButton").onclick = () => openEditPlayerModal(player);
+    document.getElementById("deletePlayerButton").onclick = () => deletePlayer(player.id);
 
-    // Configurar acciones de los botones
-    editPlayerButton.onclick = () => openEditPlayerModal(player); // Abrir el nuevo modal de edición
-    deletePlayerButton.onclick = () => deletePlayer(player.id); // Eliminar el jugador
-
-    playerModal.style.display = "flex"; // Mostrar el modal
+    playerModal.style.display = "flex";
 }
 
 // Función para cerrar el modal del jugador
@@ -197,7 +195,7 @@ function openEditPlayerModal(player) {
     document.getElementById("editPlayerHasPlayed").checked = player.hasPlayed;
 
     // Guardar el ID del jugador en un atributo del formulario
-    document.getElementById("editPlayerForm").dataset.playerId = player.id;
+    document.getElementById("editPlayerForm").dataset.playerId = player.id; // Esto es correcto
 
     editPlayerModal.style.display = "flex"; // Mostrar el modal
 }
@@ -219,61 +217,53 @@ function ordenarJugadores(jugadores) {
 
 // Función para cargar jugadores de un equipo
 async function loadPlayers(teamId, teamName) {
-    const jugadoresTable = document.getElementById("jugadoresTable");
+    const jugadoresTable = document.querySelector(".jugadores-table");
     const jugadoresTitle = document.getElementById("jugadoresTitle");
     const btnCrearJugador = document.getElementById("btnCrearJugador");
     const jugadoresTableBody = jugadoresTable.querySelector("tbody");
 
-    // Ocultar la tabla y mostrar un mensaje de carga
-    jugadoresTableBody.innerHTML = "<tr><td colspan='5'>Cargando jugadores...</td></tr>";
-    jugadoresTable.style.display = "table"; // Mostrar la tabla
-    jugadoresTitle.style.display = "block"; // Mostrar el título
-    btnCrearJugador.style.display = "block"; // Mostrar el botón de crear jugador
+    jugadoresTableBody.innerHTML = "<tr><td colspan='4'>Cargando jugadores...</td></tr>";
+    jugadoresTable.style.display = "table";
+    jugadoresTitle.style.display = "block";
+    btnCrearJugador.style.display = "block";
     jugadoresTitle.textContent = `Jugadores del Equipo: ${teamName}`;
-    currentTeamId = teamId; // Guardar el ID del equipo seleccionado
-
+    currentTeamId = teamId;
     try {
         const response = await fetch(`http://localhost:8080/users/${userId}/teams/${teamId}/players`, {
             headers: {
                 Authorization: token,
             },
         });
+        if (!response.ok) throw new Error("Error al cargar jugadores");
+        let jugadores = await response.json();
 
-        if (!response.ok) {
-            jugadoresTableBody.innerHTML = "<tr><td colspan='5'>Error: No se pudieron cargar los jugadores.</td></tr>";
-            throw new Error("Error al cargar los jugadores.");
+        // Ordenar jugadores si tienes función
+        if (typeof ordenarJugadores === "function") {
+            jugadores = ordenarJugadores(jugadores);
         }
 
-        let players = await response.json();
-        jugadoresTableBody.innerHTML = "";
-
-        if (players.length === 0) {
-            jugadoresTableBody.innerHTML = "<tr><td colspan='5'>No se encontraron jugadores.</td></tr>";
+        if (jugadores.length === 0) {
+            jugadoresTableBody.innerHTML = "<tr><td colspan='4'>No hay jugadores en este equipo.</td></tr>";
             return;
         }
 
-        // Ordenar jugadores: titulares primero, luego por posición
-        players = ordenarJugadores(players);
+        jugadoresTableBody.innerHTML = "";
+        jugadores.forEach((jugador) => {
+            const tr = document.createElement("tr");
+            tr.style.cursor = "pointer";
+            tr.onclick = () => openPlayerModal(jugador); // jugador debe tener su id
 
-        players.forEach((player) => {
-            const row = document.createElement("tr");
-
-            row.innerHTML = `
-                <td style="border: 1px solid #ccc; padding: 8px;">${player.id}</td>
-                <td style="border: 1px solid #ccc; padding: 8px;">${player.name}</td>
-                <td style="border: 1px solid #ccc; padding: 8px;">${player.skill}</td>
-                <td style="border: 1px solid #ccc; padding: 8px;">${player.position}</td>
-                <td style="border: 1px solid #ccc; padding: 8px;">${player.hasPlayed ? "Sí" : "No"}</td>
+            tr.innerHTML = `
+                <td>${jugador.name}</td>
+                <td>${jugador.skill}</td>
+                <td>${jugador.position}</td>
+                <td>${jugador.hasPlayed ? "Sí" : "No"}</td>
             `;
-
-            // Asignar evento onclick para abrir el modal del jugador
-            row.onclick = () => openPlayerModal(player);
-
-            jugadoresTableBody.appendChild(row);
+            jugadoresTableBody.appendChild(tr);
         });
     } catch (error) {
-        console.error("Error al cargar los jugadores:", error);
-        jugadoresTableBody.innerHTML = "<tr><td colspan='5'>Error al cargar los jugadores.</td></tr>";
+        jugadoresTableBody.innerHTML = "<tr><td colspan='4'>Error al cargar los jugadores.</td></tr>";
+        console.error(error);
     }
 }
 
@@ -325,7 +315,12 @@ document.getElementById("createPlayerForm").addEventListener("submit", async (ev
 document.getElementById("editPlayerForm").addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    const playerId = event.target.dataset.playerId; // Obtener el ID del jugador
+    const playerId = event.target.dataset.playerId;
+    if (!playerId) {
+        alert("Error interno: No se encontró el ID del jugador.");
+        return;
+    }
+
     const updatedName = document.getElementById("editPlayerName").value.trim();
     const updatedSkill = parseInt(document.getElementById("editPlayerSkill").value.trim(), 10);
     const updatedPosition = document.getElementById("editPlayerPosition").value; // Obtener el valor seleccionado
@@ -388,7 +383,6 @@ document.addEventListener("DOMContentLoaded", () => {
     loadTeams();
 
     // Ocultar la tabla al cargar la página
-    jugadoresTable.style.display = "none";
     jugadoresTitle.style.display = "none";
     btnCrearJugador.style.display = "none";
 });

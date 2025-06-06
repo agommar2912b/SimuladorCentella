@@ -148,9 +148,17 @@ document
             `;
       }
 
+      const localOption = selectLocal.options[selectLocal.selectedIndex];
+      const visitanteOption = selectVisitante.options[selectVisitante.selectedIndex];
+      const localImg = localOption.getAttribute("data-img") || "/public/img/equipos/default.png";
+      const visitanteImg = visitanteOption.getAttribute("data-img") || "/public/img/equipos/default.png";
+
       resumenDiv.innerHTML = `
             <div class="plantilla-box" style="background:#f8fbff;border-radius:12px;padding:2rem 1rem;margin-bottom:2rem;box-shadow:0 2px 10px #005bb51a;">
-                <h3 style="color:#005bb5;text-align:center;margin-bottom:1.2rem;">${localName}</h3>
+                <h3 style="color:#005bb5;text-align:center;margin-bottom:1.2rem;display:flex;flex-direction:column;align-items:center;gap:0.5rem;">
+                  <img src="${localImg}" alt="${localName}" style="height:120px;width:120px;vertical-align:middle;border-radius:50%;margin:0 auto 0.5rem auto;display:block;" onerror="this.onerror=null;this.src='/public/img/equipos/default.png';">
+                  <span>${localName}</span>
+                </h3>
                 <table class="jugadores-table">
                     <thead>
                         <tr>
@@ -206,7 +214,10 @@ document
                 </div>
             </div>
             <div class="plantilla-box" style="background:#f8fbff;border-radius:12px;padding:2rem 1rem;margin-bottom:2rem;box-shadow:0 2px 10px #005bb51a;">
-                <h3 style="color:#005bb5;text-align:center;margin-bottom:1.2rem;">${visitanteName}</h3>
+                <h3 style="color:#005bb5;text-align:center;margin-bottom:1.2rem;display:flex;flex-direction:column;align-items:center;gap:0.5rem;">
+                  <img src="${visitanteImg}" alt="${visitanteName}" style="height:120px;width:120px;vertical-align:middle;border-radius:50%;margin:0 auto 0.5rem auto;display:block;" onerror="this.onerror=null;this.src='/public/img/equipos/default.png';">
+                  <span>${visitanteName}</span>
+                </h3>
                 <table class="jugadores-table">
                     <thead>
                         <tr>
@@ -318,10 +329,9 @@ document
                     <div class="resultado-partido-box">
                         <div class="equipos-marcador">
                             <div class="equipo-nombre">
-                                <img src="/public/img/equipos/${localName
-                                  .replace(/\s+/g, "_")
-                                  .toLowerCase()}.png" 
+                                <img src="${localImg}" 
                                      alt="${localName}" 
+                                     style="height:100px;width:100px;border-radius:50%;"
                                      onerror="this.onerror=null;this.src='/public/img/equipos/default.png';">
                                 <span>${localName}</span>
                             </div>
@@ -338,10 +348,9 @@ document
                                   )}
                             </div>
                             <div class="equipo-nombre">
-                                <img src="/public/img/equipos/${visitanteName
-                                  .replace(/\s+/g, "_")
-                                  .toLowerCase()}.png" 
+                                <img src="${visitanteImg}" 
                                      alt="${visitanteName}" 
+                                     style="height:100px;width:100px;border-radius:50%;"
                                      onerror="this.onerror=null;this.src='/public/img/equipos/default.png';">
                                 <span>${visitanteName}</span>
                             </div>
