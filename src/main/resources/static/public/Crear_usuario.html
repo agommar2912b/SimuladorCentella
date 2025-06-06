@@ -7,13 +7,17 @@
     <link rel="stylesheet" href="css/styles_crear.css">
 </head>
 <body>
-    <form id="createForm">
+    <form id="createForm" enctype="multipart/form-data">
         <div class="formulario_grupo">
             <input type="text" id="nombre" name="nombre" placeholder="Nombre" required>
         </div>
 
         <div class="formulario_grupo">
             <input type="password" id="contraseña" name="contraseña" placeholder="Contraseña" required>
+        </div>
+
+        <div class="formulario_grupo">
+            <input type="file" id="imagen" name="imagen" accept="image/*" required>
         </div>
 
         <p id="usuario_creado" style="display: none;">Usuario creado correctamente</p>

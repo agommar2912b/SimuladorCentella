@@ -97,5 +97,20 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('btnEquipos').addEventListener('click', () => {
         window.location.href = 'equipos.html'; // Redirige a la página de Equipos
     });
+
+    // Mostrar la imagen de usuario si existe usando el nombre
+    const nombreUsuario = localStorage.getItem('nombre_usuario');
+    if (nombreUsuario) {
+        fetch(`http://localhost:8080/users?name=${encodeURIComponent(nombreUsuario)}`)
+            .then(res => res.json())
+            .then(users => {
+                if (users.length > 0 && users[0].profilePictureUrl) {
+                    document.getElementById('userPhoto').src = '/users/images/' + users[0].profilePictureUrl.split('/').pop() + '?t=' + Date.now();
+                }
+            })
+            .catch(() => {
+                // Si hay error, deja la imagen por defecto
+            });
+    }
 });
 

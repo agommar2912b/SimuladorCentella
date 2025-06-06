@@ -23,6 +23,8 @@ public class UserEntity {
 
     private String password;
 
+    private String profilePictureUrl;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private List<TeamEntity> teams;

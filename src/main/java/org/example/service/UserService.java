@@ -3,8 +3,10 @@ package org.example.service;
 import lombok.RequiredArgsConstructor;
 import org.example.dto.user.UserChangeName;
 import org.example.dto.user.UserChangePassword;
+import org.example.entity.TeamEntity;
 import org.example.entity.UserEntity;
 import org.example.exceptions.InvalidCredentialsException;
+import org.example.exceptions.TeamNotFoundException;
 import org.example.exceptions.UserNameExistException;
 import org.example.exceptions.UserNotFoundException;
 import org.example.repository.UserRepository;
@@ -54,7 +56,7 @@ public class UserService {
 
 
 
-    public UserEntity patchUser(Long id, String name, String password) {
+    public UserEntity patchUser(Long id, String name, String password , String profilePictureUrl)  {
         UserEntity User = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
 
@@ -69,6 +71,9 @@ public class UserService {
         }
         if (password!=null  && !password.trim().isEmpty()) {
             User.setPassword(password);
+        }
+        if (profilePictureUrl != null && !profilePictureUrl.trim().isEmpty()) {
+            User.setProfilePictureUrl(profilePictureUrl);
         }
         return userRepository.save(User);
     }
@@ -88,14 +93,20 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public UserEntity createUser(String name, String password) {
+    public UserEntity createUser(String name, String password , String profilePictureUrl) {
         UserEntity userWithName = getByName(name);
         if (userWithName==null) {
             UserEntity user = new UserEntity(name,password);
+            user.setProfilePictureUrl(profilePictureUrl);
             return userRepository.save(user);
         } else {
             throw new UserNameExistException(name);
         }
     }
+
+    public UserEntity getById(Long userId) {
+    return userRepository.findById(userId)
+            .orElseThrow(() -> new UserNotFoundException(userId));
+}
 }
 

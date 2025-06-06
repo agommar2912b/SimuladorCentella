@@ -4,19 +4,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const nombre = document.getElementById('nombre').value;
         const contraseña = document.getElementById('contraseña').value;
+        const imagenInput = document.getElementById('imagen');
+        const imagen = imagenInput.files[0];
 
         try {
-            const body = {
-                name: nombre,
-                password: contraseña
-            };
+            const formData = new FormData();
+            formData.append('name', nombre);
+            formData.append('password', contraseña);
+            if (imagen) {
+                formData.append('image', imagen);
+            }
 
             const response = await fetch('http://localhost:8080/users', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(body)
+                body: formData
             });
 
             if (!response.ok) throw new Error('Error al crear usuario');

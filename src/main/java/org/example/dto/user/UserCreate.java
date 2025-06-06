@@ -11,4 +11,6 @@ public class UserCreate {
     private String name;
     @NotBlank(message = "The password can't be empty")
     private String password;
+    @NotBlank(message = "The image can't be empty")
+    private String profilePictureUrl;
 }

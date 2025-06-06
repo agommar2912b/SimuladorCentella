@@ -8,9 +8,15 @@ import org.example.entity.UserEntity;
 import org.example.exceptions.InvalidCredentialsException;
 import org.example.exceptions.UserNotFoundNameException;
 import org.example.service.UserService;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,46 +50,101 @@ public class UserController {
 
     @PutMapping("/changeName")
     public UserResponse changeName(@RequestBody UserChangeName request) {
-        UserEntity user =  userService.changeName(request);
+        UserEntity user = userService.getByName(request.getOldUsername());
+        if (user == null) {
+            throw new InvalidCredentialsException("Usuario no encontrado");
+        }
+
+        String oldName = user.getName();
+        String newName = request.getNewUsername();
+
+        // Renombrar la imagen si existe
+        String oldProfilePictureUrl = user.getProfilePictureUrl();
+        String newProfilePictureUrl = null;
+        if (oldProfilePictureUrl != null && !oldProfilePictureUrl.isBlank()) {
+            try {
+                String oldFileName = oldName.replaceAll("[^a-zA-Z0-9\\-_]", "_") + ".jpg";
+                String newFileName = newName.replaceAll("[^a-zA-Z0-9\\-_]", "_") + ".jpg";
+                Path imagesDir = Paths.get("images", "users");
+                Path oldImagePath = imagesDir.resolve(oldFileName);
+                Path newImagePath = imagesDir.resolve(newFileName);
+
+                if (Files.exists(oldImagePath)) {
+                    Files.move(oldImagePath, newImagePath);
+                    newProfilePictureUrl = "/images/users/" + newFileName;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Cambiar el nombre y la url de la imagen en la base de datos
+        UserEntity updatedUser = userService.changeName(request);
+        if (newProfilePictureUrl != null) {
+            updatedUser.setProfilePictureUrl(newProfilePictureUrl);
+            userService.patchUser(updatedUser.getId(), updatedUser.getName(), null, newProfilePictureUrl);
+        }
+
         return UserResponse.builder()
-                .id(user.getId())
-                .name(user.getName())
+                .id(updatedUser.getId())
+                .name(updatedUser.getName())
+                .profilePictureUrl(updatedUser.getProfilePictureUrl())
                 .build();
-    }
-
-    @PatchMapping("/{id}")
-    public UserResponse patchUser(@PathVariable Long id, @Valid @RequestBody UserPatch userPatch){
-        UserEntity patchedTeam = userService.patchUser(id, userPatch.getName(), userPatch.getPassword());
-
-        return UserResponse.builder()
-                .id(patchedTeam.getId())
-                .name(patchedTeam.getName())
-                .password(patchedTeam.getPassword())
-                .build();
-
     }
     @DeleteMapping("/{id}")
     public UserResponse deleteUser(@PathVariable Long id){
-        UserEntity patchedTeam = userService.deleteUser(id);
+        UserEntity user = userService.deleteUser(id);
+
+        // Eliminar la imagen asociada si existe
+        String profilePictureUrl = user.getProfilePictureUrl();
+        if (profilePictureUrl != null && !profilePictureUrl.isBlank()) {
+            try {
+                String relativePath = profilePictureUrl.startsWith("/") ? profilePictureUrl.substring(1) : profilePictureUrl;
+                Path imagePath = Paths.get(relativePath);
+                if (Files.exists(imagePath)) {
+                    Files.delete(imagePath);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
         return UserResponse.builder()
-                .id(patchedTeam.getId())
-                .name(patchedTeam.getName())
-                .password(patchedTeam.getPassword())
+                .id(user.getId())
+                .name(user.getName())
+                .profilePictureUrl(user.getProfilePictureUrl())
                 .build();
-
     }
-    @PostMapping
-    public UserResponse createUser(@Valid @RequestBody UserCreate userCreate){
-        UserEntity patchedUser = userService.createUser(userCreate.getName(),userCreate.getPassword());
+    @PostMapping(consumes = {"multipart/form-data"})
+    public UserResponse createUser(
+            @RequestParam("name") String name,
+            @RequestParam("password") String password,
+            @RequestParam("image") MultipartFile image) throws Exception { // <-- Quita required = false
+
+        if (image == null || image.isEmpty()) {
+            throw new IllegalArgumentException("La imagen es obligatoria");
+        }
+
+        String imagesDir = "images/users";
+        if (!Files.exists(Paths.get(imagesDir))) {
+            Files.createDirectories(Paths.get(imagesDir));
+        }
+        String safeName = name.replaceAll("[^a-zA-Z0-9\\-_]", "_");
+        String profilePictureUrl = null;
+        String fileName = safeName + ".jpg";
+        Path imagePath = Paths.get(imagesDir, fileName);
+        Files.write(imagePath, image.getBytes());
+        profilePictureUrl = "/images/users/" + fileName;
+
+        UserEntity user = userService.createUser(name, password, profilePictureUrl);
 
         return UserResponse.builder()
-                .id(patchedUser.getId())
-                .name(patchedUser.getName())
-                .password(patchedUser.getPassword())
+                .id(user.getId())
+                .name(user.getName())
+                .profilePictureUrl(user.getProfilePictureUrl())
                 .build();
-
     }
+
 
     @GetMapping
     public List<UserResponse> getUsers(@RequestParam(required = false)String name) {
@@ -106,7 +167,19 @@ public class UserController {
                         .id(u.getId())
                         .name(u.getName())
                         .password(u.getPassword())
+                        .profilePictureUrl(u.getProfilePictureUrl())
                         .build())
                 .toList();
+    }
+
+    @GetMapping("/images/{imageName:.+}")
+    public ResponseEntity<Resource> getUserImage(@PathVariable String imageName) throws Exception {
+        Path imagePath = Paths.get("images", "users", imageName);
+        Resource resource = new UrlResource(imagePath.toUri());
+        if (resource.exists() && resource.isReadable()) {
+            return ResponseEntity.ok().body(resource);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
