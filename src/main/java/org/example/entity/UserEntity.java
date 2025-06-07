@@ -25,6 +25,10 @@ public class UserEntity {
 
     private String profilePictureUrl;
 
+    private String securityQuestion;
+
+    private String securityAnswer;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private List<TeamEntity> teams;

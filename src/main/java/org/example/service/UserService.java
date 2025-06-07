@@ -37,8 +37,13 @@ public class UserService {
     public UserEntity changePassword(UserChangePassword request) {
         UserEntity user = getByName(request.getUsername());
 
-        if (user == null || !user.getPassword().equals(request.getOld_password())) {
-            throw new InvalidCredentialsException("Usuario o contraseña incorrectos");
+        if (user == null) {
+            throw new InvalidCredentialsException("Usuario no encontrado");
+        }
+
+        // Validar respuesta de seguridad
+        if (!user.getSecurityAnswer().equalsIgnoreCase(request.getSecurityAnswer().trim())) {
+            throw new InvalidCredentialsException("Respuesta de seguridad incorrecta");
         }
 
         user.setPassword(request.getNew_password());
@@ -93,11 +98,13 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public UserEntity createUser(String name, String password , String profilePictureUrl) {
+    public UserEntity createUser(String name, String password, String profilePictureUrl, String securityQuestion, String securityAnswer) {
         UserEntity userWithName = getByName(name);
-        if (userWithName==null) {
-            UserEntity user = new UserEntity(name,password);
+        if (userWithName == null) {
+            UserEntity user = new UserEntity(name, password);
             user.setProfilePictureUrl(profilePictureUrl);
+            user.setSecurityQuestion(securityQuestion);
+            user.setSecurityAnswer(securityAnswer);
             return userRepository.save(user);
         } else {
             throw new UserNameExistException(name);

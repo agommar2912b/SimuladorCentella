@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const contraseña = document.getElementById('contraseña').value;
         const imagenInput = document.getElementById('imagen');
         const imagen = imagenInput.files[0];
+        const pregunta = document.getElementById('pregunta').value;
+        const respuesta = document.getElementById('respuesta').value;
 
         try {
             const formData = new FormData();
@@ -14,6 +16,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (imagen) {
                 formData.append('image', imagen);
             }
+            formData.append('securityQuestion', pregunta);
+            formData.append('securityAnswer', respuesta);
 
             const response = await fetch('http://localhost:8080/users', {
                 method: 'POST',
@@ -34,5 +38,10 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error:', error);
             alert('Error al crear usuario');
         }
+    });
+
+    document.getElementById('imagen').addEventListener('change', function() {
+        const fileName = this.files[0] ? this.files[0].name : 'Ningún archivo seleccionado';
+        document.getElementById('fileName').textContent = fileName;
     });
 });

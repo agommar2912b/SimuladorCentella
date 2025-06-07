@@ -320,3 +320,37 @@ input[type="text"]:focus, input[type="password"]:focus {
         font-size: 1rem;
     }
 }
+
+/* Mejora visual para el input de imagen */
+input[type="file"] {
+    display: none;
+}
+
+.custom-file-label {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    background: linear-gradient(90deg, #6dd5ed 0%, #2193b0 100%);
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    transition: background 0.3s;
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.custom-file-label:hover {
+    background: linear-gradient(90deg, #2193b0 0%, #6dd5ed 100%);
+}
+
+.file-name {
+    display: block;
+    color: #003366;
+    font-size: 0.95rem;
+    margin-top: 0.2rem;
+    margin-left: 0.2rem;
+    opacity: 0.8;
+    text-align: center;
+}

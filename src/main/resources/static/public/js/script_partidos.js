@@ -180,7 +180,7 @@ document
                                     <td>${j.id ?? "-"}</td>
                                     <td>${j.name ?? "-"}</td>
                                     <td>${j.skill ?? "-"}</td>
-                                    <td>${j.position ?? "-"}</td>
+                                    <td>${traducirPosicion(j.position ?? "-")}</td>
                                     <td>${j.hasPlayed ? "Sí" : "No"}</td>
                                 </tr>
                             `
@@ -239,7 +239,7 @@ document
                                     <td>${j.id ?? "-"}</td>
                                     <td>${j.name ?? "-"}</td>
                                     <td>${j.skill ?? "-"}</td>
-                                    <td>${j.position ?? "-"}</td>
+                                    <td>${traducirPosicion(j.position ?? "-")}</td>
                                     <td>${j.hasPlayed ? "Sí" : "No"}</td>
                                 </tr>
                             `
@@ -409,6 +409,16 @@ function setTeamImage(selectId, imgDivId, imgTagId, nombreSpanId) {
 
   select.addEventListener("change", updateImageAndName);
   updateImageAndName(); // Inicializa al cargar
+}
+
+function traducirPosicion(pos) {
+    switch (pos) {
+        case "GOALKEEPER": return "Portero";
+        case "DEFENDER": return "Defensa";
+        case "MIDFIELDER": return "Mediocentro";
+        case "FORWARD": return "Delantero";
+        default: return pos;
+    }
 }
 
 // Ejecutar cuando el DOM esté listo

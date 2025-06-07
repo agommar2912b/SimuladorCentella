@@ -270,7 +270,8 @@ main h2 {
     box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
 }
 
-#editPlayerModal .btn-submit {
+/* Botón azul para submit en todos los modales */
+.btn-submit {
     background-color: #007bff;
     color: white;
     padding: 10px 20px;
@@ -281,7 +282,7 @@ main h2 {
     transition: background-color 0.3s ease;
 }
 
-#editPlayerModal .btn-submit:hover {
+.btn-submit:hover {
     background-color: #0056b3;
 }
 

@@ -1,11 +1,13 @@
 package org.example.dto.user;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class UserChangePassword {
     private String username;
-    private String old_password;
+    private String securityAnswer;
     private String new_password;
 }
 

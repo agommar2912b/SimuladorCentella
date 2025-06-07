@@ -83,7 +83,7 @@ function openPlayerModal(player) {
     document.getElementById("playerModalName").textContent = player.name;
     
     document.getElementById("playerModalSkill").textContent = `Habilidad: ${player.skill}`;
-    document.getElementById("playerModalPosition").textContent = `Posición: ${player.position}`;
+    document.getElementById("playerModalPosition").textContent = `Posición: ${traducirPosicion(player.position)}`;
     document.getElementById("playerModalHasPlayed").textContent = `¿Es titular?: ${player.hasPlayed ? "Sí" : "No"}`;
 
     document.getElementById("editPlayerButton").onclick = () => openEditPlayerModal(player);
@@ -256,7 +256,7 @@ async function loadPlayers(teamId, teamName) {
             tr.innerHTML = `
                 <td>${jugador.name}</td>
                 <td>${jugador.skill}</td>
-                <td>${jugador.position}</td>
+                <td>${traducirPosicion(jugador.position)}</td>
                 <td>${jugador.hasPlayed ? "Sí" : "No"}</td>
             `;
             jugadoresTableBody.appendChild(tr);
@@ -359,6 +359,17 @@ document.getElementById("editPlayerForm").addEventListener("submit", async (even
         alert("Hubo un error al editar el jugador.");
     }
 });
+
+// Función para traducir la posición del jugador al español
+function traducirPosicion(pos) {
+    switch (pos) {
+        case "GOALKEEPER": return "Portero";
+        case "DEFENDER": return "Defensa";
+        case "MIDFIELDER": return "Mediocentro";
+        case "FORWARD": return "Delantero";
+        default: return pos;
+    }
+}
 
 // Evento para el buscador
 document.addEventListener("DOMContentLoaded", () => {

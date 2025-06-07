@@ -18,6 +18,15 @@
 
         <div class="formulario_grupo">
             <input type="file" id="imagen" name="imagen" accept="image/*" required>
+            <label for="imagen" class="custom-file-label" id="customFileLabel">Seleccionar imagen</label>
+            <span id="fileName" class="file-name">Ningún archivo seleccionado</span>
+        </div>
+
+        <div class="formulario_grupo">
+            <input type="text" id="pregunta" name="pregunta" placeholder="Pregunta de seguridad" required>
+        </div>
+        <div class="formulario_grupo">
+            <input type="text" id="respuesta" name="respuesta" placeholder="Respuesta de seguridad" required>
         </div>
 
         <p id="usuario_creado" style="display: none;">Usuario creado correctamente</p>

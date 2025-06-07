@@ -119,7 +119,9 @@ public class UserController {
     public UserResponse createUser(
             @RequestParam("name") String name,
             @RequestParam("password") String password,
-            @RequestParam("image") MultipartFile image) throws Exception { // <-- Quita required = false
+            @RequestParam("image") MultipartFile image,
+            @RequestParam("securityQuestion") String securityQuestion,
+            @RequestParam("securityAnswer") String securityAnswer) throws Exception { 
 
         if (image == null || image.isEmpty()) {
             throw new IllegalArgumentException("La imagen es obligatoria");
@@ -136,7 +138,7 @@ public class UserController {
         Files.write(imagePath, image.getBytes());
         profilePictureUrl = "/images/users/" + fileName;
 
-        UserEntity user = userService.createUser(name, password, profilePictureUrl);
+        UserEntity user = userService.createUser(name, password, profilePictureUrl, securityQuestion, securityAnswer);
 
         return UserResponse.builder()
                 .id(user.getId())
@@ -181,5 +183,14 @@ public class UserController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/security-question")
+    public ResponseEntity<?> getSecurityQuestion(@RequestParam String username) {
+        UserEntity user = userService.getByName(username);
+        if (user == null) {
+            return ResponseEntity.badRequest().body("Usuario no encontrado");
+        }
+        return ResponseEntity.ok().body(user.getSecurityQuestion());
     }
 }
