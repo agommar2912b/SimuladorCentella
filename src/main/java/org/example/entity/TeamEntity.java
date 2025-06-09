@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -25,7 +26,7 @@ public class TeamEntity {
     private UserEntity user;
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
-    private List<PlayerEntity> players;
+    private List<PlayerEntity> players = new ArrayList<>();
 
     private String profilePictureUrl;
 
