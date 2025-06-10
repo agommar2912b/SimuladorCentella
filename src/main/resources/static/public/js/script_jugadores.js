@@ -1,10 +1,26 @@
-const userId = localStorage.getItem("user_id"); // Obtener el ID del usuario desde localStorage
-const token = localStorage.getItem("token"); // Obtener el token desde localStorage
+const userId = localStorage.getItem('user_id');
+const nombreUsuario = localStorage.getItem('nombre_usuario');
 
-console.log("Token:", token);
-if (!token) {
-    console.error("No se encontró el token en localStorage.");
+async function validarUsuario() {
+    if (!userId || !nombreUsuario) {
+        window.location.href = 'Iniciar_sesion.html';
+        return;
+    }
+    // Comprobar que el usuario existe en la base de datos
+    try {
+        const res = await fetch(`http://localhost:8080/users?name=${encodeURIComponent(nombreUsuario)}`);
+        const users = await res.json();
+        if (!Array.isArray(users) || users.length === 0 || users[0].id != userId) {
+            window.location.href = 'Iniciar_sesion.html';
+        }
+    } catch {
+        window.location.href = 'Iniciar_sesion.html';
+    }
 }
+
+// Llama a la función antes de cualquier otra lógica
+validarUsuario();
+
 
 // Función para cargar equipos
 async function loadTeams(name = "") {
@@ -16,9 +32,6 @@ async function loadTeams(name = "") {
 
     try {
         const response = await fetch(`http://localhost:8080/users/${userId}/teams`, {
-            headers: {
-                Authorization: token,
-            },
         });
 
         if (!response.ok) {
@@ -107,9 +120,6 @@ async function deletePlayer(playerId) {
     try {
         const response = await fetch(`http://localhost:8080/users/${userId}/teams/${currentTeamId}/players/${playerId}`, {
             method: "DELETE",
-            headers: {
-                Authorization: token,
-            },
         });
 
         if (!response.ok) {
@@ -155,8 +165,7 @@ function openEditPlayerForm(player) {
             const response = await fetch(`http://localhost:8080/users/${userId}/teams/${currentTeamId}/players/${player.id}`, {
                 method: "PATCH",
                 headers: {
-                    "Content-Type": "application/json",
-                    Authorization: token,
+                    "Content-Type": "application/json",                
                 },
                 body: JSON.stringify({
                     name: updatedName,
@@ -230,9 +239,6 @@ async function loadPlayers(teamId, teamName) {
     currentTeamId = teamId;
     try {
         const response = await fetch(`http://localhost:8080/users/${userId}/teams/${teamId}/players`, {
-            headers: {
-                Authorization: token,
-            },
         });
         if (!response.ok) throw new Error("Error al cargar jugadores");
         let jugadores = await response.json();
@@ -288,7 +294,6 @@ document.getElementById("createPlayerForm").addEventListener("submit", async (ev
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: token,
             },
             body: JSON.stringify({
                 name: playerName,
@@ -336,7 +341,6 @@ document.getElementById("editPlayerForm").addEventListener("submit", async (even
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: token,
             },
             body: JSON.stringify({
                 name: updatedName,

@@ -1,8 +1,10 @@
 package org.example.controller;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.example.dto.team.TeamPatch;
 import org.example.dto.user.*;
 import org.example.entity.UserEntity;
 import org.example.exceptions.InvalidCredentialsException;
@@ -13,6 +15,14 @@ import org.example.service.UserService;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextHolderStrategy;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.nio.file.StandardCopyOption;
@@ -32,19 +42,31 @@ public class UserController {
     private final UserService userService;
     private final TeamService teamService;      
     private final PlayerService playerService;
+    private final AuthenticationManager authenticationManager;
+    private final SecurityContextHolderStrategy securityContextHolderStrategy = SecurityContextHolder.getContextHolderStrategy();
+    private final SecurityContextRepository securityContextRepository =
+            new HttpSessionSecurityContextRepository();
 
     @PostMapping("/login")
-    public UserResponse login(@Valid @RequestBody UserCreate loginRequest) {
+    public UserResponse login(@Valid @RequestBody UserCreate loginRequest , HttpServletRequest request, HttpServletResponse response) {
         UserEntity user = userService.validateUserCredentials(loginRequest.getName(), loginRequest.getPassword());
         if (user == null) {
             throw new InvalidCredentialsException("Invalid username or password");
         }
+        UsernamePasswordAuthenticationToken token = UsernamePasswordAuthenticationToken.unauthenticated(
+                loginRequest.getName(), loginRequest.getPassword());
+        Authentication authentication = authenticationManager.authenticate(token);
+        SecurityContext context = securityContextHolderStrategy.createEmptyContext();
+        context.setAuthentication(authentication);
+        securityContextHolderStrategy.setContext(context);
+        securityContextRepository.saveContext(context, request, response);
 
         return UserResponse.builder()
                 .id(user.getId())
                 .name(user.getName())
                 .build();
     }
+
 
     @PutMapping("/changePassword")
     public UserResponse changePassword(@RequestBody UserChangePassword request) {
@@ -660,5 +682,20 @@ private void crearEquipoInicialZero(UserEntity user) throws Exception {
             return ResponseEntity.badRequest().body("Usuario no encontrado");
         }
         return ResponseEntity.ok().body(user.getSecurityQuestion());
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
+        // Invalida la sesión
+        request.getSession().invalidate();
+
+        // Elimina la cookie JSESSIONID (o la que uses para la sesión)
+        Cookie cookie = new Cookie("JSESSIONID", null);
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(0); // Eliminar inmediatamente
+        response.addCookie(cookie);
+
+        return ResponseEntity.ok().body("Sesión cerrada y cookie eliminada");
     }
 }

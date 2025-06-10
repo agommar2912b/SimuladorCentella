@@ -29,14 +29,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 const errorMessage = document.getElementById('error-message');
                 errorMessage.style.display = 'block';
                 errorMessage.style.color = 'red'
-                return
+
             }
             else{
                 const usuarioData = await response.json();
                 console.log(usuarioData)
                 window.location.href = 'Sesion_iniciada.html' 
                 localStorage.setItem('nombre_usuario', nombreUsuario);
-                localStorage.setItem('token', usuarioData.token);
                 localStorage.setItem('user_id', usuarioData.id);
                 }
             } 

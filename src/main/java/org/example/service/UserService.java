@@ -10,6 +10,7 @@ import org.example.exceptions.TeamNotFoundException;
 import org.example.exceptions.UserNameExistException;
 import org.example.exceptions.UserNotFoundException;
 import org.example.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.Objects;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public UserEntity changeName(UserChangeName request) {
         UserEntity userExist = getByName(request.getNewUsername());
@@ -31,7 +33,6 @@ public class UserService {
             userRepository.save(user);
             return user;
         }
-
     }
 
     public UserEntity changePassword(UserChangePassword request) {
@@ -41,19 +42,21 @@ public class UserService {
             throw new InvalidCredentialsException("Usuario no encontrado");
         }
 
-        // Validar respuesta de seguridad
-        if (!user.getSecurityAnswer().equalsIgnoreCase(request.getSecurityAnswer().trim())) {
+        // Validar respuesta de seguridad encriptada
+        if (!passwordEncoder.matches(request.getSecurityAnswer().trim(), user.getSecurityAnswer())) {
             throw new InvalidCredentialsException("Respuesta de seguridad incorrecta");
         }
 
-        user.setPassword(request.getNew_password());
+        // Encriptar la nueva contraseña
+        user.setPassword(passwordEncoder.encode(request.getNew_password()));
         userRepository.save(user);
         return user;
     }
 
     public UserEntity validateUserCredentials(String name, String password) {
         UserEntity user = getByName(name);
-        if (user == null||!user.getPassword().equals(password)) {
+        // Usar passwordEncoder.matches para comparar la contraseña
+        if (user == null || !passwordEncoder.matches(password, user.getPassword())) {
             throw new InvalidCredentialsException("Invalid username or password");
         }
         return user;
@@ -75,7 +78,8 @@ public class UserService {
             User.setName(name);
         }
         if (password!=null  && !password.trim().isEmpty()) {
-            User.setPassword(password);
+            // Encriptar la contraseña si se actualiza
+            User.setPassword(passwordEncoder.encode(password));
         }
         if (profilePictureUrl != null && !profilePictureUrl.trim().isEmpty()) {
             User.setProfilePictureUrl(profilePictureUrl);
@@ -101,10 +105,11 @@ public class UserService {
     public UserEntity createUser(String name, String password, String profilePictureUrl, String securityQuestion, String securityAnswer) {
         UserEntity userWithName = getByName(name);
         if (userWithName == null) {
-            UserEntity user = new UserEntity(name, password);
+            // Encriptar la contraseña y la respuesta de seguridad al crear usuario
+            UserEntity user = new UserEntity(name, passwordEncoder.encode(password));
             user.setProfilePictureUrl(profilePictureUrl);
             user.setSecurityQuestion(securityQuestion);
-            user.setSecurityAnswer(securityAnswer);
+            user.setSecurityAnswer(passwordEncoder.encode(securityAnswer)); // Encriptar aquí
             return userRepository.save(user);
         } else {
             throw new UserNameExistException(name);
@@ -112,8 +117,8 @@ public class UserService {
     }
 
     public UserEntity getById(Long userId) {
-    return userRepository.findById(userId)
-            .orElseThrow(() -> new UserNotFoundException(userId));
-}
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId));
+    }
 }
 

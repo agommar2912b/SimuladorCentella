@@ -19,18 +19,24 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
     private String profilePictureUrl;
 
+    @Column(nullable = false)
     private String securityQuestion;
 
+    @Column(nullable = false)
     private String securityAnswer;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
+    @Column(nullable = false)
     private List<TeamEntity> teams;
 
 

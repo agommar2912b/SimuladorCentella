@@ -17,13 +17,17 @@ public class PlayerEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
     private String name;
+    @Column(nullable = false)
     private Integer skill;
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Position position;
+    @Column(nullable = false)
     private boolean hasPlayed;
     @ManyToOne
-    @JoinColumn(name = "team_id")
+    @JoinColumn(name = "team_id",nullable = false)
     private TeamEntity team;
 
 

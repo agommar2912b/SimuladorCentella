@@ -1,9 +1,28 @@
 document.addEventListener("DOMContentLoaded", () => {
+    const userId = localStorage.getItem('user_id');
+    const nombreUsuario = localStorage.getItem('nombre_usuario');
     const configuracionButton = document.getElementById("configuracion");
     const configuracionApartado = document.getElementById("configuracion-apartado");
 
+    async function validarUsuario() {
+        if (!userId || !nombreUsuario) {
+            window.location.href = 'Iniciar_sesion.html';
+            return;
+        }
+        // Comprobar que el usuario existe en la base de datos
+        try {
+            const res = await fetch(`http://localhost:8080/users?name=${encodeURIComponent(nombreUsuario)}`);
+            const users = await res.json();
+            if (!Array.isArray(users) || users.length === 0 || users[0].id != userId) {
+                window.location.href = 'Iniciar_sesion.html';
+            }
+        } catch {
+            window.location.href = 'Iniciar_sesion.html';
+        }
+    }
+
     configuracionButton.addEventListener("click", () => {
-        configuracionApartado.classList.toggle("abierto"); // Alternar la clase 'abierto'
+        configuracionApartado.classList.toggle("abierto"); 
     });
 
 
@@ -11,8 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('Modificar_Nombre').addEventListener('click', async function () {
         const nuevoNombre = prompt("Introduce el nuevo nombre de usuario:");
         if (nuevoNombre) {
-            const token = localStorage.getItem('token');
-            const nombreAntiguo = localStorage.getItem('nombre_usuario'); // Obtener el nombre antiguo del localStorage
+            const nombreAntiguo = localStorage.getItem('nombre_usuario'); 
 
             alert(`Nombre de usuario actualizado de: ${nombreAntiguo} a: ${nuevoNombre}`);
             try {
@@ -44,9 +62,8 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('Eliminar_cuenta').addEventListener('click', async function () {
         const confirmDelete = confirm("¿Estás seguro que quieres borrar la cuenta?");
         if (confirmDelete) {
-            const userId = localStorage.getItem('user_id'); // <--- Asegúrate de guardar esto al iniciar sesión
-            const token = localStorage.getItem('token');
-
+            const userId = localStorage.getItem('user_id'); 
+            
             if (!userId) {
                 alert("No se encontró el ID del usuario en localStorage.");
                 return;
@@ -65,10 +82,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     throw new Error('No se pudo eliminar la cuenta');
                 }
 
-                // Limpiar localStorage y redirigir
+              
                 localStorage.removeItem('nombre_usuario');
-                localStorage.removeItem('token');
-                localStorage.removeItem('user_id'); // <-- Limpiar el ID
+                localStorage.removeItem('user_id');
                 window.location.href = 'Iniciar_sesion.html';
 
             } catch (error) {
@@ -79,9 +95,16 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Cerrar sesión
-    document.getElementById('Volver_Inicio').addEventListener('click', function () {
+    document.getElementById('Volver_Inicio').addEventListener('click', async function () {
+        try {
+            await fetch('http://localhost:8080/users/logout', {
+                method: 'POST',
+                credentials: 'include' // Importante para enviar cookies
+            });
+        } catch (e) {
+            // Ignorar errores, continuar con el cierre de sesión local
+        }
         localStorage.removeItem('nombre_usuario');
-        localStorage.removeItem('token');
         localStorage.removeItem('user_id');
         window.location.href = 'Iniciar_sesion.html';
     });
@@ -98,8 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = 'equipos.html'; // Redirige a la página de Equipos
     });
 
-    // Mostrar la imagen de usuario si existe usando el nombre
-    const nombreUsuario = localStorage.getItem('nombre_usuario');
+ 
     if (nombreUsuario) {
         fetch(`http://localhost:8080/users?name=${encodeURIComponent(nombreUsuario)}`)
             .then(res => res.json())
@@ -112,5 +134,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 // Si hay error, deja la imagen por defecto
             });
     }
+
+    // Llama a la función antes de cualquier otra lógica
+    validarUsuario();
 });
 

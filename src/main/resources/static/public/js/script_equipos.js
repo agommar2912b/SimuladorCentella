@@ -1,6 +1,25 @@
-// Declarar userId y token globalmente
-const userId = localStorage.getItem("user_id"); // Obtener el ID del usuario desde localStorage
-const token = localStorage.getItem("token"); // Obtener el token desde localStorage
+const userId = localStorage.getItem('user_id');
+const nombreUsuario = localStorage.getItem('nombre_usuario');
+
+async function validarUsuario() {
+    if (!userId || !nombreUsuario) {
+        window.location.href = 'Iniciar_sesion.html';
+        return;
+    }
+    // Comprobar que el usuario existe en la base de datos
+    try {
+        const res = await fetch(`http://localhost:8080/users?name=${encodeURIComponent(nombreUsuario)}`);
+        const users = await res.json();
+        if (!Array.isArray(users) || users.length === 0 || users[0].id != userId) {
+            window.location.href = 'Iniciar_sesion.html';
+        }
+    } catch {
+        window.location.href = 'Iniciar_sesion.html';
+    }
+}
+
+// Llama a la función antes de cualquier otra lógica
+validarUsuario();
 
 // Funciones para abrir y cerrar el modal
 function openCreateTeamModal() {
@@ -67,9 +86,6 @@ function openEditFormModal(team) {
         try {
             const response = await fetch(`http://localhost:8080/users/${userId}/teams/${team.id}`, {
                 method: "PATCH",
-                headers: {
-                    Authorization: token,
-                },
                 body: formData,
             });
 
@@ -109,9 +125,6 @@ async function deleteTeam(teamId) {
     try {
         const response = await fetch(`http://localhost:8080/users/${userId}/teams/${teamId}`, {
             method: "DELETE",
-            headers: {
-                Authorization: token,
-            },
         });
 
         if (!response.ok) {
@@ -131,19 +144,12 @@ async function deleteTeam(teamId) {
 async function loadTeams(name = "") {
     const equiposContainer = document.getElementById("equiposContainer");
 
-    if (!userId || !token) {
-        equiposContainer.innerHTML = "<p>Error: No se encontró el ID del usuario o el token.</p>";
-        return;
-    }
-
     try {
-        // Siempre trae todos los equipos y filtra en el frontend
+
         const url = `http://localhost:8080/users/${userId}/teams`;
 
         const response = await fetch(url, {
-            headers: {
-                Authorization: token,
-            },
+          
         });
 
         if (!response.ok) {
@@ -152,7 +158,6 @@ async function loadTeams(name = "") {
 
         let teams = await response.json();
 
-        // Filtrado parcial en frontend (insensible a mayúsculas/minúsculas)
         if (name) {
             const search = name.toLowerCase();
             teams = teams.filter(team => team.name.toLowerCase().includes(search));
@@ -225,9 +230,6 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             const response = await fetch(`http://localhost:8080/users/${userId}/teams`, {
                 method: "POST",
-                headers: {
-                    Authorization: token,
-                },
                 body: formData,
             });
 

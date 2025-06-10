@@ -1,22 +1,39 @@
-// Obtener userId y token del localStorage
-const userId = localStorage.getItem("user_id");
-const token = localStorage.getItem("token");
+const userId = localStorage.getItem('user_id');
+const nombreUsuario = localStorage.getItem('nombre_usuario');
+
+async function validarUsuario() {
+    if (!userId || !nombreUsuario) {
+        window.location.href = 'Iniciar_sesion.html';
+        return;
+    }
+    // Comprobar que el usuario existe en la base de datos
+    try {
+        const res = await fetch(`http://localhost:8080/users?name=${encodeURIComponent(nombreUsuario)}`);
+        const users = await res.json();
+        if (!Array.isArray(users) || users.length === 0 || users[0].id != userId) {
+            window.location.href = 'Iniciar_sesion.html';
+        }
+    } catch {
+        window.location.href = 'Iniciar_sesion.html';
+    }
+}
+
+// Llama a la función antes de cualquier otra lógica
+validarUsuario();
 
 // Función para cargar equipos en los selects
 async function loadTeamsForSelects() {
   const selectLocal = document.getElementById("equipoLocal");
   const selectVisitante = document.getElementById("equipoVisitante");
 
-  if (!userId || !token) {
-    selectLocal.innerHTML = "<option>Error de usuario/token</option>";
-    selectVisitante.innerHTML = "<option>Error de usuario/token</option>";
+  if (!userId ) {
+    selectLocal.innerHTML = "<option>Error de usuario</option>";
     return;
   }
 
   try {
     const url = `http://localhost:8080/users/${userId}/teams`;
     const response = await fetch(url, {
-      headers: { Authorization: token },
     });
 
     if (!response.ok) throw new Error("Error al cargar los equipos");
@@ -75,7 +92,6 @@ async function getTeamWithPlayers(teamId) {
 
   // Obtener jugadores
   const jugadoresResp = await fetch(jugadoresUrl, {
-    headers: { Authorization: token },
   });
   const jugadores = await jugadoresResp.json();
 
@@ -162,7 +178,6 @@ document
                 <table class="jugadores-table">
                     <thead>
                         <tr>
-                            <th>ID</th>
                             <th>Nombre</th>
                             <th>Habilidad</th>
                             <th>Posición</th>
@@ -177,7 +192,6 @@ document
                                 .map(
                                   (j) => `
                                 <tr>
-                                    <td>${j.id ?? "-"}</td>
                                     <td>${j.name ?? "-"}</td>
                                     <td>${j.skill ?? "-"}</td>
                                     <td>${traducirPosicion(j.position ?? "-")}</td>
@@ -309,7 +323,6 @@ document
           const response = await fetch(url, {
             method: "POST",
             headers: {
-              Authorization: token,
               "Content-Type": "application/json",
             },
             body: JSON.stringify(body),

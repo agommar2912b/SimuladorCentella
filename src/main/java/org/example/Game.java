@@ -35,7 +35,10 @@ public class Game {
 
         teamB.setWinProbability(100 - teamA.getWinProbability());
 
-        events.add("Probabilidades de victoria: " + teamA.getName() + " " + teamA.getWinProbability() + "%, " + teamB.getName() + " " + teamB.getWinProbability() + "%");
+        events.add("Probabilidades de victoria: " + teamA.getName() + " " +
+            String.format("%.2f", teamA.getWinProbability()) + "%, " +
+            teamB.getName() + " " +
+            String.format("%.2f", teamB.getWinProbability()) + "%");
     }
 
     private double calculateWinProbabilities_players(Player atacker, Player defender) {
