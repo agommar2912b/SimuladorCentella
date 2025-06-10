@@ -61,7 +61,7 @@ form {
 }
 
 input[type="text"], input[type="password"] {
-    padding: 0.95rem 1.5rem; /* Igual que en crear usuario */
+    padding: 0.95rem 1.5rem; 
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 1rem;
@@ -127,9 +127,19 @@ input[type="text"]:focus, input[type="password"]:focus {
 
 /* Separador */
 .separator {
-    border-top: 2px dashed #7ecbff;
+    border-top: 2px dashed #abb72d;;
     margin: 1.5rem 0;
 }
+
+input {
+    text-align: center;
+}
+
+input::placeholder {
+    text-align: center;
+    color:#abb72d ;
+}
+
 
 /* Botones */
 .botones {
@@ -202,6 +212,28 @@ button:hover {
 
 .olvidar:hover {
     color: #0056b3;
+}
+
+/* Aplica el mismo hover de "Crear usuario" a todos los botones y enlaces de acción en inicio y contraseña */
+/* Puedes añadir esto al final de styles_inicio.css y styles_contraseña_olv.css */
+
+/* Botones principales y enlaces de acción */
+.botones button,
+.botones a,
+button,
+#limpiar {
+    transition: background 0.3s, transform 0.2s, box-shadow 0.2s, color 0.3s;
+}
+
+/* Hover igual que en crear usuario */
+.botones button:hover,
+.botones a:hover,
+button:hover,
+#limpiar:hover {
+    background: linear-gradient(90deg, #003366 0%, #abb72d 100%);
+    color: #fff;
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 4px 20px rgba(0,51,102,0.13);
 }
 
 /* Responsivo */
