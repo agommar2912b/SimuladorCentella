@@ -1,47 +1,47 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Simulador Centella- Sesión Iniciada</title>
-    <link rel="stylesheet" href="css/styles_sesion_iniciada.css">
-    <link rel="icon" type="image/png" href="img/favicon/favicon.png">
-
-</head>
-<body>
+    <link rel="stylesheet" href="css/styles_sesion_iniciada.css" />
+    <link rel="icon" type="image/png" href="img/favicon/favicon.png" />
+  </head>
+  <body>
     <!-- Encabezado con título decorado -->
     <nav class="navbar">
-        <h1>Simulador Centella</h1>
+      <h1>Simulador Centella</h1>
     </nav>
 
     <div class="contenido">
-        <!-- Menú lateral con botones -->
-        <aside class="menu-lateral">
-            <img id="userPhoto" alt="Foto del usuario">
-            <button type="button" id="configuracion">Configuración</button>
+      <!-- Menú lateral con botones -->
+      <aside class="menu-lateral">
+        <img id="userPhoto" alt="Foto del usuario" />
+        <button type="button" id="configuracion">Configuración</button>
+        <div id="configuracion-apartado" class="configuracion-apartado">
+          <button type="button" id="Modificar_Nombre">
+            Modificar nombre de usuario
+          </button>
+          <button type="button" id="Volver_Inicio">Cerrar sesión</button>
+          <button type="button" id="Eliminar_cuenta">Eliminar cuenta</button>
+        </div>
+      </aside>
 
-            <!-- Sección de configuración que está oculta por defecto -->
-            <div id="configuracion-apartado" class="configuracion-apartado">
-                <button type="button" id="Modificar_Nombre">Modificar nombre de usuario</button>
-                <button type="button" id="Volver_Inicio">Cerrar sesión</button>
-                <button type="button" id="Eliminar_cuenta">Eliminar cuenta</button>
-            </div>
-        </aside>
-
-        <!-- Contenido principal -->
-        <main>
-            <h2>Bienvenido a tu simulador de fútbol</h2>
-            <p>Selecciona una opción del menú para comenzar.</p>
-
-            <!-- Botones principales -->
-            <div class="botones-principales">
-                <button id="btnPartidos">Partidos</button>
-                <button id="btnJugadores" onclick="window.location.href='Jugadores.html'">Jugadores</button>
-                <button id="btnEquipos">Equipos</button>
-            </div>
-        </main>
+      <!-- Contenido principal -->
+      <main>
+        <div class="main-bg"></div>
+        <div class="main-content">
+          <h2>Bienvenido a tu simulador de fútbol</h2>
+          <p>Selecciona una opción del menú para comenzar.</p>
+          <div class="botones-principales">
+            <button id="btnPartidos">Partidos</button>
+            <button id="btnJugadores">Jugadores</button>
+            <button id="btnEquipos">Equipos</button>
+          </div>
+        </div>
+      </main>
     </div>
 
     <script src="js/script_sesion_iniciada.js"></script>
-</body>
+  </body>
 </html>

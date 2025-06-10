@@ -4,6 +4,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const configuracionButton = document.getElementById("configuracion");
     const configuracionApartado = document.getElementById("configuracion-apartado");
 
+    configuracionButton.addEventListener("click", () => {
+        configuracionApartado.classList.toggle("visible");
+    });
+
     async function validarUsuario() {
         if (!userId || !nombreUsuario) {
             window.location.href = 'Iniciar_sesion.html';
@@ -21,11 +25,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    configuracionButton.addEventListener("click", () => {
-        configuracionApartado.classList.toggle("abierto"); 
-    });
-
-
     // Evento para el botón "Modificar nombre de usuario"
     document.getElementById('Modificar_Nombre').addEventListener('click', async function () {
         const nuevoNombre = prompt("Introduce el nuevo nombre de usuario:");
@@ -36,8 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
             try {
                 const response = await fetch(`http://localhost:8080/users/changeName`, {
                     method: "PUT",
-                    headers: {
-                        'Authorization': token,
+                    headers: { 
                         'Content-Type': "application/json"
                     },
                     body: JSON.stringify({
@@ -73,7 +71,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 const response = await fetch(`http://localhost:8080/users/${userId}`, {
                     method: "DELETE",
                     headers: {
-                        'Authorization': token,
                         'Content-Type': "application/json"
                     }
                 });
@@ -138,4 +135,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // Llama a la función antes de cualquier otra lógica
     validarUsuario();
 });
+
+
 
