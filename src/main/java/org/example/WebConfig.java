@@ -1,4 +1,4 @@
-package org.example; // <- cámbialo si usas otro paquete
+package org.example;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
