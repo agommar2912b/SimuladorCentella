@@ -6,7 +6,6 @@ async function validarUsuario() {
         window.location.href = 'Iniciar_sesion.html';
         return;
     }
-    // Comprobar que el usuario existe en la base de datos
     try {
         const res = await fetch(`http://localhost:8080/users?name=${encodeURIComponent(nombreUsuario)}`);
         const users = await res.json();
@@ -18,7 +17,6 @@ async function validarUsuario() {
     }
 }
 
-// Llama a la función antes de cualquier otra lógica
 validarUsuario();
 
 // Funciones para abrir y cerrar el modal
@@ -54,7 +52,6 @@ function openEditFormModal(team) {
     document.getElementById("editTeamName").value = team.name;
     document.getElementById("editTeamImageFile").value = "";
 
-    // Mostrar la imagen actual del equipo en el modal
     const preview = document.getElementById("editTeamImagePreview");
     if (preview && team.profilePictureUrl) {
         preview.src = `/users/${userId}/teams/images/${userId}/${team.profilePictureUrl.split('/').pop()}?t=${Date.now()}`;
@@ -94,9 +91,9 @@ function openEditFormModal(team) {
             }
 
             alert("Equipo editado con éxito.");
-            editFormModal.style.display = "none"; // Cerrar el modal de edición
-            closeEditTeamModal(); // Cerrar el modal principal
-            loadTeams(); // Recargar la lista de equipos
+            editFormModal.style.display = "none"; 
+            closeEditTeamModal(); 
+            loadTeams(); 
         } catch (error) {
             console.error(error);
             alert("Hubo un error al editar el equipo (puede ser que el nombre esté repetido).");
@@ -133,7 +130,7 @@ async function deleteTeam(teamId) {
 
         alert("Equipo eliminado con éxito.");
         closeEditTeamModal();
-        loadTeams(); // Recargar la lista de equipos
+        loadTeams(); 
     } catch (error) {
         console.error(error);
         alert("Hubo un error al eliminar el equipo.");
@@ -163,7 +160,7 @@ async function loadTeams(name = "") {
             teams = teams.filter(team => team.name.toLowerCase().includes(search));
         }
 
-        equiposContainer.innerHTML = ""; // Limpiar el contenedor
+        equiposContainer.innerHTML = "";
 
         if (teams.length === 0) {
             equiposContainer.innerHTML = "<p>No se encontraron equipos.</p>";
@@ -183,7 +180,6 @@ async function loadTeams(name = "") {
                 <h3>${team.name}</h3>
             `;
 
-            // Solo la imagen abre el modal
             teamCard.querySelector('.equipo-img').onclick = (e) => {
                 e.stopPropagation();
                 openEditTeamModal(team, imageUrl);
@@ -207,7 +203,6 @@ document.addEventListener("DOMContentLoaded", () => {
         loadTeams(name);
     });
 
-    // Cargar todos los equipos al inicio
     loadTeams();
 
     // Lógica para manejar la creación de equipos
@@ -239,7 +234,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             alert("Equipo creado con éxito.");
             closeCreateTeamModal();
-            loadTeams(); // Recargar la lista de equipos
+            loadTeams();
         } catch (error) {
             console.error(error);
             alert("Hubo un error al crear el equipo puede ser que ya tengas un equipo con ese nombre.");

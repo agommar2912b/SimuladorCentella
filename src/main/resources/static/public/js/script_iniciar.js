@@ -44,7 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    //Se puede hacer sinproblema sin manejo de eventos. Es recomendable que lo hagais tambien
     document.getElementById('limpiar').addEventListener('click', function(event) {
         event.preventDefault();
         const errorMessage = document.getElementById('error-message');

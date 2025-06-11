@@ -200,9 +200,9 @@ public class SoccerMatchSimulation {
         List<Player> gigantesBench = new ArrayList<>(List.of(
                 new Player("Alvicci", 80,Position.GOALKEEPER,false),
                 new Player("Galliano", 82,  Position.DEFENDER,false),
-                new Player("Steve", 84,  Position.MIDFIELDER,false), new Player("Gabrini", 82,  Position.MIDFIELDER,false),  new Player("Michael", 82,  Position.FORWARD,false)
-//                new Player("Yurkeh", 83,  Position.MIDFIELDER,false)
-        ));
+                new Player("Steve", 84,  Position.MIDFIELDER,false), new Player("Gabrini", 82,  Position.MIDFIELDER,false),  new Player("Michael", 82,  Position.FORWARD,false),
+                new Player("Yurkeh", 83,  Position.MIDFIELDER,false)
+        )); 
 
         Team gigantes = new Team("Gigantes", gigantesPlayers, gigantesGoalie, gigantesBench);
 

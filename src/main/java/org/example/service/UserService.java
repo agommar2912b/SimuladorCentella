@@ -26,7 +26,7 @@ public class UserService {
     public UserEntity changeName(UserChangeName request) {
         UserEntity userExist = getByName(request.getNewUsername());
         UserEntity user = getByName(request.getOldUsername());
-        if (userExist != null || Objects.equals(request.getNewUsername(), request.getOldUsername())) {
+        if (userExist != null || Objects.equals(request.getNewUsername(), request.getOldUsername())||request.getNewUsername() == null || request.getNewUsername().trim().isEmpty()) {  
             throw new InvalidCredentialsException("Ese nombre ya existe o es el mismo que ya tenias");
         }else{
             user.setName(request.getNewUsername());
@@ -46,7 +46,9 @@ public class UserService {
         if (!passwordEncoder.matches(request.getSecurityAnswer().trim(), user.getSecurityAnswer())) {
             throw new InvalidCredentialsException("Respuesta de seguridad incorrecta");
         }
-
+        if (request.getNew_password() == null || request.getNew_password().trim().isEmpty()) {
+            throw new InvalidCredentialsException("La nueva contraseña no puede estar vacía");
+        }
         // Encriptar la nueva contraseña
         user.setPassword(passwordEncoder.encode(request.getNew_password()));
         userRepository.save(user);

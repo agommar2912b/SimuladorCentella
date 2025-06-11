@@ -8,13 +8,11 @@
     <link rel="icon" type="image/png" href="img/favicon/favicon.png" />
   </head>
   <body>
-    <!-- Encabezado con título decorado -->
     <nav class="navbar">
       <h1>Simulador Centella</h1>
     </nav>
 
     <div class="contenido">
-      <!-- Menú lateral con botones -->
       <aside class="menu-lateral">
         <img id="userPhoto" alt="Foto del usuario" />
         <button type="button" id="configuracion">Configuración</button>
@@ -27,7 +25,6 @@
         </div>
       </aside>
 
-      <!-- Contenido principal -->
       <main>
         <div class="main-bg"></div>
         <div class="main-content">
@@ -40,6 +37,29 @@
           </div>
         </div>
       </main>
+    </div>
+
+    <div id="modalCambiarNombre" class="modal" style="display:none;">
+      <div class="modal-content">
+        <span class="close" id="cerrarModalCambiarNombre">&times;</span>
+        <h2>Cambiar nombre de usuario</h2>
+        <form id="formCambiarNombre" autocomplete="off">
+          <div class="form-group">
+            <label for="nuevoNombreInput">Nuevo nombre de usuario</label>
+            <input
+              type="text"
+              id="nuevoNombreInput"
+              placeholder="Nuevo nombre de usuario"
+              required
+            />
+          </div>
+          <div class="buttons">
+            <button type="submit" class="btn-submit" id="guardarNuevoNombre">Guardar</button>
+            <button type="button" class="btn-delete" id="cancelarNuevoNombre">Cancelar</button>
+          </div>
+          <p id="errorNombre" style="color:red; display:none; margin-top:10px;"></p>
+        </form>
+      </div>
     </div>
 
     <script src="js/script_sesion_iniciada.js"></script>

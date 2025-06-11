@@ -28,12 +28,10 @@
             </div>
 
             <div id="equiposContainer" class="equipos-container">
-                <!-- Aquí se cargarán los equipos dinámicamente -->
             </div>
         </main>
     </div>
 
-    <!-- Modal para crear equipo -->
     <div id="createTeamModal" class="modal" style="display: none;">
         <div class="modal-content">
             <span class="close" onclick="closeCreateTeamModal()">&times;</span>
@@ -52,10 +50,11 @@
         </div>
     </div>
 
-    <!-- Modal para editar/eliminar equipos -->
     <div id="editTeamModal" class="modal" style="display: none;">
         <div class="modal-content">
-            <img id="editTeamModalImg" src="" alt="Imagen del equipo" class="equipo-img" style="margin-bottom:12px;display:block;margin:auto;" />
+            <div class="modal-img-container">
+                <img id="editTeamModalImg" src="" alt="Imagen del equipo" class="equipo-img" style="margin-bottom:12px;display:block;margin:auto;" />
+            </div>
             <h2 id="teamInfo">Nombre del Equipo</h2>
             <div class="buttons">
                 <button id="editTeamButton" class="btn-edit">Editar</button>
@@ -65,7 +64,6 @@
         </div>
     </div>
 
-    <!-- Modal para el formulario de edición -->
     <div id="editFormModal" class="modal" style="display: none;">
         <div class="modal-content">
             <span class="close" onclick="closeEditFormModal()">&times;</span>

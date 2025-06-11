@@ -1,28 +1,30 @@
-/* General */
-body {
-    font-family: 'Roboto', sans-serif;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
+/* Fondo y tipografía general */
+body, html {
     height: 100vh;
-    background: linear-gradient(to bottom, #003366, #005bb5);
-    color: #fff;
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(120deg, #003366 0%, #7ecbff 100%);
+    color: #333;
+    overflow-x: hidden;
 }
 
 /* Navbar */
 .navbar {
-    background-color: #002244;
-    color: white;
+    background: rgba(0, 51, 102, 0.95);
+    color: #abb72d;
     text-align: center;
-    padding: 1rem 2rem;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    border-bottom: 3px solid #005bb5;
+    padding: 1.2rem 2rem;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.18);
+    border-bottom: 3px solid #abb72d;
 }
 
 .navbar h1 {
     margin: 0;
-    font-size: 2rem;
+    font-size: 2.2rem;
     font-weight: bold;
+    text-shadow: 2px 2px 6px rgba(0,0,0,0.13);
+    letter-spacing: 1px;
 }
 
 /* Contenedor principal */
@@ -30,57 +32,66 @@ body {
     display: flex;
     flex: 1;
     flex-direction: row;
-    background-color: #f5f5f5;
+    background: rgba(255,255,255,0.18);
     color: #333;
+    min-height: 0;
 }
 
 /* Menú lateral */
 .menu-lateral {
-    background-color: #ffffff;
-    padding: 2rem;
-    width: 200px;
-    box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
-    border-right: 3px solid #f2f2f2;
+    background: rgba(255,255,255,0.85);
+    padding: 2rem 1rem;
+    width: 210px;
+    box-shadow: 4px 0 16px rgba(0, 0, 0, 0.07);
+    border-right: none;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.2rem;
     align-items: center;
+    min-height: 100vh;
 }
 
 .menu-lateral button {
-    background-color: #005bb5;
-    color: white;
-    padding: 0.75rem 1.5rem;
+    background: linear-gradient(90deg, #7ecbff 0%, #003366 100%);
+    color: #fff;
+    padding: 0.8rem 1.5rem;
     border: none;
-    border-radius: 0.375rem;
+    border-radius: 16px;
     cursor: pointer;
     font-size: 1rem;
-    transition: background-color 0.3s, transform 0.2s;
+    font-weight: bold;
+    transition: all 0.3s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
     width: 100%;
     text-align: center;
 }
 
 .menu-lateral button:hover {
-    background-color: #003366;
-    transform: translateY(-2px);
+    background: linear-gradient(90deg, #003366 0%, #abb72d 100%);
+    color: #fff;
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 4px 20px rgba(0,51,102,0.13);
 }
 
 /* Contenido principal */
 main {
     flex: 1;
-    padding: 2rem;
-    background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 2.5rem 2rem;
+    background: rgba(255,255,255,0.95);
+    border-radius: 18px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.10);
     margin: 2rem;
+    min-width: 0;
 }
 
 main h2 {
     font-size: 2rem;
-    color: #003366;
-    margin-bottom: 1rem;
+    color: #abb72d;
+    margin-bottom: 1.2rem;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.08);
 }
 
+/* Buscador */
 .busqueda {
     display: flex;
     gap: 1rem;
@@ -90,35 +101,49 @@ main h2 {
 .busqueda input {
     flex: 1;
     padding: 0.75rem;
-    border: 1px solid #ccc;
-    border-radius: 0.375rem;
+    border: 1.5px solid #abb72d;
+    border-radius: 8px;
     font-size: 1rem;
+    background: rgba(255,255,255,0.85);
+    color: #003366;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    text-align: left; 
+    transition: border 0.3s;
+}
+
+.busqueda input::placeholder {
+    text-align: left; 
+    color: #abb72d;
 }
 
 .busqueda button {
-    background-color: #005bb5;
-    color: white;
-    padding: 0.75rem 1.5rem;
+    background: linear-gradient(90deg, #7ecbff 0%, #003366 100%);
+    color: #fff;
+    padding: 0.8rem 1.5rem;
     border: none;
-    border-radius: 0.375rem;
-    cursor: pointer;
+    border-radius: 16px;
     font-size: 1rem;
-    transition: background-color 0.3s, transform 0.2s;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
 }
 
 .busqueda button:hover {
-    background-color: #003366;
-    transform: translateY(-2px);
+    background: linear-gradient(90deg, #003366 0%, #abb72d 100%);
+    color: #fff;
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 4px 20px rgba(0,51,102,0.13);
 }
 
 /* Contenedor de equipos */
 .equipos-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1rem;
+    gap: 1.5rem;
 }
 
-/* Tarjetas de equipo mejoradas */
+/* Tarjetas de equipo */
 .equipo-card {
     background: linear-gradient(135deg, #e3f0ff 0%, #fafcff 100%);
     padding: 24px 18px 18px 18px;
@@ -128,7 +153,7 @@ main h2 {
     transition: transform 0.25s cubic-bezier(.4,2,.6,1), box-shadow 0.25s;
     position: relative;
     overflow: hidden;
-    border: 2px solid #e0e7ef;
+    border: 2px solid #abb72d;
 }
 
 .equipo-card:hover {
@@ -143,7 +168,7 @@ main h2 {
     object-fit: cover;
     border-radius: 50%;
     margin-bottom: 1rem;
-    border: 4px solid #fff;
+    border: 4px solid #abb72d;
     box-shadow: 0 2px 8px rgba(0,91,181,0.10);
     background: #f2f6fa;
     transition: box-shadow 0.3s;
@@ -166,202 +191,57 @@ main h2 {
     color: #555;
 }
 
-/* Estilos para el modal */
+/* Botones de acción en tarjetas */
+.btn-edit,
+.btn-delete {
+    display: inline-block;
+    padding: 12px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    margin: 0 0.3rem;
+    transition: all 0.3s;
+    box-shadow: 0 2px 8px rgba(0,91,181,0.08);
+}
+
+.btn-edit {
+    background: linear-gradient(90deg, #28a745 80%, #abb72d 100%);
+    color: #fff;
+}
+
+.btn-edit:hover {
+    background: linear-gradient(90deg, #218838 80%, #abb72d 100%);
+    transform: scale(1.05);
+}
+
+.btn-delete {
+    background: linear-gradient(90deg, #dc3545 80%, #ff6b81 100%);
+    color: #fff;
+}
+
+.btn-delete:hover {
+    background: linear-gradient(90deg, #c82333 80%, #abb72d 100%);
+    transform: scale(1.05);
+}
+
+/* Modal */
 .modal {
-    display: none; /* Ocultar el modal por defecto */
+    display: none;
     position: fixed;
     z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
     overflow: auto;
-    background-color: rgba(0, 0, 0, 0.6); /* Fondo oscuro con transparencia */
-    display: flex;
+    background-color: rgba(0, 0, 0, 0.6);
     justify-content: center;
     align-items: center;
 }
 
 .modal-content {
-    background-color: #fff;
-    padding: 20px; /* Espacio interno */
-    border-radius: 12px; /* Bordes redondeados */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Sombra */
-    width: 70%; /* Ancho del modal */
-    max-width: 600px; /* Ancho máximo */
-    text-align: center;
-    position: relative;
-    animation: slideDown 0.4s ease-in-out;
-    box-sizing: border-box; /* Asegurar que el padding se incluya en el ancho */
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes slideDown {
-    from {
-        transform: translateY(-20px);
-    }
-    to {
-        transform: translateY(0);
-    }
-}
-
-.modal-content h2 {
-    margin-bottom: 20px;
-    font-size: 24px;
-    color: #333;
-    font-weight: bold;
-}
-
-.modal-content .buttons {
-    display: flex;
-    justify-content: space-between; /* Espacio entre los botones */
-    gap: 15px; /* Espacio entre los botones */
-    margin-top: 20px; /* Espacio superior */
-}
-
-.form-group {
-    margin-bottom: 20px; /* Espacio entre los campos */
-    text-align: left;
-    width: 100%; /* Asegurar que el grupo ocupe todo el ancho disponible */
-    box-sizing: border-box; /* Incluir padding y borde en el ancho */
-}
-
-.form-group label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 8px; /* Espacio entre el label y el campo */
-    color: #555;
-}
-
-.form-group input {
-    width: calc(100% - 20px); /* Reducir el ancho para respetar los márgenes */
-    padding: 12px; /* Espacio interno */
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 16px; /* Tamaño de fuente */
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    box-sizing: border-box; /* Asegurar que el padding y el borde se incluyan en el ancho */
-}
-
-.form-group input:focus {
-    border-color: #007bff;
-    outline: none;
-    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
-}
-
-button.btn-submit {
-    padding: 15px 30px; /* Botón más grande */
-    font-size: 18px; /* Texto más grande */
-    font-weight: bold;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-button.btn-submit:hover {
-    background-color: #0056b3;
-    transform: scale(1.05);
-}
-
-.btn-submit,
-.btn-edit,
-.btn-delete {
-    display: inline-block;
-    padding: 12px 20px;
-    font-size: 16px;
-    font-weight: bold;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.btn-submit:hover {
-    background-color: #0056b3;
-    transform: scale(1.05);
-}
-
-button.btn-edit,
-button.btn-delete {
-    padding: 12px 20px; /* Tamaño de los botones */
-    font-size: 16px;
-    font-weight: bold;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-button.btn-edit {
-    background-color: #28a745;
-    color: #fff;
-}
-
-button.btn-edit:hover {
-    background-color: #218838;
-    transform: scale(1.05);
-}
-
-button.btn-delete {
-    background-color: #dc3545;
-    color: #fff;
-}
-
-button.btn-delete:hover {
-    background-color: #c82333;
-    transform: scale(1.05);
-}
-
-.btn-edit {
-    background-color: #28a745;
-    color: #fff;
-}
-
-.btn-edit:hover {
-    background-color: #218838;
-    transform: scale(1.05);
-}
-
-.btn-delete {
-    background-color: #dc3545;
-    color: #fff;
-}
-
-.btn-delete:hover {
-    background-color: #c82333;
-    transform: scale(1.05);
-}
-
-.close {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    font-size: 20px;
-    font-weight: bold;
-    color: #333;
-    cursor: pointer;
-    transition: color 0.3s ease;
-}
-
-.close:hover {
-    color: #ff0000;
-}
-
-/* Modal de detalles del equipo mejorado */
-#editTeamModal .modal-content {
     background: linear-gradient(120deg, #f5faff 60%, #e3f0ff 100%);
-    padding: 36px 32px 28px 32px;
+    padding: 2.5rem 2rem 2rem 2rem;
     border-radius: 20px;
     box-shadow: 0 8px 32px rgba(0, 91, 181, 0.18), 0 2px 8px rgba(0,0,0,0.10);
     width: 95%;
@@ -369,71 +249,171 @@ button.btn-delete:hover {
     text-align: center;
     position: relative;
     animation: slideDown 0.4s cubic-bezier(.4,2,.6,1);
+    box-sizing: border-box;
 }
 
-#editTeamModalImg {
-    width: 120px;
-    height: 120px;
-    object-fit: cover;
-    border-radius: 50%;
-    border: 4px solid #fff;
-    box-shadow: 0 4px 16px rgba(0,91,181,0.15);
-    margin-bottom: 18px;
-    background: #f2f6fa;
+@keyframes slideDown {
+    from { transform: translateY(-20px); }
+    to { transform: translateY(0); }
 }
 
-#editTeamModal h2#teamInfo {
+.modal-content h2 {
+    margin-bottom: 20px;
     font-size: 1.5rem;
-    color: #003366;
-    margin-bottom: 18px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
+    color: #abb72d;
+    font-weight: bold;
 }
 
-#editTeamModal .buttons {
+.modal-content .buttons {
     display: flex;
     justify-content: center;
     gap: 24px;
     margin-top: 18px;
 }
 
-#editTeamModal .btn-edit,
-#editTeamModal .btn-delete {
-    min-width: 110px;
-    padding: 12px 0;
-    font-size: 1rem;
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #003366;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1.5px solid #abb72d;
     border-radius: 8px;
-    font-weight: 600;
-    box-shadow: 0 2px 8px rgba(0,91,181,0.08);
+    font-size: 1rem;
+    background: rgba(255,255,255,0.85);
+    color: #003366;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.07);
+    box-sizing: border-box;
+    text-align: center;
 }
 
-#editTeamModal .btn-edit {
-    background: linear-gradient(90deg, #28a745 80%, #34d058 100%);
+.form-group input:focus {
+    border-color: #007bff;
+    outline: none;
+    background: #fff;
+}
+
+button.btn-submit {
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    background: linear-gradient(90deg, #7ecbff 0%, #003366 100%);
     color: #fff;
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
 }
 
-#editTeamModal .btn-edit:hover {
-    background: linear-gradient(90deg, #218838 80%, #28a745 100%);
-}
-
-#editTeamModal .btn-delete {
-    background: linear-gradient(90deg, #dc3545 80%, #ff6b81 100%);
+button.btn-submit:hover {
+    background: linear-gradient(90deg, #003366 0%, #abb72d 100%);
     color: #fff;
+    transform: scale(1.05);
 }
 
-#editTeamModal .btn-delete:hover {
-    background: linear-gradient(90deg, #c82333 80%, #dc3545 100%);
-}
-
-#editTeamModal .close {
+/* Botón cerrar modal */
+.close {
+    position: absolute;
     top: 18px;
     right: 18px;
     font-size: 26px;
+    font-weight: bold;
     color: #003366;
     opacity: 0.7;
+    cursor: pointer;
+    transition: color 0.3s;
 }
 
-#editTeamModal .close:hover {
+.close:hover {
     color: #ff0000;
     opacity: 1;
+}
+
+@media (max-width: 900px) {
+    .contenido {
+        flex-direction: column;
+    }
+    .menu-lateral {
+        flex-direction: row;
+        width: 100%;
+        min-height: unset;
+        border-right: none;
+        border-bottom: 2.5px dashed #abb72d;
+        box-shadow: none;
+        padding: 1.2rem 6vw;
+        justify-content: center;
+        align-items: center;
+        gap: 0.7rem; 
+        text-align: center;
+        display: flex;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    .menu-lateral button {
+        padding: 0.25rem 0.6rem;
+        font-size: 0.82rem;
+        border-radius: 10px;
+        min-width: 58px;
+        max-width: 85px;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+    main {
+        margin: 1rem 0.5rem;
+        padding: 1.2rem 0.5rem;
+    }
+}
+
+@media (max-width: 680px) {
+    .equipos-container {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    .equipo-card {
+        padding: 18px 8px 14px 8px;
+    }
+    .modal-content {
+        padding: 1.2rem 0.5rem;
+        max-width: 98vw;
+    }
+}
+
+.modal-content .modal-img-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1rem;
+    width: 120px;
+    height: 120px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 50%;
+    background: #fff;
+    border: 4px solid #abb72d;
+    box-shadow: 0 2px 8px rgba(0,91,181,0.10);
+}
+.modal-content .modal-img-container img {
+    width: 110px;
+    height: 110px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    box-shadow: none;
 }

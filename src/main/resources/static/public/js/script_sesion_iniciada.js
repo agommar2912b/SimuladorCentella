@@ -13,7 +13,6 @@ document.addEventListener("DOMContentLoaded", () => {
             window.location.href = 'Iniciar_sesion.html';
             return;
         }
-        // Comprobar que el usuario existe en la base de datos
         try {
             const res = await fetch(`http://localhost:8080/users?name=${encodeURIComponent(nombreUsuario)}`);
             const users = await res.json();
@@ -25,36 +24,63 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Evento para el botón "Modificar nombre de usuario"
-    document.getElementById('Modificar_Nombre').addEventListener('click', async function () {
-        const nuevoNombre = prompt("Introduce el nuevo nombre de usuario:");
-        if (nuevoNombre) {
-            const nombreAntiguo = localStorage.getItem('nombre_usuario'); 
+    // MODAL CAMBIAR NOMBRE
+    const modal = document.getElementById('modalCambiarNombre');
+    const cerrarModal = document.getElementById('cerrarModalCambiarNombre');
+    const guardarBtn = document.getElementById('guardarNuevoNombre');
+    const cancelarBtn = document.getElementById('cancelarNuevoNombre');
+    const errorNombre = document.getElementById('errorNombre');
+    const nuevoNombreInput = document.getElementById('nuevoNombreInput');
+    const formCambiarNombre = document.getElementById('formCambiarNombre');
 
-            alert(`Nombre de usuario actualizado de: ${nombreAntiguo} a: ${nuevoNombre}`);
-            try {
-                const response = await fetch(`http://localhost:8080/users/changeName`, {
-                    method: "PUT",
-                    headers: { 
-                        'Content-Type': "application/json"
-                    },
-                    body: JSON.stringify({
-                        oldUsername: nombreAntiguo, 
-                        newUsername: nuevoNombre  
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error('No se pudo modificar el nombre de usuario');
-                }
-                localStorage.setItem('nombre_usuario', nuevoNombre);
-
-            } catch (error) {
-                console.error("Error:", error.message);
-                alert("Ese nombre ya existe o es el mismo que ya tenias");
-            }
-        }
+    document.getElementById('Modificar_Nombre').addEventListener('click', function () {
+        errorNombre.style.display = 'none';
+        nuevoNombreInput.value = '';
+        modal.style.display = 'flex';
+        setTimeout(() => nuevoNombreInput.focus(), 100);
     });
+
+    cerrarModal.onclick = cancelarBtn.onclick = function() {
+        modal.style.display = 'none';
+    };
+
+    window.onclick = function(event) {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    };
+
+    formCambiarNombre.onsubmit = async function(e) {
+        e.preventDefault();
+        const nuevoNombre = nuevoNombreInput.value.trim();
+        if (!nuevoNombre) {
+            errorNombre.textContent = "Introduce un nombre válido.";
+            errorNombre.style.display = 'block';
+            nuevoNombreInput.focus();
+            return;
+        }
+        const nombreAntiguo = localStorage.getItem('nombre_usuario');
+        try {
+            const response = await fetch(`http://localhost:8080/users/changeName`, {
+                method: "PUT",
+                headers: { 'Content-Type': "application/json" },
+                body: JSON.stringify({
+                    oldUsername: nombreAntiguo,
+                    newUsername: nuevoNombre
+                })
+            });
+            if (!response.ok) {
+                throw new Error('No se pudo modificar el nombre de usuario');
+            }
+            localStorage.setItem('nombre_usuario', nuevoNombre);
+            modal.style.display = 'none';
+            alert(`Nombre de usuario actualizado de: ${nombreAntiguo} a: ${nuevoNombre}`);
+            location.reload();
+        } catch (error) {
+            errorNombre.textContent = "Ese nombre ya existe o es el mismo que ya tenías.";
+            errorNombre.style.display = 'block';
+        }
+    };
 
     // Eliminar cuenta
     document.getElementById('Eliminar_cuenta').addEventListener('click', async function () {
@@ -96,10 +122,10 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             await fetch('http://localhost:8080/users/logout', {
                 method: 'POST',
-                credentials: 'include' // Importante para enviar cookies
+                credentials: 'include' 
             });
         } catch (e) {
-            // Ignorar errores, continuar con el cierre de sesión local
+            
         }
         localStorage.removeItem('nombre_usuario');
         localStorage.removeItem('user_id');
@@ -128,11 +154,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             })
             .catch(() => {
-                // Si hay error, deja la imagen por defecto
+                
             });
     }
 
-    // Llama a la función antes de cualquier otra lógica
     validarUsuario();
 });
 

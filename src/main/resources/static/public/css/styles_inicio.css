@@ -135,9 +135,6 @@ input:focus {
     transform: scale(1.03);
 }
 
-/* Aplica el mismo hover de "Crear usuario" a todos los botones y enlaces de acción en inicio y contraseña */
-/* Puedes añadir esto al final de styles_inicio.css y styles_contraseña_olv.css */
-
 /* Botones principales y enlaces de acción */
 .botones button,
 .botones a,
@@ -146,7 +143,6 @@ button,
     transition: background 0.3s, transform 0.2s, box-shadow 0.2s, color 0.3s;
 }
 
-/* Hover igual que en crear usuario */
 .botones button:hover,
 .botones a:hover,
 button:hover,
@@ -240,7 +236,6 @@ button:hover,
     margin-top: 2rem;
 }
 
-/* Responsive para móviles */
 @media (max-width: 680px) {
     #registrationForm {
         padding: 1.2rem;

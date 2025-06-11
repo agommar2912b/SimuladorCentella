@@ -107,7 +107,6 @@ main {
     width: 100%;
     height: 100%;
     z-index: 0;
-    /* padding no aquí, sino en .main-content */
 }
 
 /* Contenido sobre el fondo translúcido */
@@ -124,7 +123,6 @@ main {
     box-sizing: border-box;
 }
 
-/* Títulos y textos SIN fondo */
 .main-content h2,
 .main-content p {
     background: none !important;
@@ -182,7 +180,6 @@ main div p {
     box-shadow: 0 4px 20px rgba(0,51,102,0.13);
 }
 
-/* Oculta los botones de configuración por defecto */
 .configuracion-apartado {
     display: none;
     flex-direction: column;
@@ -195,12 +192,156 @@ main div p {
     padding: 0;
 }
 
-/* Muestra los botones cuando el aside tiene la clase visible */
 .configuracion-apartado.visible {
     display: flex;
 }
 
-/* Responsive para tablets */
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.6);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: linear-gradient(120deg, #f5faff 60%, #e3f0ff 100%);
+    padding: 2.5rem 2rem 2rem 2rem;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 91, 181, 0.18), 0 2px 8px rgba(0,0,0,0.10);
+    width: 95%;
+    max-width: 420px;
+    text-align: center;
+    position: relative;
+    animation: slideDown 0.4s cubic-bezier(.4,2,.6,1);
+    box-sizing: border-box;
+}
+
+@keyframes slideDown {
+    from { transform: translateY(-20px); }
+    to { transform: translateY(0); }
+}
+
+.modal-content h2 {
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    color: #abb72d;
+    font-weight: bold;
+}
+
+.modal-content .buttons {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 18px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #003366;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1.5px solid #abb72d;
+    border-radius: 8px;
+    font-size: 1rem;
+    background: rgba(255,255,255,0.85);
+    color: #003366;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.07);
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.form-group input:focus {
+    border-color: #007bff;
+    outline: none;
+    background: #fff;
+}
+
+.form-group input:focus:invalid {
+    border: 2px solid #2196f3;
+    box-shadow: 0 0 4px #2196f3;
+}
+
+.form-group input:valid {
+    border: 1.5px solid #abb72d;
+}
+
+input:invalid:focus {
+    outline: none;
+}
+
+button.btn-submit {
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    background: linear-gradient(90deg, #7ecbff 0%, #003366 100%);
+    color: #fff;
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+}
+
+button.btn-submit:hover {
+    background: linear-gradient(90deg, #003366 0%, #abb72d 100%);
+    color: #fff;
+    transform: scale(1.05);
+}
+
+button.btn-delete {
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    background: linear-gradient(90deg, #dc3545 80%, #ff6b81 100%);
+    color: #fff;
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+}
+
+button.btn-delete:hover {
+    background: linear-gradient(90deg, #c82333 80%, #abb72d 100%);
+    color: #fff;
+    transform: scale(1.05);
+}
+
+.close {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    font-size: 26px;
+    font-weight: bold;
+    color: #003366;
+    opacity: 0.7;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.close:hover {
+    color: #ff0000;
+    opacity: 1;
+}
+
 @media (max-width: 1100px) {
     .contenido {
         flex-direction: column;
@@ -243,7 +384,6 @@ main div p {
     }
 }
 
-/* Responsive para móviles */
 @media (max-width: 700px) {
     .navbar h1 {
         font-size: 1.3rem;
@@ -273,5 +413,158 @@ main div p {
     .botones-principales button {
         font-size: 1rem;
         padding: 0.8rem 1rem;
+    }
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.6);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: linear-gradient(120deg, #f5faff 60%, #e3f0ff 100%);
+    padding: 2.5rem 2rem 2rem 2rem;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 91, 181, 0.18), 0 2px 8px rgba(0,0,0,0.10);
+    width: 95%;
+    max-width: 420px;
+    text-align: center;
+    position: relative;
+    animation: slideDown 0.4s cubic-bezier(.4,2,.6,1);
+    box-sizing: border-box;
+}
+
+@keyframes slideDown {
+    from { transform: translateY(-20px); }
+    to { transform: translateY(0); }
+}
+
+.modal-content h2 {
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    color: #abb72d;
+    font-weight: bold;
+}
+
+.modal-content .buttons {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 18px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #003366;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1.5px solid #abb72d;
+    border-radius: 8px;
+    font-size: 1rem;
+    background: rgba(255,255,255,0.85);
+    color: #003366;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.07);
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.form-group input:focus {
+    border-color: #007bff;
+    outline: none;
+    background: #fff;
+}
+
+.form-group input:focus:invalid {
+    border: 2px solid #2196f3;
+    box-shadow: 0 0 4px #2196f3;
+}
+
+.form-group input:valid {
+    border: 1.5px solid #abb72d;
+}
+
+input:invalid:focus {
+    outline: none;
+}
+
+button.btn-submit {
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    background: linear-gradient(90deg, #7ecbff 0%, #003366 100%);
+    color: #fff;
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+}
+
+button.btn-submit:hover {
+    background: linear-gradient(90deg, #003366 0%, #abb72d 100%);
+    color: #fff;
+    transform: scale(1.05);
+}
+
+button.btn-delete {
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    background: linear-gradient(90deg, #dc3545 80%, #ff6b81 100%);
+    color: #fff;
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+}
+
+button.btn-delete:hover {
+    background: linear-gradient(90deg, #c82333 80%, #abb72d 100%);
+    color: #fff;
+    transform: scale(1.05);
+}
+
+.close {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    font-size: 26px;
+    font-weight: bold;
+    color: #003366;
+    opacity: 0.7;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.close:hover {
+    color: #ff0000;
+    opacity: 1;
+}
+
+@media (max-width: 680px) {
+    .modal-content {
+        padding: 1.2rem 0.5rem;
+        max-width: 98vw;
     }
 }

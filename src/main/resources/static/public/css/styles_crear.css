@@ -158,10 +158,9 @@ button:hover,
     text-decoration: underline;
 }
 
-/* Responsive */
 @media (max-width: 600px) {
     form {
-        padding: 1.2rem 0.5rem 2.2rem 0.5rem; /* Más padding abajo en móvil también */
+        padding: 1.2rem 0.5rem 2.2rem 0.5rem;
         max-width: 98vw;
     }
     button,

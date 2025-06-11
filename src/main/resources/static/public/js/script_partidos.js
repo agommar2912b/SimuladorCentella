@@ -6,7 +6,6 @@ async function validarUsuario() {
         window.location.href = 'Iniciar_sesion.html';
         return;
     }
-    // Comprobar que el usuario existe en la base de datos
     try {
         const res = await fetch(`http://localhost:8080/users?name=${encodeURIComponent(nombreUsuario)}`);
         const users = await res.json();
@@ -18,7 +17,6 @@ async function validarUsuario() {
     }
 }
 
-// Llama a la función antes de cualquier otra lógica
 validarUsuario();
 
 // Función para cargar equipos en los selects
@@ -46,7 +44,6 @@ async function loadTeamsForSelects() {
       return;
     }
 
-    // Primera opción vacía
     selectLocal.innerHTML =
       `<option value="">Selecciona equipo local</option>` +
       teams
@@ -64,7 +61,6 @@ async function loadTeamsForSelects() {
         )
         .join("");
 
-    // Evitar seleccionar el mismo equipo en ambos selects
     selectLocal.addEventListener("change", () => {
       for (const opt of selectVisitante.options) {
         opt.disabled = opt.value && opt.value === selectLocal.value;
@@ -76,7 +72,6 @@ async function loadTeamsForSelects() {
       }
     });
 
-    // Inicializar el bloqueo por defecto
     for (const opt of selectVisitante.options) {
       opt.disabled = opt.value && opt.value === selectLocal.value;
     }
@@ -90,7 +85,6 @@ async function loadTeamsForSelects() {
 async function getTeamWithPlayers(teamId) {
   const jugadoresUrl = `http://localhost:8080/users/${userId}/teams/${teamId}/players`;
 
-  // Obtener jugadores
   const jugadoresResp = await fetch(jugadoresUrl, {
   });
   const jugadores = await jugadoresResp.json();
@@ -128,7 +122,6 @@ document
       });
     }
 
-    // Cargar datos de ambos equipos y sus jugadores
     resumenDiv.innerHTML = "<p>Cargando equipos...</p>";
     try {
       const [local, visitante] = await Promise.all([
@@ -140,7 +133,6 @@ document
       const visitanteJugadores = ordenarJugadores(visitante.jugadores);
 
       function lanzadoresCheckboxes(jugadores, equipo, tipo, label, color) {
-        // Excluye porteros
         const jugadoresSinPortero = jugadores.filter(
           (j) => j.position !== "GOALKEEPER"
         );
@@ -235,7 +227,6 @@ document
                 <table class="jugadores-table">
                     <thead>
                         <tr>
-                            <th>ID</th>
                             <th>Nombre</th>
                             <th>Habilidad</th>
                             <th>Posición</th>
@@ -250,7 +241,6 @@ document
                                 .map(
                                   (j) => `
                                 <tr>
-                                    <td>${j.id ?? "-"}</td>
                                     <td>${j.name ?? "-"}</td>
                                     <td>${j.skill ?? "-"}</td>
                                     <td>${traducirPosicion(j.position ?? "-")}</td>
@@ -297,7 +287,6 @@ document
         const resultadoDiv = document.getElementById("resultadoSimulacion");
         resultadoDiv.innerHTML = "<p>Simulando partido...</p>";
 
-        // Recoge los nombres seleccionados
         function getCheckedNames(name) {
           return Array.from(
             document.querySelectorAll(`input[name="${name}"]:checked`)
@@ -334,9 +323,8 @@ document
           }
           const resultado = await response.text();
 
-          // Separar eventos y resultado final
           const eventos = resultado.split("<br>");
-          const resultadoFinal = eventos.pop(); // Última línea es el resultado final
+          const resultadoFinal = eventos.pop(); 
 
           resultadoDiv.innerHTML = `
                     <div class="resultado-partido-box">
@@ -402,15 +390,15 @@ function setTeamImage(selectId, imgDivId, imgTagId, nombreSpanId) {
       teamName.toLowerCase().includes("selecciona equipo") ||
       teamName.trim() === ""
     ) {
-      imgTag.style.display = "none"; // Oculta la imagen
-      imgDiv.style.background = "transparent"; // Fondo blanco/transparente
-      imgDiv.style.border = "none"; // Sin borde
+      imgTag.style.display = "none"; 
+      imgDiv.style.background = "transparent"; 
+      imgDiv.style.border = "none"; 
       nombreSpan.textContent = "";
       return;
     }
-    imgTag.style.display = "block"; // Muestra la imagen
-    imgDiv.style.background = "#e0e7ef"; // Fondo normal
-    imgDiv.style.border = "2px solid #005bb5"; // Borde normal
+    imgTag.style.display = "block"; 
+    imgDiv.style.background = "#e0e7ef"; 
+    imgDiv.style.border = "2px solid #005bb5";
     imgTag.src = imgSrc;
     imgTag.alt = teamName;
     imgTag.onerror = function () {
@@ -421,7 +409,7 @@ function setTeamImage(selectId, imgDivId, imgTagId, nombreSpanId) {
   }
 
   select.addEventListener("change", updateImageAndName);
-  updateImageAndName(); // Inicializa al cargar
+  updateImageAndName(); 
 }
 
 function traducirPosicion(pos) {
@@ -434,7 +422,6 @@ function traducirPosicion(pos) {
     }
 }
 
-// Ejecutar cuando el DOM esté listo
 document.addEventListener("DOMContentLoaded", () => {
   loadTeamsForSelects();
   setTeamImage("equipoLocal", "imgLocal", "imgLocalImg", "nombreLocal");

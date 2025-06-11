@@ -1,28 +1,30 @@
-/* General */
-body {
-    font-family: 'Roboto', sans-serif;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
+/* Fondo y tipografía general */
+body, html {
     height: 100vh;
-    background: linear-gradient(to bottom, #003366, #005bb5);
-    color: #fff;
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(120deg, #003366 0%, #7ecbff 100%);
+    color: #333;
+    overflow-x: hidden;
 }
 
 /* Navbar */
 .navbar {
-    background-color: #002244;
-    color: white;
+    background: rgba(0, 51, 102, 0.95);
+    color: #abb72d;
     text-align: center;
-    padding: 1rem 2rem;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    border-bottom: 3px solid #005bb5;
+    padding: 1.2rem 2rem;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.18);
+    border-bottom: 3px solid #abb72d;
 }
 
 .navbar h1 {
     margin: 0;
-    font-size: 2rem;
+    font-size: 2.2rem;
     font-weight: bold;
+    text-shadow: 2px 2px 6px rgba(0,0,0,0.13);
+    letter-spacing: 1px;
 }
 
 /* Contenedor principal */
@@ -30,270 +32,118 @@ body {
     display: flex;
     flex: 1;
     flex-direction: row;
-    background-color: #f5f5f5;
+    background: rgba(255,255,255,0.18);
     color: #333;
+    min-height: 0;
 }
 
 /* Menú lateral */
 .menu-lateral {
-    background-color: #ffffff;
-    padding: 2rem;
-    width: 200px;
-    box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
-    border-right: 3px solid #f2f2f2;
+    background: rgba(255,255,255,0.85);
+    padding: 2rem 1rem;
+    width: 210px;
+    box-shadow: 4px 0 16px rgba(0, 0, 0, 0.07);
+    border-right: none;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.2rem;
     align-items: center;
+    min-height: 100vh;
 }
 
 .menu-lateral button {
-    background-color: #005bb5;
-    color: white;
-    padding: 0.75rem 1.5rem;
+    background: linear-gradient(90deg, #7ecbff 0%, #003366 100%);
+    color: #fff;
+    padding: 0.8rem 1.5rem;
     border: none;
-    border-radius: 0.375rem;
+    border-radius: 16px;
     cursor: pointer;
     font-size: 1rem;
-    transition: background-color 0.3s, transform 0.2s;
+    font-weight: bold;
+    transition: all 0.3s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
     width: 100%;
     text-align: center;
 }
 
 .menu-lateral button:hover {
-    background-color: #003366;
-    transform: translateY(-2px);
+    background: linear-gradient(90deg, #003366 0%, #abb72d 100%);
+    color: #fff;
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 4px 20px rgba(0,51,102,0.13);
 }
 
 /* Contenido principal */
 main {
     flex: 1;
-    padding: 2rem;
-    background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 2.5rem 2rem;
+    background: rgba(255,255,255,0.95);
+    border-radius: 18px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.10);
     margin: 2rem;
+    min-width: 0;
 }
 
 main h2 {
     font-size: 2rem;
-    color: #003366;
-    margin-bottom: 1rem;
+    color: #abb72d;
+    margin-bottom: 1.2rem;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.08);
 }
 
-/* Tabla de jugadores */
-.jugadores-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
-}
-
-.jugadores-table th,
-.jugadores-table td {
-    border: 1px solid #ccc;
-    padding: 8px;
-    text-align: left;
-    font-size: 0.9rem;
-}
-
-.jugadores-table th {
-    background-color: #005bb5;
-    color: white;
-    font-weight: bold;
-}
-
-.jugadores-table tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-.jugadores-table tr:hover {
-    background-color: #f1f1f1;
-}
-
-/* Botón para crear jugador */
-#btnCrearJugador {
-    background-color: #005bb5; /* Mismo color que el botón de "Volver" */
-    color: white;
-    padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: 0.375rem;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.3s, transform 0.2s;
-    width: 100%; /* Asegura que el ancho sea consistente */
-    text-align: center;
-}
-
-#btnCrearJugador:hover {
-    background-color: #003366; /* Mismo efecto hover que el botón de "Volver" */
-    transform: translateY(-2px);
-}
-
-/* Modal */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.6);
+/* Buscador */
+.busqueda {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
 }
 
-.modal-content {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    width: 70%;
-    max-width: 600px;
-    text-align: center;
-    position: relative;
-    animation: slideDown 0.4s ease-in-out;
-    box-sizing: border-box;
-}
-
-.modal-content h2 {
-    margin-bottom: 20px;
-    font-size: 24px;
-    color: #333;
-    font-weight: bold;
-}
-
-.modal-content .form-group {
-    margin-bottom: 20px;
-    text-align: left;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.modal-content .form-group label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 8px;
-    color: #555;
-}
-
-.modal-content .form-group input,
-.modal-content .form-group select {
-    width: calc(100% - 20px);
-    padding: 12px;
-    border: 1px solid #ccc;
+.busqueda input {
+    flex: 1;
+    padding: 0.75rem;
+    border: 1.5px solid #abb72d;
     border-radius: 8px;
-    font-size: 16px;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    box-sizing: border-box;
-}
-
-.modal-content .form-group input:focus,
-.modal-content .form-group select:focus {
-    border-color: #007bff;
-    outline: none;
-    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
-}
-
-
-.close {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    font-size: 20px;
-    font-weight: bold;
-    color: #333;
-    cursor: pointer;
-    transition: color 0.3s ease;
-}
-
-.close:hover {
-    color: #ff0000;
-}
-
-/* Modal para jugadores */
-#playerModal .modal-content {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    width: 70%;
-    max-width: 600px;
-    text-align: center;
-    position: relative;
-    animation: slideDown 0.4s ease-in-out;
-    box-sizing: border-box;
-}
-
-/* Modal para editar jugador */
-#editPlayerModal .modal-content {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    width: 70%;
-    max-width: 600px;
-    text-align: center;
-    position: relative;
-    animation: slideDown 0.4s ease-in-out;
-    box-sizing: border-box;
-}
-
-#editPlayerModal .form-group {
-    margin-bottom: 20px;
-    text-align: left;
-}
-
-#editPlayerModal .form-group label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 8px;
-    color: #555;
-}
-
-#editPlayerModal .form-group input {
-    width: calc(100% - 20px);
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 16px;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-#editPlayerModal .form-group input:focus {
-    border-color: #007bff;
-    outline: none;
-    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
-}
-
-/* Botón azul para submit en todos los modales */
-.btn-submit {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
     font-size: 1rem;
-    transition: background-color 0.3s ease;
+    background: rgba(255,255,255,0.85);
+    color: #003366;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    text-align: left;
+    transition: border 0.3s;
 }
 
-.btn-submit:hover {
-    background-color: #0056b3;
+.busqueda input::placeholder {
+    text-align: left;
+    color: #abb72d;
+}
+
+.busqueda button {
+    background: linear-gradient(90deg, #7ecbff 0%, #003366 100%);
+    color: #fff;
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 16px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+}
+
+.busqueda button:hover {
+    background: linear-gradient(90deg, #003366 0%, #abb72d 100%);
+    color: #fff;
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 4px 20px rgba(0,51,102,0.13);
 }
 
 /* Contenedor de equipos */
 .equipos-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1rem;
+    gap: 1.5rem;
 }
 
-/* Tarjetas de equipo mejoradas */
+/* Tarjetas de equipo */
 .equipo-card {
     background: linear-gradient(135deg, #e3f0ff 0%, #fafcff 100%);
     padding: 24px 18px 18px 18px;
@@ -303,7 +153,7 @@ main h2 {
     transition: transform 0.25s cubic-bezier(.4,2,.6,1), box-shadow 0.25s;
     position: relative;
     overflow: hidden;
-    border: 2px solid #e0e7ef;
+    border: 2px solid #abb72d;
 }
 
 .equipo-card:hover {
@@ -318,7 +168,7 @@ main h2 {
     object-fit: cover;
     border-radius: 50%;
     margin-bottom: 1rem;
-    border: 4px solid #fff;
+    border: 4px solid #abb72d;
     box-shadow: 0 2px 8px rgba(0,91,181,0.10);
     background: #f2f6fa;
     transition: box-shadow 0.3s;
@@ -341,52 +191,188 @@ main h2 {
     color: #555;
 }
 
-/* Estilos para la búsqueda */
-.busqueda {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 2rem;
+/* Tabla de jugadores */
+.jugadores-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 1.5rem;
+    background: transparent;
+    border-radius: 10px 10px 0 0;
+    overflow: hidden;
 }
 
-.busqueda input {
-    flex: 1;
-    padding: 0.75rem;
-    border: 1px solid #ccc;
-    border-radius: 0.375rem;
+.jugadores-table th,
+.jugadores-table td {
+    border: 1.5px solid #abb72d;
+    padding: 10px 8px;
+    text-align: center;
     font-size: 1rem;
+    background: #fff;
+    color: #003366;
 }
 
-.busqueda button {
-    background-color: #005bb5;
-    color: white;
-    padding: 0.75rem 1.5rem;
+.jugadores-table th {
+    background: #abb72d;
+    color: #003366;
+    font-weight: bold;
+    border-top: 2px solid #e0e0e0;
+    border-bottom: 2px solid #e0e0e0;
+    border-right: 2px solid #e0e0e0;
+    border-left: none;
+    padding: 12px 8px;
+    font-size: 1.08rem;
+}
+
+.jugadores-table th:first-child {
+    border-top-left-radius: 10px;
+    border-left: 2px solid #e0e0e0;
+}
+
+.jugadores-table th:last-child {
+    border-top-right-radius: 10px;
+    border-right: 2px solid #e0e0e0;
+}
+
+.jugadores-table tr:nth-child(even) td {
+    background: #f2f6fa;
+}
+
+.jugadores-table tr:hover td {
+    background: #e3f0ff;
+}
+
+/* Botón para crear jugador */
+#btnCrearJugador {
+    background: linear-gradient(90deg, #7ecbff 0%, #003366 100%);
+    color: #fff;
+    padding: 0.8rem 1.5rem;
     border: none;
-    border-radius: 0.375rem;
+    border-radius: 16px;
     cursor: pointer;
     font-size: 1rem;
-    transition: background-color 0.3s, transform 0.2s;
+    font-weight: bold;
+    transition: all 0.3s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+    width: 100%;
+    text-align: center;
 }
 
-.busqueda button:hover {
-    background-color: #003366;
-    transform: translateY(-2px);
+#btnCrearJugador:hover {
+    background: linear-gradient(90deg, #003366 0%, #abb72d 100%);
+    color: #fff;
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 4px 20px rgba(0,51,102,0.13);
 }
 
-/* Iconos Material */
-@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
-.material-icons {
-    font-family: 'Material Icons';
-    font-style: normal;
-    font-weight: normal;
-    font-size: 24px;
-    line-height: 1;
-    letter-spacing: normal;
-    text-transform: none;
-    display: inline-block;
-    white-space: nowrap;
-    direction: ltr;
-    -webkit-font-feature-settings: 'liga';
-    -webkit-font-smoothing: antialiased;
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.6);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: linear-gradient(120deg, #f5faff 60%, #e3f0ff 100%);
+    padding: 2.5rem 2rem 2rem 2rem;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 91, 181, 0.18), 0 2px 8px rgba(0,0,0,0.10);
+    width: 95%;
+    max-width: 420px;
+    text-align: center;
+    position: relative;
+    animation: slideDown 0.4s cubic-bezier(.4,2,.6,1);
+    box-sizing: border-box;
+}
+
+@keyframes slideDown {
+    from { transform: translateY(-20px); }
+    to { transform: translateY(0); }
+}
+
+.modal-content h2 {
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    color: #abb72d;
+    font-weight: bold;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #003366;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1.5px solid #abb72d;
+    border-radius: 8px;
+    font-size: 1rem;
+    background: rgba(255,255,255,0.85);
+    color: #003366;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.07);
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #007bff;
+    outline: none;
+    background: #fff;
+}
+
+button.btn-submit {
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    background: linear-gradient(90deg, #7ecbff 0%, #003366 100%);
+    color: #fff;
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+}
+
+button.btn-submit:hover {
+    background: linear-gradient(90deg, #003366 0%, #abb72d 100%);
+    color: #fff;
+    transform: scale(1.05);
+}
+
+/* Botón cerrar modal */
+.close {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    font-size: 26px;
+    font-weight: bold;
+    color: #003366;
+    opacity: 0.7;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.close:hover {
+    color: #ff0000;
+    opacity: 1;
 }
 
 /* Modal de jugador mejorado */
@@ -397,6 +383,7 @@ main h2 {
     box-shadow: 0 8px 32px rgba(0,0,0,0.18);
     text-align: left;
     position: relative;
+    background: linear-gradient(120deg, #f5faff 60%, #e3f0ff 100%);
 }
 
 .player-modal-header {
@@ -406,30 +393,11 @@ main h2 {
     margin-bottom: 18px;
 }
 
-.player-avatar {
-    width: 64px;
-    height: 64px;
-    background: #e3f0ff;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 38px;
-    color: #005bb5;
-    box-shadow: 0 2px 8px rgba(0,91,181,0.10);
-}
-
 .player-modal-header h2 {
     margin: 0;
     font-size: 1.5rem;
     color: #003366;
     font-weight: 700;
-}
-
-.player-id {
-    font-size: 0.95rem;
-    color: #888;
-    margin: 0;
 }
 
 .player-modal-body {
@@ -458,11 +426,11 @@ main h2 {
 }
 
 .btn-player-green {
-    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+    background: linear-gradient(135deg, #28a745 80%, #abb72d 100%);
     color: #fff;
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     font-weight: bold;
-    padding: 18px 40px;
+    padding: 14px 32px;
     border: none;
     border-radius: 16px;
     cursor: pointer;
@@ -471,16 +439,16 @@ main h2 {
 }
 
 .btn-player-green:hover {
-    background: linear-gradient(135deg, #219150 0%, #27ae60 100%);
+    background: linear-gradient(135deg, #218838 80%, #abb72d 100%);
     transform: translateY(-2px) scale(1.04);
 }
 
 .btn-player-red {
-    background: linear-gradient(135deg, #e74c3c 0%, #ff5f5f 100%);
+    background: linear-gradient(135deg, #dc3545 80%, #ff6b81 100%);
     color: #fff;
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     font-weight: bold;
-    padding: 18px 40px;
+    padding: 14px 32px;
     border: none;
     border-radius: 16px;
     cursor: pointer;
@@ -489,6 +457,86 @@ main h2 {
 }
 
 .btn-player-red:hover {
-    background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
+    background: linear-gradient(90deg, #c82333 80%, #abb72d 100%);
     transform: translateY(-2px) scale(1.04);
+}
+
+@media (max-width: 900px) {
+    .contenido {
+        flex-direction: column;
+    }
+    .menu-lateral {
+        flex-direction: row;
+        width: 100%;
+        min-height: unset;
+        border-right: none;
+        border-bottom: 2.5px dashed #abb72d;
+        box-shadow: none;
+        padding: 1.2rem 6vw;
+        justify-content: center;
+        align-items: center;
+        gap: 0.7rem;
+        text-align: center;
+        display: flex;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    .menu-lateral button,
+    #btnCrearJugador {
+        padding: 0.25rem 0.6rem;
+        font-size: 0.82rem;
+        border-radius: 10px;
+        min-width: 58px;
+        max-width: 85px;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        width: auto;
+    }
+    main {
+        margin: 1rem 0.5rem;
+        padding: 1.2rem 0.5rem;
+    }
+}
+
+@media (max-width: 680px) {
+    .equipos-container {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    .equipo-card {
+        padding: 18px 8px 14px 8px;
+    }
+    .modal-content {
+        padding: 1.2rem 0.5rem;
+        max-width: 98vw;
+    }
+    .jugadores-table th, .jugadores-table td {
+        font-size: 0.95rem;
+        padding: 7px 4px;
+    }
+    main {
+        margin: 0.5rem 0.2rem;
+        padding: 0.7rem 0.2rem;
+    }
+}
+
+/* Material Icons */
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+.material-icons {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
 }

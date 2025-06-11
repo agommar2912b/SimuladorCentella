@@ -14,7 +14,6 @@ body {
     background-repeat: no-repeat;
     background-size: cover;
 }
-/* Nueva animación de fondo */
 @keyframes fondo {
     0% {
         background-position: 0% 0%;
@@ -214,8 +213,6 @@ button:hover {
     color: #0056b3;
 }
 
-/* Aplica el mismo hover de "Crear usuario" a todos los botones y enlaces de acción en inicio y contraseña */
-/* Puedes añadir esto al final de styles_inicio.css y styles_contraseña_olv.css */
 
 /* Botones principales y enlaces de acción */
 .botones button,
@@ -236,7 +233,6 @@ button:hover,
     box-shadow: 0 4px 20px rgba(0,51,102,0.13);
 }
 
-/* Responsivo */
 @media (max-width: 480px) {
     form {
         padding: 1.2rem 0.5rem 1rem 0.5rem;
