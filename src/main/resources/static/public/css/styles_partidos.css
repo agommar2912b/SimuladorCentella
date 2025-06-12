@@ -73,6 +73,29 @@ body, html {
     box-shadow: 0 4px 20px rgba(0,51,102,0.13);
 }
 
+/* Botón para mostrar/ocultar menú lateral */
+.toggle-menu-btn {
+    display: block;
+    position: absolute;
+    left: 1.5rem;
+    top: 50px; 
+    background: #abb72d;
+    color: #003366;
+    border: none;
+    border-radius: 8px;
+    padding: 0.6rem 1.5rem;
+    font-size: 1.4rem;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+    font-weight: bold;
+    z-index: 200;
+}
+
+/* Ocultar menú lateral */
+.menu-lateral.oculto {
+    display: none !important;
+}
+
 /* Main */
 main {
     flex: 1;
@@ -397,6 +420,12 @@ main h2, main h3 {
     .jugadores-table td {
         padding: 10px 10px;
         font-size: 0.95rem;
+    }
+    .toggle-menu-btn {
+        display: block;
+    }
+    .contenido {
+        position: relative;
     }
 }
 

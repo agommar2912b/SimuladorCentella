@@ -426,4 +426,13 @@ document.addEventListener("DOMContentLoaded", () => {
   loadTeamsForSelects();
   setTeamImage("equipoLocal", "imgLocal", "imgLocalImg", "nombreLocal");
   setTeamImage("equipoVisitante", "imgVisitante", "imgVisitanteImg", "nombreVisitante");
+
+  // Mostrar/ocultar menú lateral
+  const toggleBtn = document.getElementById("toggleMenuBtn");
+  const menuLateral = document.getElementById("menuLateral");
+  if (toggleBtn && menuLateral) {
+    toggleBtn.addEventListener("click", () => {
+      menuLateral.classList.toggle("oculto");
+    });
+  }
 });
