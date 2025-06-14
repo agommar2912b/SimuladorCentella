@@ -87,7 +87,8 @@ public class UserController {
         String oldName = user.getName();
         String newName = request.getNewUsername();
 
-        // Renombrar la imagen si existe
+        UserEntity updatedUser = userService.changeName(request);
+
         String oldProfilePictureUrl = user.getProfilePictureUrl();
         String newProfilePictureUrl = null;
         if (oldProfilePictureUrl != null && !oldProfilePictureUrl.isBlank()) {
@@ -101,17 +102,12 @@ public class UserController {
                 if (Files.exists(oldImagePath)) {
                     Files.move(oldImagePath, newImagePath);
                     newProfilePictureUrl = "/images/users/" + newFileName;
+                    userService.patchUser(updatedUser.getId(), updatedUser.getName(), null, newProfilePictureUrl);
+                    updatedUser.setProfilePictureUrl(newProfilePictureUrl);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-
-        // Cambiar el nombre y la url de la imagen en la base de datos
-        UserEntity updatedUser = userService.changeName(request);
-        if (newProfilePictureUrl != null) {
-            updatedUser.setProfilePictureUrl(newProfilePictureUrl);
-            userService.patchUser(updatedUser.getId(), updatedUser.getName(), null, newProfilePictureUrl);
         }
 
         return UserResponse.builder()
