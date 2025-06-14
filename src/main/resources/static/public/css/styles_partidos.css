@@ -17,6 +17,7 @@ body, html {
     padding: 1.2rem 2rem;
     box-shadow: 0 4px 18px rgba(0, 0, 0, 0.18);
     border-bottom: 3px solid #abb72d;
+    position: relative; /* Añade esto para que el botón se posicione respecto al navbar */
 }
 
 .navbar h1 {
@@ -78,7 +79,8 @@ body, html {
     display: block;
     position: absolute;
     left: 1.5rem;
-    top: 50px; 
+    top: 50%;
+    transform: translateY(-50%);
     background: #abb72d;
     color: #003366;
     border: none;
@@ -89,6 +91,7 @@ body, html {
     box-shadow: 0 2px 8px rgba(0,0,0,0.10);
     font-weight: bold;
     z-index: 200;
+    /* Ajuste para que esté dentro del navbar */
 }
 
 /* Ocultar menú lateral */
