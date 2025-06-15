@@ -7,7 +7,9 @@ async function validarUsuario() {
         return;
     }
     try {
-        const res = await fetch(`http://localhost:8080/users?name=${encodeURIComponent(nombreUsuario)}`);
+        const res = await fetch(`/users?name=${encodeURIComponent(nombreUsuario)}`, {
+    credentials: 'include'
+});
         const users = await res.json();
         if (!Array.isArray(users) || users.length === 0 || users[0].id != userId) {
             window.location.href = 'Iniciar_sesion.html';
@@ -30,9 +32,10 @@ async function loadTeamsForSelects() {
   }
 
   try {
-    const url = `http://localhost:8080/users/${userId}/teams`;
+    const url = `/users/${userId}/teams`;
     const response = await fetch(url, {
-    });
+    credentials: 'include'
+});
 
     if (!response.ok) throw new Error("Error al cargar los equipos");
 
@@ -83,10 +86,11 @@ async function loadTeamsForSelects() {
 
 // Función para obtener los datos de un equipo y sus jugadores
 async function getTeamWithPlayers(teamId) {
-  const jugadoresUrl = `http://localhost:8080/users/${userId}/teams/${teamId}/players`;
+  const jugadoresUrl = `/users/${userId}/teams/${teamId}/players`;
 
   const jugadoresResp = await fetch(jugadoresUrl, {
-  });
+    credentials: 'include'
+});
   const jugadores = await jugadoresResp.json();
 
   return { jugadores };
@@ -308,14 +312,15 @@ document
         };
 
         try {
-          const url = `http://localhost:8080/users/${userId}/teams/simulate`;
+          const url = `/users/${userId}/teams/simulate`;
           const response = await fetch(url, {
             method: "POST",
             headers: {
-              "Content-Type": "application/json",
+                "Content-Type": "application/json",
             },
             body: JSON.stringify(body),
-          });
+            credentials: 'include'
+});
           if (!response.ok) {
             const errorText = await response.text();
             resultadoDiv.innerHTML = `<p style="color:red">Error: ${errorText}</p>`;

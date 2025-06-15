@@ -16,12 +16,13 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("El json body es"+jsonbody)
     
         try {
-            const response = await fetch('http://localhost:8080/users/login',{
-                method:"POST",
-                body:jsonbody,
-                headers:{
-                    "Content-Type":"application/json"
-                }
+            const response = await fetch('/users/login', {
+                method: "POST",
+                body: jsonbody,
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: 'include' 
             });
             
             if (!response.ok) {

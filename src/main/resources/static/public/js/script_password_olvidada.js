@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         try {
-            const response = await fetch(`http://localhost:8080/users/security-question?username=${encodeURIComponent(nombreUsuario)}`);
+            const response = await fetch(`/users/security-question?username=${encodeURIComponent(nombreUsuario)}`);
             if (!response.ok) {
                 errorMessage.style.display = 'block';
                 errorMessage.innerText = 'Usuario no encontrado';
@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         try {
-            const response = await fetch('http://localhost:8080/users/changePassword', {
+            const response = await fetch('/users/changePassword', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

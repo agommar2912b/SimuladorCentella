@@ -45,7 +45,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/users/login", "/users/changePassword","/users/security-question", "/users","/public/**").permitAll()
                         .anyRequest().authenticated())
-                .sessionManagement(Customizer.withDefaults())
+                .sessionManagement(Customizer.withDefaults())              
                 .build();
     }
 

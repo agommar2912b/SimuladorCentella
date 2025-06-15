@@ -433,6 +433,9 @@ main h2, main h3 {
 }
 
 @media (max-width: 900px) {
+    .toggle-menu-btn {
+        display: none;
+    }
     .contenido {
         flex-direction: column;
     }
