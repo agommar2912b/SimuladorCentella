@@ -15,6 +15,11 @@ Crea tu propio universo futbolístico: diseña equipos, gestiona jugadores y enf
 
 ---
 
+## ▶️ ¿Cómo ejecutar el programa?
+
+- **Ejecuta el archivo CentellaApplication**  
+
+
 ## 👤 Autor
 
 - [@Anbreom](https://www.github.com/agommar2912b)
