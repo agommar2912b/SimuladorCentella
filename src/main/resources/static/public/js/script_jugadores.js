@@ -7,7 +7,9 @@ async function validarUsuario() {
         return;
     }
     try {
-        const res = await fetch(`http://localhost:8080/users?name=${encodeURIComponent(nombreUsuario)}`);
+        const res = await fetch(`/users?name=${encodeURIComponent(nombreUsuario)}`, {
+            credentials: 'include'
+        });
         const users = await res.json();
         if (!Array.isArray(users) || users.length === 0 || users[0].id != userId) {
             window.location.href = 'Iniciar_sesion.html';
@@ -29,7 +31,8 @@ async function loadTeams(name = "") {
     jugadoresTitle.style.display = "none"; 
 
     try {
-        const response = await fetch(`http://localhost:8080/users/${userId}/teams`, {
+        const response = await fetch(`/users/${userId}/teams`, {
+            credentials: 'include'
         });
 
         if (!response.ok) {
@@ -113,8 +116,9 @@ async function deletePlayer(playerId) {
     }
 
     try {
-        const response = await fetch(`http://localhost:8080/users/${userId}/teams/${currentTeamId}/players/${playerId}`, {
+        const response = await fetch(`/users/${userId}/teams/${currentTeamId}/players/${playerId}`, {
             method: "DELETE",
+            credentials: 'include'
         });
 
         if (!response.ok) {
@@ -156,7 +160,7 @@ function openEditPlayerForm(player) {
         }
 
         try {
-            const response = await fetch(`http://localhost:8080/users/${userId}/teams/${currentTeamId}/players/${player.id}`, {
+            const response = await fetch(`/users/${userId}/teams/${currentTeamId}/players/${player.id}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",                
@@ -167,6 +171,7 @@ function openEditPlayerForm(player) {
                     position: updatedPosition,
                     hasPlayed: updatedHasPlayed,
                 }),
+                credentials: 'include'
             });
 
             if (!response.ok) {
@@ -231,7 +236,8 @@ async function loadPlayers(teamId, teamName) {
     jugadoresTitle.textContent = `Jugadores del Equipo: ${teamName}`;
     currentTeamId = teamId;
     try {
-        const response = await fetch(`http://localhost:8080/users/${userId}/teams/${teamId}/players`, {
+        const response = await fetch(`/users/${userId}/teams/${teamId}/players`, {
+            credentials: 'include'
         });
         if (!response.ok) throw new Error("Error al cargar jugadores");
         let jugadores = await response.json();
@@ -280,7 +286,7 @@ document.getElementById("createPlayerForm").addEventListener("submit", async (ev
     }
 
     try {
-        const response = await fetch(`http://localhost:8080/users/${userId}/teams/${currentTeamId}/players`, {
+        const response = await fetch(`/users/${userId}/teams/${currentTeamId}/players`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -291,6 +297,7 @@ document.getElementById("createPlayerForm").addEventListener("submit", async (ev
                 position: playerPosition.toUpperCase(),
                 hasPlayed: playerHasPlayed, 
             }),
+            credentials: 'include'
         });
 
         if (!response.ok) {
@@ -327,7 +334,7 @@ document.getElementById("editPlayerForm").addEventListener("submit", async (even
     }
 
     try {
-        const response = await fetch(`http://localhost:8080/users/${userId}/teams/${currentTeamId}/players/${playerId}`, {
+        const response = await fetch(`/users/${userId}/teams/${currentTeamId}/players/${playerId}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
@@ -338,6 +345,7 @@ document.getElementById("editPlayerForm").addEventListener("submit", async (even
                 position: updatedPosition, 
                 hasPlayed: updatedHasPlayed,
             }),
+            credentials: 'include'
         });
 
         if (!response.ok) {

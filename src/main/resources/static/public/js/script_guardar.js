@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.append('securityQuestion', pregunta);
             formData.append('securityAnswer', respuesta);
 
-            const response = await fetch('http://localhost:8080/users', {
+            const response = await fetch('/users', {
                 method: 'POST',
                 body: formData
             });

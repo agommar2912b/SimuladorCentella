@@ -14,7 +14,9 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
         try {
-            const res = await fetch(`http://localhost:8080/users?name=${encodeURIComponent(nombreUsuario)}`);
+            const res = await fetch(`/users?name=${encodeURIComponent(nombreUsuario)}`, {
+                credentials: 'include'
+            });
             const users = await res.json();
             if (!Array.isArray(users) || users.length === 0 || users[0].id != userId) {
                 window.location.href = 'Iniciar_sesion.html';
@@ -61,13 +63,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         const nombreAntiguo = localStorage.getItem('nombre_usuario');
         try {
-            const response = await fetch(`http://localhost:8080/users/changeName`, {
+            const response = await fetch(`/users/changeName`, {
                 method: "PUT",
                 headers: { 'Content-Type': "application/json" },
                 body: JSON.stringify({
                     oldUsername: nombreAntiguo,
                     newUsername: nuevoNombre
-                })
+                }),
+                credentials: 'include'
             });
             if (!response.ok) {
                 throw new Error('No se pudo modificar el nombre de usuario');
@@ -94,11 +97,12 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             try {
-                const response = await fetch(`http://localhost:8080/users/${userId}`, {
+                const response = await fetch(`/users/${userId}`, {
                     method: "DELETE",
                     headers: {
                         'Content-Type': "application/json"
-                    }
+                    },
+                    credentials: 'include'
                 });
 
                 if (!response.ok) {
@@ -120,9 +124,9 @@ document.addEventListener("DOMContentLoaded", () => {
     // Cerrar sesión
     document.getElementById('Volver_Inicio').addEventListener('click', async function () {
         try {
-            await fetch('http://localhost:8080/users/logout', {
+            await fetch('/users/logout', {
                 method: 'POST',
-                credentials: 'include' 
+                credentials: 'include'
             });
         } catch (e) {
             
@@ -146,7 +150,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
  
     if (nombreUsuario) {
-        fetch(`http://localhost:8080/users?name=${encodeURIComponent(nombreUsuario)}`)
+        fetch(`/users?name=${encodeURIComponent(nombreUsuario)}`, {
+            credentials: 'include',
+            
+        })
             .then(res => res.json())
             .then(users => {
                 if (users.length > 0 && users[0].profilePictureUrl) {

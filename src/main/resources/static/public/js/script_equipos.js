@@ -7,7 +7,9 @@ async function validarUsuario() {
         return;
     }
     try {
-        const res = await fetch(`http://localhost:8080/users?name=${encodeURIComponent(nombreUsuario)}`);
+        const res = await fetch(`/users?name=${encodeURIComponent(nombreUsuario)}`, {
+            credentials: 'include'
+        });
         const users = await res.json();
         if (!Array.isArray(users) || users.length === 0 || users[0].id != userId) {
             window.location.href = 'Iniciar_sesion.html';
@@ -81,9 +83,10 @@ function openEditFormModal(team) {
         }
 
         try {
-            const response = await fetch(`http://localhost:8080/users/${userId}/teams/${team.id}`, {
+            const response = await fetch(`/users/${userId}/teams/${team.id}`, {
                 method: "PATCH",
                 body: formData,
+                credentials: 'include'
             });
 
             if (!response.ok) {
@@ -120,8 +123,9 @@ async function deleteTeam(teamId) {
     }
 
     try {
-        const response = await fetch(`http://localhost:8080/users/${userId}/teams/${teamId}`, {
+        const response = await fetch(`/users/${userId}/teams/${teamId}`, {
             method: "DELETE",
+            credentials: 'include'
         });
 
         if (!response.ok) {
@@ -143,10 +147,10 @@ async function loadTeams(name = "") {
 
     try {
 
-        const url = `http://localhost:8080/users/${userId}/teams`;
+        const url = `/users/${userId}/teams`;
 
         const response = await fetch(url, {
-          
+            credentials: 'include'
         });
 
         if (!response.ok) {
@@ -223,9 +227,10 @@ document.addEventListener("DOMContentLoaded", () => {
         formData.append("image", teamImage);
 
         try {
-            const response = await fetch(`http://localhost:8080/users/${userId}/teams`, {
+            const response = await fetch(`/users/${userId}/teams`, {
                 method: "POST",
                 body: formData,
+                credentials: 'include'
             });
 
             if (!response.ok) {
