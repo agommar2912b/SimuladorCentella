@@ -18,8 +18,12 @@ Crea tu propio universo futbolístico: diseña equipos, gestiona jugadores y enf
 ## ▶️ ¿Cómo ejecutar el programa?
 
 - **Ejecuta el archivo CentellaApplication**  
-- **Tener MySQL instalado y configurado en el puerto 3306** 
+- **Tener MySQL instalado y configurado en el puerto 3306, el schema lo crea solo la app** 
 - **Poner la IPv4 del dispositivo en el webConfing en el apartado de allowedOrigins, se busca en terminal poniendo ipconfig**   
+-- **Poder usar Java y Springboot ademas de implementaciones de este** 
+--**Recomendado un IDE para ejecutar el archivo sino el comando es ./gradlew bootRun**
+--**Si hay mas dudas revisar el manual tecnico para ver los lenguajes utilizados**
+
 
 
 ## 👤 Autor
