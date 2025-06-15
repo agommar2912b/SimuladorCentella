@@ -18,6 +18,8 @@ Crea tu propio universo futbolístico: diseña equipos, gestiona jugadores y enf
 ## ▶️ ¿Cómo ejecutar el programa?
 
 - **Ejecuta el archivo CentellaApplication**  
+- **Tener MySQL instalado y configurado en el puerto 3306** 
+- **Poner la IPv4 del dispositivo en el webConfing en el apartado de allowedOrigins, se busca en terminal poniendo ipconfig**   
 
 
 ## 👤 Autor

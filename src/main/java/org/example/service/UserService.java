@@ -80,7 +80,6 @@ public class UserService {
             User.setName(name);
         }
         if (password!=null  && !password.trim().isEmpty()) {
-            // Encriptar la contraseña si se actualiza
             User.setPassword(passwordEncoder.encode(password));
         }
         if (profilePictureUrl != null && !profilePictureUrl.trim().isEmpty()) {
@@ -111,7 +110,7 @@ public class UserService {
             UserEntity user = new UserEntity(name, passwordEncoder.encode(password));
             user.setProfilePictureUrl(profilePictureUrl);
             user.setSecurityQuestion(securityQuestion);
-            user.setSecurityAnswer(passwordEncoder.encode(securityAnswer)); // Encriptar aquí
+            user.setSecurityAnswer(passwordEncoder.encode(securityAnswer)); 
             return userRepository.save(user);
         } else {
             throw new UserNameExistException(name);

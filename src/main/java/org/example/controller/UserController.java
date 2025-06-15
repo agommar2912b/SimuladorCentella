@@ -682,14 +682,12 @@ private void crearEquipoInicialZero(UserEntity user) throws Exception {
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
-        // Invalida la sesión
         request.getSession().invalidate();
 
-        // Elimina la cookie JSESSIONID (o la que uses para la sesión)
         Cookie cookie = new Cookie("JSESSIONID", null);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
-        cookie.setMaxAge(0); // Eliminar inmediatamente
+        cookie.setMaxAge(0); 
         response.addCookie(cookie);
 
         return ResponseEntity.ok().body("Sesión cerrada y cookie eliminada");

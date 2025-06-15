@@ -289,7 +289,6 @@ public class TeamController {
         // Eliminar la imagen asociada si existe
         String profilePictureUrl = deletedTeam.getProfilePictureUrl();
         if (profilePictureUrl != null && !profilePictureUrl.isBlank()) {
-            // profilePictureUrl es algo como "/images/{userId}/nombre.jpg"
             try {
                 String relativePath = profilePictureUrl.startsWith("/") ? profilePictureUrl.substring(1) : profilePictureUrl;
                 Path imagePath = Paths.get(relativePath);
@@ -297,7 +296,6 @@ public class TeamController {
                     Files.delete(imagePath);
                 }
             } catch (Exception e) {
-                // Puedes loguear el error si lo deseas
                 e.printStackTrace();
             }
         }
