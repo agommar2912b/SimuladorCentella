@@ -137,15 +137,15 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     document.getElementById('btnPartidos').addEventListener('click', () => {
-        window.location.href = 'partidos.html'; // Redirige a la página de Partidos
+        window.location.href = 'Partidos.html'; // Redirige a la página de Partidos
     });
 
     document.getElementById('btnJugadores').addEventListener('click', () => {
-        window.location.href = 'jugadores.html'; // Redirige a la página de Jugadores
+        window.location.href = 'Jugadores.html'; // Redirige a la página de Jugadores
     });
 
     document.getElementById('btnEquipos').addEventListener('click', () => {
-        window.location.href = 'equipos.html'; // Redirige a la página de Equipos
+        window.location.href = 'Equipos.html'; // Redirige a la página de Equipos
     });
 
  

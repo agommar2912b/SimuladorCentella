@@ -215,7 +215,7 @@ public class Game {
             defender.setPoints(defender.getPoints() - 0.25);
             simulateOccasion(counterAttackingTeam, attacker, defendTeam, assist);
         } else {
-            events.add("\tLa defensa logra reagruparse liderada por " + defender.getName() + "y frustra el contraataque de" + attacker.getName() + ".");
+            events.add("\tLa defensa logra reagruparse liderada por " + defender.getName() + " y frustra el contraataque de" + attacker.getName() + ".");
             attacker.setPoints(attacker.getPoints() - 0.25);
             defender.setPoints(defender.getPoints() + 1);
         }
