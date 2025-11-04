@@ -17,4 +17,6 @@ public class PlayerPatch {
     private Position position;
     @NotBlankOrEmpty
     private boolean hasPlayed;
+    @NotBlankOrEmpty
+    private boolean convocado;
 }

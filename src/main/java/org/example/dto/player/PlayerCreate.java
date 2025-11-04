@@ -18,5 +18,6 @@ public class PlayerCreate {
     private Position position;
     @NotBlank(message = "If is titular or not can't be empty")
     private boolean hasPlayed;
-
+    @NotBlank(message = "Convocado no puede estar vacío")
+    private boolean convocado;
 }

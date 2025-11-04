@@ -96,6 +96,7 @@ function openPlayerModal(player) {
     document.getElementById("playerModalSkill").textContent = `Habilidad: ${player.skill}`;
     document.getElementById("playerModalPosition").textContent = `Posición: ${traducirPosicion(player.position)}`;
     document.getElementById("playerModalHasPlayed").textContent = `¿Es titular?: ${player.hasPlayed ? "Sí" : "No"}`;
+    document.getElementById("playerModalConvocado").textContent = `¿Convocado?: ${player.convocado ? "Sí" : "No"}`;
 
     document.getElementById("editPlayerButton").onclick = () => openEditPlayerModal(player);
     document.getElementById("deletePlayerButton").onclick = () => deletePlayer(player.id);
@@ -143,6 +144,7 @@ function openEditPlayerForm(player) {
     document.getElementById("playerSkill").value = player.skill;
     document.getElementById("playerPosition").value = player.position;
     document.getElementById("playerHasPlayed").checked = player.hasPlayed;
+    document.getElementById("playerConvocado").checked = player.convocado;
 
     // Configurar el evento de envío del formulario
     const createPlayerForm = document.getElementById("createPlayerForm");
@@ -153,6 +155,7 @@ function openEditPlayerForm(player) {
         const updatedSkill = parseInt(document.getElementById("playerSkill").value.trim(), 10);
         const updatedPosition = document.getElementById("playerPosition").value.trim();
         const updatedHasPlayed = document.getElementById("playerHasPlayed").checked;
+        const updatedConvocado = document.getElementById("playerConvocado").checked;
 
         if (!updatedName || isNaN(updatedSkill) || !updatedPosition) {
             alert("Por favor, completa todos los campos.");
@@ -170,6 +173,7 @@ function openEditPlayerForm(player) {
                     skill: updatedSkill,
                     position: updatedPosition,
                     hasPlayed: updatedHasPlayed,
+                    convocado: updatedConvocado
                 }),
                 credentials: 'include'
             });
@@ -200,6 +204,7 @@ function openEditPlayerModal(player) {
     positionSelect.value = player.position; 
 
     document.getElementById("editPlayerHasPlayed").checked = player.hasPlayed;
+    document.getElementById("editPlayerConvocado").checked = player.convocado;
 
     // Guardar el ID del jugador en un atributo del formulario
     document.getElementById("editPlayerForm").dataset.playerId = player.id; 
@@ -262,6 +267,7 @@ async function loadPlayers(teamId, teamName) {
                 <td>${jugador.skill}</td>
                 <td>${traducirPosicion(jugador.position)}</td>
                 <td>${jugador.hasPlayed ? "Sí" : "No"}</td>
+                <td>${jugador.convocado ? "Sí" : "No"}</td>
             `;
             jugadoresTableBody.appendChild(tr);
         });
@@ -279,6 +285,7 @@ document.getElementById("createPlayerForm").addEventListener("submit", async (ev
     const playerSkill = document.getElementById("playerSkill").value.trim();
     const playerPosition = document.getElementById("playerPosition").value.trim();
     const playerHasPlayed = document.getElementById("playerHasPlayed").checked;
+    const playerConvocado = document.getElementById("playerConvocado").checked;
 
     if (!playerName || !playerSkill || !playerPosition) {
         alert("Por favor, completa todos los campos.");
@@ -295,7 +302,8 @@ document.getElementById("createPlayerForm").addEventListener("submit", async (ev
                 name: playerName,
                 skill: parseInt(playerSkill, 10),
                 position: playerPosition.toUpperCase(),
-                hasPlayed: playerHasPlayed, 
+                hasPlayed: playerHasPlayed,
+                convocado: playerConvocado
             }),
             credentials: 'include'
         });
@@ -327,6 +335,7 @@ document.getElementById("editPlayerForm").addEventListener("submit", async (even
     const updatedSkill = parseInt(document.getElementById("editPlayerSkill").value.trim(), 10);
     const updatedPosition = document.getElementById("editPlayerPosition").value; 
     const updatedHasPlayed = document.getElementById("editPlayerHasPlayed").checked;
+    const updatedConvocado = document.getElementById("editPlayerConvocado").checked;
 
     if (!updatedName || isNaN(updatedSkill) || !updatedPosition) {
         alert("Por favor, completa todos los campos.");
@@ -344,6 +353,7 @@ document.getElementById("editPlayerForm").addEventListener("submit", async (even
                 skill: updatedSkill,
                 position: updatedPosition, 
                 hasPlayed: updatedHasPlayed,
+                convocado: updatedConvocado
             }),
             credentials: 'include'
         });

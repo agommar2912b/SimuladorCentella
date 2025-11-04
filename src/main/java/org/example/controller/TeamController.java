@@ -38,7 +38,8 @@ public class TeamController {
     @PostMapping("/simulate")
     public ResponseEntity<String> simulateGame(
             @PathVariable Long userId,
-            @RequestBody Map<String, Object> body) {
+            @RequestBody Map<String, Object> body
+    ) {
 
         String teamAName = (String) body.get("teamAName");
         String teamBName = (String) body.get("teamBName");
@@ -62,14 +63,15 @@ public class TeamController {
 
         // Asignar titulares, portero y suplentes para teamA
         List<PlayerEntity> allA = teamAEntity.getPlayers();
-        PlayerEntity goalieAEntity = allA.stream()
+        List<PlayerEntity> convocadosA = allA.stream().filter(PlayerEntity::isConvocado).toList();
+        PlayerEntity goalieAEntity = convocadosA.stream()
                 .filter(p -> p.getPosition() == Position.GOALKEEPER && p.isHasPlayed())
                 .findFirst()
                 .orElse(null);
-        List<PlayerEntity> fieldPlayersAEntities = allA.stream()
+        List<PlayerEntity> fieldPlayersAEntities = convocadosA.stream()
                 .filter(p -> p.getPosition() != Position.GOALKEEPER && p.isHasPlayed())
                 .toList();
-        List<PlayerEntity> substitutesAEntities = allA.stream()
+        List<PlayerEntity> substitutesAEntities = convocadosA.stream()
                 .filter(p -> !p.isHasPlayed())
                 .toList();
 
@@ -96,14 +98,15 @@ public class TeamController {
 
         // Asignar titulares, portero y suplentes para teamB
         List<PlayerEntity> allB = teamBEntity.getPlayers();
-        PlayerEntity goalieBEntity = allB.stream()
+        List<PlayerEntity> convocadosB = allB.stream().filter(PlayerEntity::isConvocado).toList();
+        PlayerEntity goalieBEntity = convocadosB.stream()
                 .filter(p -> p.getPosition() == Position.GOALKEEPER && p.isHasPlayed())
                 .findFirst()
                 .orElse(null);
-        List<PlayerEntity> fieldPlayersBEntities = allB.stream()
+        List<PlayerEntity> fieldPlayersBEntities = convocadosB.stream()
                 .filter(p -> p.getPosition() != Position.GOALKEEPER && p.isHasPlayed())
                 .toList();
-        List<PlayerEntity> substitutesBEntities = allB.stream()
+        List<PlayerEntity> substitutesBEntities = convocadosB.stream()
                 .filter(p -> !p.isHasPlayed())
                 .toList();
 
@@ -190,8 +193,18 @@ public class TeamController {
             teamB.getPlayers().stream().filter(p -> visitantePenalty.contains(p.getName())).toList()
         );
 
-        Game game = new Game(teamA, teamB);
-        game.simulate();
+        Boolean copa = false;
+        if (body.containsKey("copa")) {
+            Object copaObj = body.get("copa");
+            if (copaObj instanceof Boolean) {
+                copa = (Boolean) copaObj;
+            } else if (copaObj instanceof String) {
+                copa = Boolean.parseBoolean((String) copaObj);
+            }
+        }
+
+        Game game = new Game(teamA, teamB, copa);
+        game.simulate(copa);
         List<String> gameEvents = game.showEvents();
 
         // Unir todos los eventos en un solo String con saltos de línea HTML

@@ -305,10 +305,14 @@ document
           visitante_penalty: getCheckedNames("visitante_penalty"),
         };
 
+        const copaCheckbox = document.getElementById("copaCheckbox");
+        const copa = copaCheckbox && copaCheckbox.checked;
+
         const body = {
           teamAName: localName,
           teamBName: visitanteName,
           ...lanzadores,
+          copa: copa
         };
 
         try {
@@ -329,6 +333,15 @@ document
           const resultado = await response.text();
 
           const eventos = resultado.split("<br>");
+          // Buscar resultado de penaltis
+          let penaltisFinal = null;
+          for (let i = eventos.length - 1; i >= 0; i--) {
+            if (eventos[i].startsWith("Penaltis final:")) {
+              penaltisFinal = eventos[i];
+              eventos.splice(i, 1); // lo quitamos de la timeline
+              break;
+            }
+          }
           const resultadoFinal = eventos.pop(); 
 
           resultadoDiv.innerHTML = `
@@ -361,6 +374,7 @@ document
                                 <span>${visitanteName}</span>
                             </div>
                         </div>
+                        ${penaltisFinal ? `<div style='margin:1.2rem 0 0 0;font-size:1.15rem;color:#e53935;font-weight:bold;'>${penaltisFinal.replace('Penaltis final:', 'Resultado de penaltis:')}</div>` : ""}
                         <div class="eventos-timeline">
                             ${eventos
                               .map(

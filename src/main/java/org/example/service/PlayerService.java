@@ -22,7 +22,7 @@ public class PlayerService {
     private final PlayerRepository playerRepository;
     private final UserRepository userRepository;
 
-    public PlayerEntity patchPlayer(Long userId, Long teamId, Long playerId, String name, Integer skill, Position position, Boolean titular) {
+    public PlayerEntity patchPlayer(Long userId, Long teamId, Long playerId, String name, Integer skill, Position position, Boolean titular, Boolean convocado) {
         TeamEntity team = teamRepository.findById(teamId)
                 .orElseThrow(() -> new TeamNotFoundException(teamId));
 
@@ -94,11 +94,15 @@ public class PlayerService {
             player.setHasPlayed(titular);
         }
 
+        if (convocado != null) {
+            player.setConvocado(convocado);
+        }
+
         return playerRepository.save(player);
     }
 
 
-    public PlayerEntity createPlayer(Long userId, Long teamId, String name, int skill, Position position, Boolean titular) {
+    public PlayerEntity createPlayer(Long userId, Long teamId, String name, int skill, Position position, Boolean titular, Boolean convocado) {
         System.out.println("Datos recibidos: " + name + ", " + skill + ", " + position + ", " + titular);
 
         UserEntity user = userRepository.findById(userId)
@@ -137,7 +141,7 @@ public class PlayerService {
             throw new IllegalStateException("Debe haber al menos un portero titular entre los 11 titulares.");
         }
 
-        PlayerEntity player = new PlayerEntity(name, skill, position, titular);
+        PlayerEntity player = new PlayerEntity(name, skill, position, titular, convocado);
         player.setTeam(team);
         return playerRepository.save(player);
     }

@@ -26,15 +26,18 @@ public class PlayerEntity {
     private Position position;
     @Column(nullable = false)
     private boolean hasPlayed;
+    @Column(nullable = false)
+    private boolean convocado;
     @ManyToOne
     @JoinColumn(name = "team_id",nullable = false)
     private TeamEntity team;
 
 
-    public PlayerEntity(String name, int skill, Position position , Boolean hasPlayed) {
+    public PlayerEntity(String name, int skill, Position position , Boolean hasPlayed, Boolean convocado) {
         this.name = name;
         this.skill = skill;
         this.position = position;
-        this.hasPlayed=hasPlayed;
+        this.hasPlayed = hasPlayed;
+        this.convocado = convocado;
     }
 }

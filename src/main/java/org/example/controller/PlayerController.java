@@ -20,7 +20,7 @@ public class PlayerController {
 
     @PatchMapping("/{playerId}")
     public PlayerResponse patchPlayer(@PathVariable Long playerId, @PathVariable Long teamId, @PathVariable Long userId, @Valid @RequestBody PlayerPatch player) {
-        PlayerEntity playerPatched = playerService.patchPlayer(userId, teamId, playerId, player.getName(), player.getSkill(), player.getPosition(), player.isHasPlayed());
+        PlayerEntity playerPatched = playerService.patchPlayer(userId, teamId, playerId, player.getName(), player.getSkill(), player.getPosition(), player.isHasPlayed(), player.isConvocado());
 
         return PlayerResponse.builder()
                 .id(playerPatched.getId())
@@ -28,13 +28,14 @@ public class PlayerController {
                 .skill(playerPatched.getSkill())
                 .position(playerPatched.getPosition())
                 .hasPlayed(playerPatched.isHasPlayed())
+                .convocado(playerPatched.isConvocado())
                 .build();
 
     }
 
     @PostMapping
     public PlayerResponse createPlayer(@PathVariable Long teamId, @PathVariable Long userId, @Valid @RequestBody PlayerCreate playerCreate) {
-        PlayerEntity createdTeam = playerService.createPlayer(userId, teamId, playerCreate.getName(), playerCreate.getSkill(), playerCreate.getPosition(), playerCreate.isHasPlayed());
+        PlayerEntity createdTeam = playerService.createPlayer(userId, teamId, playerCreate.getName(), playerCreate.getSkill(), playerCreate.getPosition(), playerCreate.isHasPlayed(), playerCreate.isConvocado());
 
         return PlayerResponse.builder()
                 .id(createdTeam.getId())
@@ -42,6 +43,7 @@ public class PlayerController {
                 .skill(createdTeam.getSkill())
                 .position(createdTeam.getPosition())
                 .hasPlayed(createdTeam.isHasPlayed())
+                .convocado(createdTeam.isConvocado())
                 .build();
 
     }
@@ -56,6 +58,7 @@ public class PlayerController {
                 .skill(deletedPlayer.getSkill())
                 .position(deletedPlayer.getPosition())
                 .hasPlayed(deletedPlayer.isHasPlayed())
+                .convocado(deletedPlayer.isConvocado())
                 .build();
 
     }
@@ -79,6 +82,7 @@ public class PlayerController {
                         .skill(user.getSkill())
                         .position(user.getPosition())
                         .hasPlayed(user.isHasPlayed())
+                        .convocado(user.isConvocado())
                         .build())
                 .toList();
     }

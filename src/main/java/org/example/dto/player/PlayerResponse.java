@@ -12,4 +12,5 @@ public class PlayerResponse {
     private Integer skill;
     private Position position;
     private boolean hasPlayed;
+    private boolean convocado;
 }

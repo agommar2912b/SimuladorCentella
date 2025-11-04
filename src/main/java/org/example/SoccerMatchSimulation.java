@@ -260,12 +260,12 @@ public class SoccerMatchSimulation {
         setFreeKickKickers(zero, List.of("Riccardo","Jordan"));
         setCornerKickers(zero, List.of("Riccardo","Aitor"));
 
-        Game game = new Game(dragonLink, gigantes);
-        game.simulate();
-        List<String> gameEvents=game.showEvents();
-        for (String event : gameEvents) {
-            System.out.println(event);
-        }
+        //Game game = new Game(inazuma, dragones,);
+        //game.simulate();
+        //List<String> gameEvents=game.showEvents();
+//        for (String event : gameEvents) {
+//            System.out.println(event);
+//        }
     }
 
     private void setPenaltyKickers(Team team, List<String> names) {

@@ -15,7 +15,7 @@ public class Game {
     Player mvp;
     boolean firstCalculate = true;
 
-    public Game(Team teamA, Team teamB) {
+    public Game(Team teamA, Team teamB, Boolean copa) {
         this.teamA = teamA;
         this.teamB = teamB;
     }
@@ -45,14 +45,76 @@ public class Game {
         return Math.abs(atacker.getSkill() * 5 - defender.getSkill() * 5);
     }
 
-    public void simulate() {
+    public void simulate(Boolean copa) {
         calculateWinProbabilities();
-        for (int minute = 10; minute <= 90; minute = minute + 5) {
-            simulateMinute(minute);
-        }
-        listMvp();
-        events.add("Resultado final: " + teamA.getName() + " " + scoreA + " - " + scoreB + " " + teamB.getName());
 
+        if (copa) {
+            // Partido hasta el minuto 90
+            for (int minute = 10; minute <= 90; minute = minute + 5) {
+                simulateMinute(minute);
+            }
+            // Si hay empate, prórroga
+            if (scoreA == scoreB) {
+                events.add("\n--- Prórroga ---");
+                for (int minute = 95; minute <= 120; minute = minute + 5) {
+                    simulateMinute(minute);
+                }
+            }
+            // Si sigue empate, penaltis
+            if (scoreA == scoreB) {
+                events.add("\n--- Penaltis ---");
+                int penalesA = 0;
+                int penalesB = 0;
+                for (int i = 0; i < 5; i++) {
+                    if (simulatePenaltyShootout(teamA, teamB, i)) penalesA++;
+                    if (simulatePenaltyShootout(teamB, teamA, i)) penalesB++;
+                    events.add("Ronda " + (i+1) + ": " + teamA.getName() + " " + penalesA + " - " + penalesB + " " + teamB.getName());
+                }
+                // Muerte súbita si sigue empate
+                int ronda = 6;
+                int lanzadorIndex = 5;
+                while (penalesA == penalesB) {
+                    boolean golA = simulatePenaltyShootout(teamA, teamB, lanzadorIndex);
+                    boolean golB = simulatePenaltyShootout(teamB, teamA, lanzadorIndex);
+                    if (golA != golB) {
+                        if (golA) penalesA++;
+                        if (golB) penalesB++;
+                        events.add("Ronda " + ronda + " (muerte súbita): " + teamA.getName() + " " + penalesA + " - " + penalesB + " " + teamB.getName());
+                        break;
+                    }
+                    ronda++;
+                    lanzadorIndex++;
+                }
+                events.add("Penaltis final: " + teamA.getName() + " " + penalesA + " - " + penalesB + " " + teamB.getName());
+            }
+            listMvp();
+            events.add("Resultado final: " + teamA.getName() + " " + scoreA + " - " + scoreB + " " + teamB.getName());
+        } else {
+            for (int minute = 10; minute <= 90; minute = minute + 5) {
+                simulateMinute(minute);
+            }
+            listMvp();
+            events.add("Resultado final: " + teamA.getName() + " " + scoreA + " - " + scoreB + " " + teamB.getName());
+        }
+    }
+
+    // Simulación de penaltis para copa
+    private boolean simulatePenaltyShootout(Team atacking, Team defending, int lanzadorIndex) {
+        // Obtener titulares ordenados por habilidad descendente
+        List<Player> titulares = atacking.getPlayers().stream()
+            .filter(Player::isHasPlayed)
+            .sorted((a, b) -> Integer.compare(b.getSkill(), a.getSkill()))
+            .toList();
+
+        // Si hay menos de 1 titular, usar el portero
+        Player penaltyTaker = titulares.size() > lanzadorIndex ? titulares.get(lanzadorIndex) : atacking.getGoalie();
+        Player goalkeeper = defending.getGoalie();
+        double skillDifference = penaltyTaker.getSkill() - goalkeeper.getSkill();
+        double chanceToScore = 70 + skillDifference;
+        boolean gol = rand.nextDouble(100) < chanceToScore;
+        String resultado = gol ? "¡Gol!" : "Falla";
+        events.add("\tPenalti: " + penaltyTaker.getName() + " (" + atacking.getName() + ") vs " + goalkeeper.getName() + " (" + defending.getName() + ") → " + resultado);
+        return gol;
     }
 
     private void simulateMinute(int minute) {
@@ -315,7 +377,7 @@ public class Game {
         Player fouler = defendTeam.getPlayers().get(rand.nextInt(defendTeam.getPlayers().size()));
         int random = rand.nextInt(100) + 1;
 
-        if (random < 20) {
+        if (random < 30) {
             if (!fouler.isHasYellowCard()) {
                 events.add("\t " + beenfoul.getName() + " recibe una falta de " + fouler.getName() + ".");
                 events.add("\tTarjeta amarilla para " + fouler.getName() + " de " + defendTeam.getName() + ".");
@@ -327,7 +389,7 @@ public class Game {
                 defendTeam.removePlayer(fouler);
                 adjustWinProbabilityAfterExpulsion(defendTeam, fouler);
             }
-        } else if (random < 95) {
+        } else if (random < 90) {
             events.add("\tFalta realizada por " + fouler.getName() + " de " + defendTeam.getName() + " a " + beenfoul.getName() + ".");
         } else {
             events.add("\t " + beenfoul.getName() + " recibe una falta de " + fouler.getName() + ".");
