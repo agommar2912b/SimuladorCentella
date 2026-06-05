@@ -116,6 +116,45 @@ public class Team {
         return penaltyKickers != null ? penaltyKickers : new ArrayList<>();
     }
 
+    public Player selectQuickCounterPlayer(Random rand) {
+        // Seleccionar jugador para contraataques rápidos priorizando velocidad y habilidad
+        List<Player> attackers = players.stream()
+                .filter(p -> p.getPosition() == Position.FORWARD || p.getPosition() == Position.MIDFIELDER)
+                .sorted((p1, p2) -> Double.compare(p2.getSkill(), p1.getSkill()))
+                .toList();
+        
+        if (!attackers.isEmpty()) {
+            return attackers.get(rand.nextInt(Math.min(3, attackers.size())));
+        }
+        return players.get(rand.nextInt(players.size()));
+    }
+
+    public Player selectPressurePlayer(Random rand) {
+        // Seleccionar jugador para presionar al rival
+        List<Player> pressurePlayers = players.stream()
+                .filter(p -> p.getPosition() != Position.GOALKEEPER)
+                .sorted((p1, p2) -> Double.compare(p2.getSkill(), p1.getSkill()))
+                .toList();
+        
+        if (!pressurePlayers.isEmpty()) {
+            return pressurePlayers.get(rand.nextInt(Math.min(5, pressurePlayers.size())));
+        }
+        return players.get(rand.nextInt(players.size()));
+    }
+
+    public Player selectSetPieceDefender(Random rand) {
+        // Seleccionar defensor para jugadas a balón parado
+        List<Player> defenders = players.stream()
+                .filter(p -> p.getPosition() == Position.DEFENDER)
+                .sorted((p1, p2) -> Double.compare(p2.getSkill(), p1.getSkill()))
+                .toList();
+        
+        if (!defenders.isEmpty()) {
+            return defenders.get(rand.nextInt(Math.min(4, defenders.size())));
+        }
+        return players.get(rand.nextInt(players.size()));
+    }
+
     public Player selectFreeKickTaker(Random rand) {
         List<Player> eligible = getFreekickKickers().stream()
             .filter(players::contains)
@@ -148,69 +187,126 @@ public class Team {
 
 
 public Player selectPlayerByProbabilityBallMiddle(Random rand) {
-    List<Player> midfielders = players.stream()
-            .filter(p -> p.getPosition() == Position.MIDFIELDER)
-            .toList();
-    List<Player> forwardsAndDefenders = players.stream()
-            .filter(p -> p.getPosition() == Position.FORWARD || p.getPosition() == Position.DEFENDER)
-            .toList();
-
+    List<Player> eligiblePlayers;
     int randValue = rand.nextInt(100) + 1;
-    if (randValue <= 65 && !midfielders.isEmpty()) {
-        return midfielders.get(rand.nextInt(midfielders.size()));
-    } else if (randValue <= 95 && !forwardsAndDefenders.isEmpty()) {
-        return forwardsAndDefenders.get(rand.nextInt(forwardsAndDefenders.size()));
+    
+    if (randValue <= 70) {
+        // Mediocampistas tienen más probabilidad en el centro
+        eligiblePlayers = players.stream()
+                .filter(p -> p.getPosition() == Position.MIDFIELDER)
+                .toList();
+    } else if (randValue <= 90) {
+        // Defensores en la construcción
+        eligiblePlayers = players.stream()
+                .filter(p -> p.getPosition() == Position.DEFENDER)
+                .toList();
     } else {
-        return goalie;
+        // Delanteros bajan a recibir
+        eligiblePlayers = players.stream()
+                .filter(p -> p.getPosition() == Position.FORWARD)
+                .toList();
     }
+
+    if (eligiblePlayers.isEmpty()) {
+        return players.get(rand.nextInt(players.size()));
+    }
+
+    // Suma total de habilidades para calcular probabilidades
+    double totalSkill = eligiblePlayers.stream().mapToInt(Player::getSkill).sum();
+    double randomPoint = rand.nextDouble() * totalSkill;
+    double currentSum = 0;
+
+    // Selección ponderada por habilidad
+    for (Player player : eligiblePlayers) {
+        currentSum += player.getSkill();
+        if (currentSum >= randomPoint) {
+            return player;
+        }
+    }
+
+    return eligiblePlayers.get(0);
 }
 
 public Player selectPlayerByProbabilityDefenderPass(Random rand) {
-    List<Player> defenders = players.stream()
-            .filter(p -> p.getPosition() == Position.DEFENDER)
-            .toList();
-    List<Player> midfielders = players.stream()
-            .filter(p -> p.getPosition() == Position.MIDFIELDER)
-            .toList();
-    List<Player> forwards = players.stream()
-            .filter(p -> p.getPosition() == Position.FORWARD)
-            .toList();
-
+    List<Player> eligiblePlayers;
     int randValue = rand.nextInt(100) + 1;
-    if (randValue <= 70 && !defenders.isEmpty()) {
-        return defenders.get(rand.nextInt(defenders.size()));
-    } else if (randValue <= 90 && !midfielders.isEmpty()) {
-        return midfielders.get(rand.nextInt(midfielders.size()));
+    
+    if (randValue <= 80) {
+        // Los defensores tienen mayor probabilidad en defensa
+        eligiblePlayers = players.stream()
+                .filter(p -> p.getPosition() == Position.DEFENDER)
+                .toList();
+    } else if (randValue <= 95) {
+        // Los mediocampistas ayudan en la presión
+        eligiblePlayers = players.stream()
+                .filter(p -> p.getPosition() == Position.MIDFIELDER)
+                .toList();
     } else {
-        if (!forwards.isEmpty() && rand.nextBoolean()) {
-            return forwards.get(rand.nextInt(forwards.size()));
-        } else {
-            return goalie;
+        // Algunos delanteros presionan
+        eligiblePlayers = players.stream()
+                .filter(p -> p.getPosition() == Position.FORWARD)
+                .toList();
+    }
+
+    if (eligiblePlayers.isEmpty()) {
+        return players.get(rand.nextInt(players.size()));
+    }
+
+    // Suma total de habilidades para calcular probabilidades
+    double totalSkill = eligiblePlayers.stream().mapToInt(Player::getSkill).sum();
+    double randomPoint = rand.nextDouble() * totalSkill;
+    double currentSum = 0;
+
+    // Selección ponderada por habilidad
+    for (Player player : eligiblePlayers) {
+        currentSum += player.getSkill();
+        if (currentSum >= randomPoint) {
+            return player;
         }
     }
+
+    return eligiblePlayers.get(0);
 }
 
 public Player selectPlayerByProbabilityOffensivePass(Random rand) {
-    List<Player> forwards = players.stream()
-            .filter(p -> p.getPosition() == Position.FORWARD)
-            .toList();
-    List<Player> midfielders = players.stream()
-            .filter(p -> p.getPosition() == Position.MIDFIELDER)
-            .toList();
-    List<Player> defenders = players.stream()
-            .filter(p -> p.getPosition() == Position.DEFENDER)
-            .toList();
-
+    List<Player> eligiblePlayers;
     int randValue = rand.nextInt(100) + 1;
-    if (randValue <= 60 && !forwards.isEmpty()) {
-        return forwards.get(rand.nextInt(forwards.size()));
-    } else if (randValue <= 85 && !midfielders.isEmpty()) {
-        return midfielders.get(rand.nextInt(midfielders.size()));
-    } else if (randValue <= 95 && !defenders.isEmpty()) {
-        return defenders.get(rand.nextInt(defenders.size()));
+    
+    if (randValue <= 80) {
+        // Los delanteros son principales en ataque
+        eligiblePlayers = players.stream()
+                .filter(p -> p.getPosition() == Position.FORWARD)
+                .toList();
+    } else if (randValue <= 95) {
+        // Los mediocampistas participan mucho en ataque
+        eligiblePlayers = players.stream()
+                .filter(p -> p.getPosition() == Position.MIDFIELDER)
+                .toList();
     } else {
-        return goalie;
+        // Ocasionalmente los defensas suben al ataque
+        eligiblePlayers = players.stream()
+                .filter(p -> p.getPosition() == Position.DEFENDER)
+                .toList();
     }
+
+    if (eligiblePlayers.isEmpty()) {
+        return players.get(rand.nextInt(players.size()));
+    }
+
+    // Suma total de habilidades para calcular probabilidades
+    double totalSkill = eligiblePlayers.stream().mapToInt(Player::getSkill).sum();
+    double randomPoint = rand.nextDouble() * totalSkill;
+    double currentSum = 0;
+
+    // Selección ponderada por habilidad
+    for (Player player : eligiblePlayers) {
+        currentSum += player.getSkill();
+        if (currentSum >= randomPoint) {
+            return player;
+        }
+    }
+
+    return eligiblePlayers.get(0);
 }
 
 }
